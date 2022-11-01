@@ -35,8 +35,3 @@ def edit_emp(request):
   return render(request, "employee_register\employee_list.html")
 def remove_emp(request):
   return render(request, "employee_register\employee_list.html")
-
-
-
-def demo_show(request):  
-  return render(request, "employee_register\data-table.html")
