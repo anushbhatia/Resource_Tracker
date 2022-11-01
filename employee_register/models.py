@@ -9,11 +9,13 @@ class Employee(models.Model):
     primary=models.CharField(max_length=100)
     secondary=models.CharField(max_length=100)
     location=models.CharField(max_length=100)
-    date=models.DateField()
+    date=models.CharField(max_length=100)
     remarks=models.CharField(max_length=100)
     status=models.CharField(max_length=100)
     designation=models.CharField(max_length=100)
     benchmng=models.CharField(max_length=100)
+class Meta:        
+    db_table="Employee"
 '''
 KID/User ID
 Name
