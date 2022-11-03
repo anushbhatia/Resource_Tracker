@@ -28,6 +28,9 @@ def insert_emp(request,template_name="employee_register\employee_list.html"):
     return redirect('show/')    
   else:        
       return render(request, 'employee_register\index.html')
+#Home page view
+def home(request):  
+  return render(request, "employee_register\home.html")
 def show_emp(request):  
   employees = Employee.objects.all()
   return render(request, "employee_register\data-table.html",{'employees':employees} )
