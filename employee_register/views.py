@@ -28,17 +28,13 @@ def insert_emp(request,template_name="employee_register\employee_list.html"):
     return redirect('show/')    
   else:        
       return render(request, 'employee_register\index.html')
-#Home page view
-def home(request):  
-  return render(request, "employee_register\home.html")
 def show_emp(request):  
-  employees = Employee.objects.all()
-  return render(request, "employee_register\data-table.html",{'employees':employees} )
+  employees = Employee.objects.all()    
+  return render(request,'employee_register\show.html',{'employees':employees} )
 def edit_emp(request):  
   return render(request, "employee_register\employee_list.html")
 def remove_emp(request):
   return render(request, "employee_register\employee_list.html")
-
 import csv, io
 from django.contrib import messages
 # Create your views here.
@@ -78,6 +74,3 @@ def profile_upload(request):
         )
       context = {}
       return render(request, template, context)
-
-
-  
