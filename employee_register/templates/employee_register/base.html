@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'baseAsset/img/capg-icon.jpg' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'baseAsset/img/capg_icon.jpg' %}"/>
     <title>Profile Tracker</title>
     <!-- Google Fonts============================================ -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Dosis:300,400,500,,600,700,700i|Lato:300,300i,400,400i,700,700i" rel="stylesheet">
@@ -25,6 +25,18 @@
     <link rel="stylesheet" href="{% static 'insertAsset/css/bootstrap.min.css' %}">
     <!-- Style ============================================-->
     <link rel="stylesheet" href="{% static 'insertAsset/css/style.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- for show filter-->
+    <script src="https://code.jquery.com/jquery-3.6.1.slim.min.js" integrity="sha256-w8CvhFs7iHNVUtnSP0YKEg00p9Ih13rlL9zGqvLdePA=" crossorigin="anonymous"></script>
+  
+    <!-- Load the plugin bundle. -->
+    <script href="{% static 'showAsset/excel-bootstrap-table-filter-bundle.js' %}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="{% static 'showAsset/excel-bootstrap-table-filter-style.css' %}" />
 
 </head>
 <body>
@@ -39,25 +51,22 @@
 
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a class="nav-link scrollto active" href="">Home</a></li>
-          <li><a class="nav-link scrollto" href="upload-csv/">Insert Employee</a></li>
-          <li><a class="nav-link scrollto " href="show/">Show Employee</a></li>
+          <li><a class="nav-link scrollto" id="homeActive" href="../">Home</a></li>
+          <li><a class="nav-link scrollto" id="insertActive" href="../upload-csv/">Insert Employee</a></li>
+          <li><a class="nav-link scrollto " id="showActive" href="../show/">Show Employee</a></li>
           <!--<li><a class="nav-link scrollto" href="#">Team</a></li>-->
-          <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>
+          <li class="dropdown"><a href="#"><span>User name</span> <i class="bi bi-chevron-down"></i></a>
             <ul>
-              <li><a href="#">Drop Down 1</a></li>
-              <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
+              <li><a href="#">About me</a></li>
+              <li class="dropdown"><a href="#"><span>Edit details</span> <i class="bi bi-chevron-right"></i></a>
                 <ul>
-                  <li><a href="#">Deep Drop Down 1</a></li>
-                  <li><a href="#">Deep Drop Down 2</a></li>
-                  <li><a href="#">Deep Drop Down 3</a></li>
-                  <li><a href="#">Deep Drop Down 4</a></li>
-                  <li><a href="#">Deep Drop Down 5</a></li>
+                  <li><a href="#">Password</a></li>
+                  <li><a href="#">preferance</a></li>
+                  <li><a href="#">other</a></li>
                 </ul>
               </li>
-              <li><a href="#">Drop Down 2</a></li>
+              <li><a href="#">Suggestions</a></li>
               <li><a href="#">Drop Down 3</a></li>
-              <li><a href="#">Drop Down 4</a></li>
             </ul>
           </li>
           <li><a class="nav-link scrollto" href="#">Logout</a></li>
@@ -103,7 +112,15 @@
 
         <!-- Template Main JS File -->
         <script src="{% static 'baseAsset/js/main.js' %}"></script>
-
+        <script>
+          // Use the plugin once the DOM has been loaded.
+          $(function () {
+            // Apply the plugin 
+            $('#table').excelTableFilter();
+           
+          });
+        </script>
+  
         <script src="{% static 'insertAsset/js/jquery-3.3.1.min.js' %}"></script>
        <script src="{% static 'insertAsset/js/popper.min.js' %}"></script>
        <script src="{% static 'insertAsset/js/bootstrap.min.js' %}"></script>

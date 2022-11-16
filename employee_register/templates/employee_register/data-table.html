@@ -1,96 +1,761 @@
 {% extends 'employee_register/base.html' %}
 {% block content %}
-<section id="" class="d-flex align-items-center">
-    <!--[if lt IE 8]>
-		<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-	<![endif]-->
+<style>
+    #showActive {
+      color: #49b5e7;
+    }
+</style>
 
-        <!-- Static Table Start -->
-        <div class="data-table-area mg-b-15">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="sparkline13-list">
-                            <div class="sparkline13-hd">
-                                <div class="main-sparkline13-hd">
-                                    <h1>Projects <span class="table-project-n">Data</span> Table</h1>
-                                </div>
-                            </div>
-                            <div class="sparkline13-graph">
-                                <div class="datatable-dashv1-list custom-datatable-overright">
-                                    <div id="toolbar">
-                                        <select class="form-control dt-tb">
-											<option value="">Export Basic</option>
-											<option value="all">Export All</option>
-											<option value="selected">Export Selected</option>
-										</select>
-                                    </div>
-                                    <table id="table" data-toggle="table" data-pagination="true" data-search="true" data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true"
-                                        data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
-                                        <thead>
-                                            <tr>
-                                                <th data-field="state" data-checkbox="true"></th>
-                                                <th data-field="id">ID</th>
-                                                <th data-field="name" data-editable="true">Name</th>
-                                                <th data-field="email" data-editable="true">Email</th>
-                                                <th data-field="primary" data-editable="true">Primary Skill</th>
-                                                <th data-field="secondary" data-editable="true">Secondary Skill</th>
-                                                <th data-field="location" data-editable="true">Location</th>
-                                                <th data-field="date" data-editable="true">Date</th>
-                                                <th data-field="remarks" data-editable="true">Remarks</th>
-                                                <th data-field="status" data-editable="true">Status</th>
-                                                <th data-field="designation" data-editable="true">Designation</th>
-                                                <th data-field="benchmng" data-editable="true">Bench Manager</th>
-                                                <th data-field="action">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for employee in employees %}
-                                            <tr>
-                                                <td>
-                                                    {{employee.emp_code}}
-                                                </td> 
-                                                <td>
-                                                    {{employee.fullname}}
-                                                </td>
-                                                <td>
-                                                    {{employee.email}}
-                                                </td>
-                                                <td>
-                                                    {{employee.primary}}
-                                                </td>
-                                                <td>
-                                                    {{employee.secondary}}
-                                                </td>
-                                                <td>
-                                                    {{employee.location}}
-                                                </td>
-                                                <td>
-                                                    {{employee.date}}
-                                                </td>
-                                                <td>
-                                                    {{employee.remarks}}
-                                                </td>
-                                                <td>
-                                                    {{employee.status}}
-                                                </td>
-                                                <td>
-                                                    {{employee.designation}}
-                                                </td>
-                                                <td>
-                                                    {{employee.benchmng}}
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <style>
+        body {
+            color: #566787cf;
+            background: #f5f5f5;
+            font-family: 'Varela Round', sans-serif;
+            font-size: 13px;
+        }
+        .table-responsive {
+            margin: 30px 0;
+        }
+        .table-wrapper {
+            min-width: 1000px;
+            background: #fff;
+            padding: 20px 25px;
+            border-radius: 3px;
+            box-shadow: 0 1px 1px rgba(0,0,0,.05);
+        }
+        .table-wrapper .btn {
+            float: right;
+            color: #333;
+            background-color: #fff;
+            border-radius: 3px;
+            border: none;
+            outline: none !important;
+            margin-left: 10px;
+        }
+        .table-wrapper .btn:hover {
+            color: #333;
+            background: #f2f2f2;
+        }
+        .table-wrapper .btn.btn-primary {
+            color: #fff;
+            background: #03A9F4;
+        }
+        .table-wrapper .btn.btn-primary:hover {
+            background: #03a3e7;
+        }
+        .table-title .btn {		
+            font-size: 13px;
+            border: none;
+        }
+        .table-title .btn i {
+            float: left;
+            font-size: 21px;
+            margin-right: 5px;
+        }
+        .table-title .btn span {
+            float: left;
+            margin-top: 2px;
+        }
+        .table-title {
+            color: #fff;
+            background: #4b5366;		
+            padding: 16px 25px;
+            margin: -20px -25px 10px;
+            border-radius: 3px 3px 0 0;
+        }
+        .table-title h2 {
+            margin: 5px 0 0;
+            font-size: 24px;
+        }
+        .show-entries select.form-control {        
+            width: 60px;
+            margin: 0 5px;
+        }
+        .table-filter .filter-group {
+            float: right;
+            margin-left: 15px;
+        }
+        .table-filter input, .table-filter select {
+            height: 34px;
+            border-radius: 3px;
+            border-color: #ddd;
+            box-shadow: none;
+        }
+        .table-filter {
+            padding: 5px 0 15px;
+            border-bottom: 1px solid #e9e9e9;
+            margin-bottom: 5px;
+        }
+        .table-filter .btn {
+            height: 34px;
+        }
+        .table-filter label {
+            font-weight: normal;
+            margin-left: 10px;
+        }
+        .table-filter select, .table-filter input {
+            display: inline-block;
+            margin-left: 5px;
+        }
+        .table-filter input {
+            width: 200px;
+            display: inline-block;
+        }
+        .filter-group select.form-control {
+            width: 110px;
+        }
+        .filter-icon {
+            float: right;
+            margin-top: 7px;
+        }
+        .filter-icon i {
+            font-size: 18px;
+            opacity: 0.7;
+        }	
+        table.table tr th, table.table tr td {
+            border-color: #e9e9e9;
+            padding: 12px 15px;
+            vertical-align: middle;
+        }
+        table.table tr th:first-child {
+            width: 60px;
+        }
+        table.table tr th:last-child {
+            width: 80px;
+        }
+        table.table-striped tbody tr:nth-of-type(odd) {
+            background-color: #fcfcfc;
+        }
+        table.table-striped.table-hover tbody tr:hover {
+            background: #f5f5f5;
+        }
+        table.table th i {
+            font-size: 13px;
+            margin: 0 5px;
+            cursor: pointer;
+        }	
+        table.table td a {
+            font-weight: bold;
+            color: #566787;
+            display: inline-block;
+            text-decoration: none;
+        }
+        table.table td a:hover {
+            color: #2196F3;
+        }
+        table.table td a.view {        
+            width: 30px;
+            height: 30px;
+            color: #2196F3;
+            border: 2px solid;
+            border-radius: 30px;
+            text-align: center;
+        }
+        table.table td a.view i {
+            font-size: 22px;
+            margin: 2px 0 0 1px;
+        }   
+        table.table .avatar {
+            border-radius: 50%;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        .status {
+            font-size: 30px;
+            margin: 2px 2px 0 0;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 10px;
+        }
+        .text-success {
+            color: #10c469;
+        }
+        .text-info {
+            color: #62c9e8;
+        }
+        .text-warning {
+            color: #FFC107;
+        }
+        .text-danger {
+            color: #ff5b5b;
+        }
+        .pagination {
+            float: right;
+            margin: 0 0 5px;
+        }
+        .pagination li a {
+            border: none;
+            font-size: 13px;
+            min-width: 30px;
+            min-height: 30px;
+            color: #999;
+            margin: 0 2px;
+            line-height: 30px;
+            border-radius: 2px !important;
+            text-align: center;
+            padding: 0 6px;
+        }
+        .pagination li a:hover {
+            color: #666;
+        }	
+        .pagination li.active a {
+            background: #03A9F4;
+        }
+        .pagination li.active a:hover {        
+            background: #0397d6;
+        }
+        .pagination li.disabled i {
+            color: #ccc;
+        }
+        .pagination li i {
+            font-size: 16px;
+            padding-top: 6px
+        }
+        .hint-text {
+            float: left;
+            margin-top: 10px;
+            font-size: 13px;
+        }    
+    </style>
+
+        
+
+        <!--Table Start -->
+        <div class="content">
+            <div class="sparkline13-hd">
+                <div class="main-sparkline13-hd">
+                    <h2>Projects <span class="table-project-n">Data</span> Table</h2>
                 </div>
             </div>
+            <div class="table-filter">
+                <div class="row">
+                    
+                </div>
+            </div>
+            <table id="divTable" class="table table-striped table-hover" data-toggle="table" data-pagination="true" data-search="true" data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true"
+            data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
+                <thead>
+                    <tr>
+                        <th data-field="state" data-checkbox="true">#</th>
+                        <th data-field="id">ID</th>
+                        <th data-field="name" data-editable="true">Name</th>
+                        <th data-field="email" data-editable="true">Email</th>
+                        <th data-field="primary" data-editable="true">Primary Skill</th>
+                        <th data-field="secondary" data-editable="true">Secondary Skill</th>
+                        <th data-field="location" data-editable="true">Location</th>
+                        <th data-field="date" data-editable="true">Date</th>
+                        <th data-field="remarks" data-editable="true">Remarks</th>
+                        <th data-field="status" data-editable="true">Status</th>
+                        <th data-field="designation" data-editable="true">Designation</th>
+                        <th data-field="benchmng" data-editable="true">Bench Manager</th>
+                        <th data-field="action">Action</th>
+                    </tr>
+                </thead>
+                {% for employee in employees %}
+                    <tr>
+                        <td>
+                            {{forloop.counter}}
+                        </td>
+                        <td>
+                            {{employee.emp_code}}
+                        </td> 
+                        <td>
+                            {{employee.fullname}}
+                        </td>
+                        <td>
+                            {{employee.email}}
+                        </td>
+                        <td>
+                            {{employee.primary}}
+                        </td>
+                        <td>
+                            {{employee.secondary}}
+                        </td>
+                        <td>
+                            {{employee.location}}
+                        </td>
+                        <td>
+                            {{employee.date}}
+                        </td>
+                        <td>
+                            {{employee.remarks}}
+                        </td>
+                        <td>
+                            {{employee.status}}
+                        </td>
+                        <td>
+                            {{employee.designation}}
+                        </td>
+                        <td>
+                            {{employee.benchmng}}
+                        </td>
+                        <td>
+                            <a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                            <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tbody>
+            </table>
         </div>
-        <!-- Static Table End -->
-</section>
+    </div>   
+    <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h2>Table 2</h2>
+            <table id="table" class="table table-bordered table-intel">
+              <thead>
+                <tr>
+                  <th class="filter">Animal</th>
+                  <th class="filter">Class</th>
+                  <th class="filter">Collective Noun</th>
+                  <th class="filter">A Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Bear</td>
+                  <td>Mammal</td>
+                  <td>Sleuth</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>Ant</td>
+                  <td>Insect</td>
+                  <td>Army</td>
+                  <td>2</td>
+                </tr>
+                <tr>
+                  <td>Salamander</td>
+                  <td>Amphibian</td>
+                  <td>Congress</td>
+                  <td>3</td>
+                </tr>
+                <tr>
+                  <td>Owl</td>
+                  <td>Bird</td>
+                  <td>Parliament</td>
+                  <td>4</td>
+                </tr>
+                <tr>
+                  <td>Frog</td>
+                  <td>Amphibian</td>
+                  <td>Army</td>
+                  <td>5</td>
+                </tr>
+                <tr>
+                  <td>Shark</td>
+                  <td>Fish</td>
+                  <td>Gam</td>
+                  <td>6</td>
+                </tr>
+                <tr>
+                  <td>Kookaburra</td>
+                  <td>Bird</td>
+                  <td>Cackle</td>
+                  <td>7</td>
+                </tr>
+                <tr>
+                  <td>Crow</td>
+                  <td>Bird</td>
+                  <td>Murder</td>
+                  <td>8</td>
+                </tr>
+                <tr>
+                  <td>Elephant</td>
+                  <td>Mammal</td>
+                  <td>Herd</td>
+                  <td>9</td>
+                </tr>
+                <tr>
+                  <td>Barracude</td>
+                  <td>Fish</td>
+                  <td>Grist</td>
+                  <td>10</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <h2>Table 3</h2>
+            <table id="table3" class="table table-bordered table-intel">
+              <thead>
+                <tr>
+                  <th>Company</th>
+                  <th>Contact</th>
+                  <th>Country</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Alfreds Futterkiste</td>
+                  <td>Maria Anders</td>
+                  <td>Germany</td>
+                </tr>
+                <tr>
+                  <td>Centro comercial Moctezuma</td>
+                  <td>Francisco Chang</td>
+                  <td>Mexico</td>
+                </tr>
+                <tr>
+                  <td>Ernst Handel</td>
+                  <td>Roland Mendel</td>
+                  <td>Austria</td>
+                </tr>
+                <tr>
+                  <td>Island Trading</td>
+                  <td>Helen Bennett</td>
+                  <td>UK</td>
+                </tr>
+                <tr>
+                  <td>Laughing Bacchus Winecellars</td>
+                  <td>Yoshi Tannamuri</td>
+                  <td>Canada</td>
+                </tr>
+                <tr>
+                  <td>Magazzini Alimentari Riuniti</td>
+                  <td>Giovanni Rovelli</td>
+                  <td>Italy</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+    <script>
+        (function ($$1) {
+            'use strict';
+            
+            $$1 = 'default' in $$1 ? $$1['default'] : $$1;
+            
+            var FilterMenu = function () {
+                function FilterMenu(target, th, column, index, options) {
+                    this.options = options;
+                    this.th = th;
+                    this.column = column;
+                    this.index = index;
+                    this.tds = target.find('tbody tr td:nth-child(' + (this.column + 1) + ')').toArray();
+                }
+                FilterMenu.prototype.initialize = function () {
+                    this.menu = this.dropdownFilterDropdown();
+                    this.th.appendChild(this.menu);
+                    var $trigger = $(this.menu.children[0]);
+                    var $content = $(this.menu.children[1]);
+                    var $menu = $(this.menu);
+                    $trigger.click(function () {
+                        return $content.toggle();
+                    });
+                    $(document).click(function (el) {
+                        if (!$menu.is(el.target) && $menu.has(el.target).length === 0) {
+                            $content.hide();
+                        }
+                    });
+                };
+                FilterMenu.prototype.searchToggle = function (value) {
+                    if (this.selectAllCheckbox instanceof HTMLInputElement) this.selectAllCheckbox.checked = false;
+                    if (value.length === 0) {
+                        this.toggleAll(true);
+                        if (this.selectAllCheckbox instanceof HTMLInputElement) this.selectAllCheckbox.checked = true;
+                        return;
+                    }
+                    this.toggleAll(false);
+                    this.inputs.filter(function (input) {
+                        return input.value.toLowerCase().indexOf(value.toLowerCase()) > -1;
+                    }).forEach(function (input) {
+                        input.checked = true;
+                    });
+                };
+                FilterMenu.prototype.updateSelectAll = function () {
+                    if (this.selectAllCheckbox instanceof HTMLInputElement) {
+                        $(this.searchFilter).val('');
+                        this.selectAllCheckbox.checked = this.inputs.length === this.inputs.filter(function (input) {
+                            return input.checked;
+                        }).length;
+                    }
+                };
+                FilterMenu.prototype.selectAllUpdate = function (checked) {
+                    $(this.searchFilter).val('');
+                    this.toggleAll(checked);
+                };
+                FilterMenu.prototype.toggleAll = function (checked) {
+                    for (var i = 0; i < this.inputs.length; i++) {
+                        var input = this.inputs[i];
+                        if (input instanceof HTMLInputElement) input.checked = checked;
+                    }
+                };
+                FilterMenu.prototype.dropdownFilterItem = function (td, self) {
+                    var value = td.innerText;
+                    var dropdownFilterItem = document.createElement('div');
+                    dropdownFilterItem.className = 'dropdown-filter-item';
+                    var input = document.createElement('input');
+                    input.type = 'checkbox';
+                    input.value = value.trim().replace(/ +(?= )/g, '');
+                    input.setAttribute('checked', 'checked');
+                    input.className = 'dropdown-filter-menu-item item';
+                    input.setAttribute('data-column', self.column.toString());
+                    input.setAttribute('data-index', self.index.toString());
+                    dropdownFilterItem.appendChild(input);
+                    dropdownFilterItem.innerHTML = dropdownFilterItem.innerHTML.trim() + ' ' + value;
+                    return dropdownFilterItem;
+                };
+                FilterMenu.prototype.dropdownFilterItemSelectAll = function () {
+                    var value = this.options.captions.select_all;
+                    var dropdownFilterItemSelectAll = document.createElement('div');
+                    dropdownFilterItemSelectAll.className = 'dropdown-filter-item';
+                    var input = document.createElement('input');
+                    input.type = 'checkbox';
+                    input.value = this.options.captions.select_all;
+                    input.setAttribute('checked', 'checked');
+                    input.className = 'dropdown-filter-menu-item select-all';
+                    input.setAttribute('data-column', this.column.toString());
+                    input.setAttribute('data-index', this.index.toString());
+                    dropdownFilterItemSelectAll.appendChild(input);
+                    dropdownFilterItemSelectAll.innerHTML = dropdownFilterItemSelectAll.innerHTML + ' ' + value;
+                    return dropdownFilterItemSelectAll;
+                };
+                FilterMenu.prototype.dropdownFilterSearch = function () {
+                    var dropdownFilterItem = document.createElement('div');
+                    dropdownFilterItem.className = 'dropdown-filter-search';
+                    var input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'dropdown-filter-menu-search form-control';
+                    input.setAttribute('data-column', this.column.toString());
+                    input.setAttribute('data-index', this.index.toString());
+                    input.setAttribute('placeholder', this.options.captions.search);
+                    dropdownFilterItem.appendChild(input);
+                    return dropdownFilterItem;
+                };
+                FilterMenu.prototype.dropdownFilterSort = function (direction) {
+                    var dropdownFilterItem = document.createElement('div');
+                    dropdownFilterItem.className = 'dropdown-filter-sort';
+                    var span = document.createElement('span');
+                    span.className = direction.toLowerCase().split(' ').join('-');
+                    span.setAttribute('data-column', this.column.toString());
+                    span.setAttribute('data-index', this.index.toString());
+                    span.innerText = direction;
+                    dropdownFilterItem.appendChild(span);
+                    return dropdownFilterItem;
+                };
+                FilterMenu.prototype.dropdownFilterContent = function () {
+                    var _this = this;
+                    var self = this;
+                    var dropdownFilterContent = document.createElement('div');
+                    dropdownFilterContent.className = 'dropdown-filter-content';
+                    var innerDivs = this.tds.reduce(function (arr, el) {
+                        var values = arr.map(function (el) {
+                            return el.innerText.trim();
+                        });
+                        if (values.indexOf(el.innerText.trim()) < 0) arr.push(el);
+                        return arr;
+                    }, []).sort(function (a, b) {
+                        var A = a.innerText.toLowerCase();
+                        var B = b.innerText.toLowerCase();
+                        if (!isNaN(Number(A)) && !isNaN(Number(B))) {
+                            if (Number(A) < Number(B)) return -1;
+                            if (Number(A) > Number(B)) return 1;
+                        } else {
+                            if (A < B) return -1;
+                            if (A > B) return 1;
+                        }
+                        return 0;
+                    }).map(function (td) {
+                        return _this.dropdownFilterItem(td, self);
+                    });
+                    this.inputs = innerDivs.map(function (div) {
+                        return div.firstElementChild;
+                    });
+                    var selectAllCheckboxDiv = this.dropdownFilterItemSelectAll();
+                    this.selectAllCheckbox = selectAllCheckboxDiv.firstElementChild;
+                    innerDivs.unshift(selectAllCheckboxDiv);
+                    var searchFilterDiv = this.dropdownFilterSearch();
+                    this.searchFilter = searchFilterDiv.firstElementChild;
+                    var outerDiv = innerDivs.reduce(function (outerDiv, innerDiv) {
+                        outerDiv.appendChild(innerDiv);
+                        return outerDiv;
+                    }, document.createElement('div'));
+                    outerDiv.className = 'checkbox-container';
+                    var elements = [];
+                    if (this.options.sort) elements = elements.concat([this.dropdownFilterSort(this.options.captions.a_to_z), this.dropdownFilterSort(this.options.captions.z_to_a)]);
+                    if (this.options.search) elements.push(searchFilterDiv);
+                    return elements.concat(outerDiv).reduce(function (html, el) {
+                        html.appendChild(el);
+                        return html;
+                    }, dropdownFilterContent);
+                };
+                FilterMenu.prototype.dropdownFilterDropdown = function () {
+                    var dropdownFilterDropdown = document.createElement('div');
+                    dropdownFilterDropdown.className = 'dropdown-filter-dropdown';
+                    var arrow = document.createElement('span');
+                    arrow.className = 'glyphicon glyphicon-arrow-down dropdown-filter-icon';
+                    var icon = document.createElement('i');
+                    icon.className = 'arrow-down';
+                    arrow.appendChild(icon);
+                    dropdownFilterDropdown.appendChild(arrow);
+                    dropdownFilterDropdown.appendChild(this.dropdownFilterContent());
+                    if ($(this.th).hasClass('no-sort')) {
+                        $(dropdownFilterDropdown).find('.dropdown-filter-sort').remove();
+                    }
+                    if ($(this.th).hasClass('no-filter')) {
+                        $(dropdownFilterDropdown).find('.checkbox-container').remove();
+                    }
+                    if ($(this.th).hasClass('no-search')) {
+                        $(dropdownFilterDropdown).find('.dropdown-filter-search').remove();
+                    }
+                    return dropdownFilterDropdown;
+                };
+                return FilterMenu;
+            }();
+            
+            var FilterCollection = function () {
+                function FilterCollection(target, options) {
+                    this.target = target;
+                    this.options = options;
+                    this.ths = target.find('th' + options.columnSelector).toArray();
+                    this.filterMenus = this.ths.map(function (th, index) {
+                        var column = $(th).index();
+                        return new FilterMenu(target, th, column, index, options);
+                    });
+                    this.rows = target.find('tbody').find('tr').toArray();
+                    this.table = target.get(0);
+                }
+                FilterCollection.prototype.initialize = function () {
+                    this.filterMenus.forEach(function (filterMenu) {
+                        filterMenu.initialize();
+                    });
+                    this.bindCheckboxes();
+                    this.bindSelectAllCheckboxes();
+                    this.bindSort();
+                    this.bindSearch();
+                };
+                FilterCollection.prototype.bindCheckboxes = function () {
+                    var filterMenus = this.filterMenus;
+                    var rows = this.rows;
+                    var ths = this.ths;
+                    var updateRowVisibility = this.updateRowVisibility;
+                    this.target.find('.dropdown-filter-menu-item.item').change(function () {
+                        var index = $(this).data('index');
+                        var value = $(this).val();
+                        filterMenus[index].updateSelectAll();
+                        updateRowVisibility(filterMenus, rows, ths);
+                    });
+                };
+                FilterCollection.prototype.bindSelectAllCheckboxes = function () {
+                    var filterMenus = this.filterMenus;
+                    var rows = this.rows;
+                    var ths = this.ths;
+                    var updateRowVisibility = this.updateRowVisibility;
+                    this.target.find('.dropdown-filter-menu-item.select-all').change(function () {
+                        var index = $(this).data('index');
+                        var value = this.checked;
+                        filterMenus[index].selectAllUpdate(value);
+                        updateRowVisibility(filterMenus, rows, ths);
+                    });
+                };
+                FilterCollection.prototype.bindSort = function () {
+                    var filterMenus = this.filterMenus;
+                    var rows = this.rows;
+                    var ths = this.ths;
+                    var sort = this.sort;
+                    var table = this.table;
+                    var options = this.options;
+                    var updateRowVisibility = this.updateRowVisibility;
+                    this.target.find('.dropdown-filter-sort').click(function () {
+                        var $sortElement = $(this).find('span');
+                        var column = $sortElement.data('column');
+                        var order = $sortElement.attr('class');
+                        sort(column, order, table, options);
+                        updateRowVisibility(filterMenus, rows, ths);
+                    });
+                };
+                FilterCollection.prototype.bindSearch = function () {
+                    var filterMenus = this.filterMenus;
+                    var rows = this.rows;
+                    var ths = this.ths;
+                    var updateRowVisibility = this.updateRowVisibility;
+                    this.target.find('.dropdown-filter-search').keyup(function () {
+                        var $input = $(this).find('input');
+                        var index = $input.data('index');
+                        var value = $input.val();
+                        filterMenus[index].searchToggle(value);
+                        updateRowVisibility(filterMenus, rows, ths);
+                    });
+                };
+                FilterCollection.prototype.updateRowVisibility = function (filterMenus, rows, ths) {
+                    var showRows = rows;
+                    var hideRows = [];
+                    var selectedLists = filterMenus.map(function (filterMenu) {
+                        return {
+                            column: filterMenu.column,
+                            selected: filterMenu.inputs.filter(function (input) {
+                                return input.checked;
+                            }).map(function (input) {
+                                return input.value.trim().replace(/ +(?= )/g, '');
+                            })
+                        };
+                    });
+                    for (var i = 0; i < rows.length; i++) {
+                        var tds = rows[i].children;
+                        for (var j = 0; j < selectedLists.length; j++) {
+                            var content = tds[selectedLists[j].column].innerText.trim().replace(/ +(?= )/g, '');
+                            if (selectedLists[j].selected.indexOf(content) === -1) {
+                                $(rows[i]).hide();
+                                break;
+                            }
+                            $(rows[i]).show();
+                        }
+                    }
+                };
+                FilterCollection.prototype.sort = function (column, order, table, options) {
+                    var flip = 1;
+                    if (order === options.captions.z_to_a.toLowerCase().split(' ').join('-')) flip = -1;
+                    var tbody = $(table).find('tbody').get(0);
+                    var rows = $(tbody).find('tr').get();
+                    rows.sort(function (a, b) {
+                        var A = a.children[column].innerText.toUpperCase();
+                        var B = b.children[column].innerText.toUpperCase();
+                        if (!isNaN(Number(A)) && !isNaN(Number(B))) {
+                            if (Number(A) < Number(B)) return -1 * flip;
+                            if (Number(A) > Number(B)) return 1 * flip;
+                        } else {
+                            if (A < B) return -1 * flip;
+                            if (A > B) return 1 * flip;
+                        }
+                        return 0;
+                    });
+                    for (var i = 0; i < rows.length; i++) {
+                        tbody.appendChild(rows[i]);
+                    }
+                };
+                return FilterCollection;
+            }();
+            
+            $$1.fn.excelTableFilter = function (options) {
+                var target = this;
+                options = $$1.extend({}, $$1.fn.excelTableFilter.options, options);
+                if (typeof options.columnSelector === 'undefined') options.columnSelector = '';
+                if (typeof options.sort === 'undefined') options.sort = true;
+                if (typeof options.search === 'undefined') options.search = true;
+                if (typeof options.captions === 'undefined') options.captions = {
+                    a_to_z: 'A to Z',
+                    z_to_a: 'Z to A',
+                    search: 'Search',
+                    select_all: 'Select All'
+                };
+                var filterCollection = new FilterCollection(target, options);
+                filterCollection.initialize();
+                return target;
+            };
+            $$1.fn.excelTableFilter.options = {};
+            
+            }(jQuery));
+            $(function () {
+                // Apply the plugin 
+                $('#divTable').excelTableFilter();
+                $('table2').excelTableFilter();
+                $('#table3').excelTableFilter();
+              });
+    </script>
 {% endblock content %}

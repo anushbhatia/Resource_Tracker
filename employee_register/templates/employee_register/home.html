@@ -2,6 +2,11 @@
 {% extends 'employee_register/base.html' %}
 {% load static %}
 {% block content %}
+  <style>
+  #homeActive {
+    color: #49b5e7;
+  }
+  </style>
   <!-- ======= Hero Section ======= -->
   <section id="hero" class="d-flex align-items-center">
 
@@ -10,7 +15,7 @@
         <div class="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 d-flex flex-column justify-content-center">
           <h1>Websites that Help you track resources</h1>
           <h2>You can easily add and track resource profiles. </h2>
-          <div><a href="show/" class="btn-get-started scrollto">Track</a></div>
+          <div><a href="../show/" class="btn-get-started scrollto">Track</a></div>
         </div>
         <div class="col-lg-6 order-1 order-lg-2 hero-img">
           <img src="{% static 'baseAsset/img/hero-img.png' %}" class="img-fluid" alt="">
@@ -58,5 +63,6 @@
       </div>
     </section><!-- End Counts Section -->
 
-  </main><!-- End #main -->
+  </main>
+  <!-- End #main -->
 {% endblock content %}

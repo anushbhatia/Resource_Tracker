@@ -2,6 +2,7 @@ from django.db import models
 # Create your models here.
 class Position(models.Model):
    title = models.CharField(max_length=50)
+   
 class Employee(models.Model):
     emp_code = models.CharField(max_length=100)
     fullname = models.CharField(max_length=100)
