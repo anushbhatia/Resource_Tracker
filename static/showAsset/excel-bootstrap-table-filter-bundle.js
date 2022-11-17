@@ -1,4 +1,3 @@
- console.log('Hello');
 (function ($$1) {
 'use strict';
 
