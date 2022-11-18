@@ -27,7 +27,12 @@ def insert_emp(request,template_name="employee_register\employee_list.html"):
 
 #Home page view
 def home(request): 
-  return render(request, "employee_register\home.html")
+  employees = Employee.objects.all()
+  profileCount = 0
+  for employee in employees:
+    profileCount = profileCount+1
+  
+  return render(request, "employee_register\home.html",{'profileCount':profileCount})
 
 def show_emp(request):  
   employees = Employee.objects.all()
@@ -79,7 +84,8 @@ def profile_upload(request):
       context = {}
       return render(request, template, context)
 
-       
+def login_emp(request):
+   return render(request, "employee_register\login.html")
       
 
 
