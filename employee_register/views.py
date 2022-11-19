@@ -38,11 +38,35 @@ def show_emp(request):
   employees = Employee.objects.all()
   return render(request, "employee_register\data-table.html",{'employees':employees} )
 
-def edit_emp(request):  
-  return render(request, "employee_register\employee_list.html")
+def edit_emp(request,emp_code):  
+  employee = Employee.objects.get(emp_code=emp_code)
+  if request.method == 'POST':
+    employee.emp_code= request.POST['emp_code']       
+    employee.fullname = request.POST['fullname']       
+    employee.email = request.POST['email']       
+    employee.primary = request.POST['primary']       
+    employee.secondary= request.POST['secondary'] 
+    employee.location= request.POST['location']
+    employee.remarks=request.POST['remarks']
+    employee.status=request.POST['status']
+    employee.designation=request.POST['designation']
+    employee.benchmng=request.POST['benchmng'] 
+    employee.save() 
+    return redirect('/show')
+
+  return render(request,'employee_register\edit.html',{'employees':employee})
   
-def remove_emp(request):
-  return render(request, "employee_register\employee_list.html")
+def remove_emp(request,emp_code):
+  employees = Employee.objects.get(emp_code=emp_code)
+  if request.method == 'POST':
+      employees.delete()
+      return redirect('/show')
+
+  context = {
+        'employees': employees,
+  }
+
+  return render(request, 'employee_register\delete.html', context)
 
 
 # Create your views here.
@@ -86,6 +110,8 @@ def profile_upload(request):
 
 def login_emp(request):
    return render(request, "employee_register\login.html")
+
+
       
 
 

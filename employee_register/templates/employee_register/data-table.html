@@ -303,8 +303,8 @@
                             {{employee.benchmng}}
                         </td>
                         <td>
-                            <a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                            <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+                            <a href="/edit/{{employee.emp_code}}" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                            <a href="/remove/{{employee.emp_code}}" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
                         </td>
                     </tr>
                 {% endfor %}

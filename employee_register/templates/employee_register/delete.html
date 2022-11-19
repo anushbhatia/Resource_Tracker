@@ -1,0 +1,21 @@
+{% extends 'employee_register/base.html' %}
+{% block content %}
+<div class="content">
+<form action="" method="POST">
+    {% csrf_token %}
+
+    <br><br>
+    <div class="alert alert-danger" role="alert">
+        Are you sure you want to delete "{{ employees.fullname}}"?
+    </div>
+
+    <p>
+        <a href="{% url 'show-emp' %}"><-- Return</a>
+    </p>
+
+    <p>
+        <input class="btn btn-danger" type="submit" value="Confirm">
+    </p>
+</form>
+</div>
+{% endblock content %}
