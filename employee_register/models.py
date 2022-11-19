@@ -1,7 +1,12 @@
 from django.db import models
+from datetime import date
 # Create your models here.
-class Position(models.Model):
-   title = models.CharField(max_length=50)
+
+class EmpStatus(models.Model):
+    status=models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.status
    
 class Employee(models.Model):
     emp_code = models.CharField(max_length=100)
@@ -10,9 +15,9 @@ class Employee(models.Model):
     primary=models.CharField(max_length=100)
     secondary=models.CharField(max_length=100)
     location=models.CharField(max_length=100)
-    date=models.CharField(max_length=100)
+    date=models.DateField(default=date.today)
     remarks=models.CharField(max_length=100)
-    status=models.CharField(max_length=100)
+    status=models.ForeignKey(EmpStatus,on_delete=models.RESTRICT)
     designation=models.CharField(max_length=100)
     benchmng=models.CharField(max_length=100)
 class Meta:        

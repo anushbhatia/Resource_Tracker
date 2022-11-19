@@ -1,29 +1,38 @@
 from django.shortcuts import render, redirect
 from .models import Employee
+from .models import EmpStatus
 import csv, io
 from django.contrib import messages
 
-# Create your views here.
+# insert view page for form
 def insert_emp(request,template_name="employee_register\employee_list.html"):  
-  if request.method == "POST":       
-    emp_code= request.POST['emp_code']       
-    fullname = request.POST['fullname']       
-    email = request.POST['email']       
-    primary = request.POST['primary']       
-    secondary= request.POST['secondary'] 
-    location= request.POST['location']
-    date=request.POST['date']
-    remarks=request.POST['remarks']
-    status=request.POST['status']
-    designation=request.POST['designation']
-    benchmng=request.POST['benchmng']  
-    data = Employee(emp_code=emp_code, fullname=fullname, email=email, primary=primary, 
-    secondary= secondary, location=location,date=date,remarks=remarks,status=status,designation=designation,
-    benchmng=benchmng)        
-    data.save()          
-    return redirect('../upload-csv/')    
+  if request.method == "POST":  
+    empId = None
+    try:
+      empId = Employee.objects.get(emp_code=request.POST['emp_code'])
+    except:
+      pass
+    if(empId==None):
+      emp_code= request.POST['emp_code']       
+      fullname = request.POST['fullname']       
+      email = request.POST['email']       
+      primary = request.POST['primary']       
+      secondary= request.POST['secondary'] 
+      location= request.POST['location']
+      #remarks=request.POST['remarks']
+      #status=request.POST['status']
+      designation=request.POST['designation']
+      benchmng=request.POST['benchmng']  
+      data = Employee(emp_code=emp_code, fullname=fullname, email=email, primary=primary, 
+      secondary= secondary, location=location,status_id=1, designation=designation,
+      benchmng=benchmng)        
+      data.save()          
+      return redirect('../upload-csv/')
+    else:
+      
+      return render(request, 'employee_register\profile_upload.html')
   else:        
-      return render(request, 'employee_register\index.html')
+      return render(request, 'employee_register\profile_upload.html')
 
 #Home page view
 def home(request): 
@@ -34,18 +43,21 @@ def home(request):
   
   return render(request, "employee_register\home.html",{'profileCount':profileCount})
 
+#show page view
 def show_emp(request):  
   employees = Employee.objects.all()
   return render(request, "employee_register\data-table.html",{'employees':employees} )
 
+#edit page view
 def edit_emp(request):  
   return render(request, "employee_register\employee_list.html")
   
+#remove page view
 def remove_emp(request):
   return render(request, "employee_register\employee_list.html")
 
 
-# Create your views here.
+# insert page view for csv upload
 # one parameter named request
 def profile_upload(request):
       template = "employee_register\profile_upload.html"
@@ -84,6 +96,7 @@ def profile_upload(request):
       context = {}
       return render(request, template, context)
 
+#Login page view
 def login_emp(request):
    return render(request, "employee_register\login.html")
       
