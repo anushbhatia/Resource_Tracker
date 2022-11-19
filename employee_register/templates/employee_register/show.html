@@ -1,0 +1,60 @@
+{% extends 'employee_register/base.html' %}
+{% block content %}
+<h4>Employee Data</h4>
+<table class="table table-sm">
+<thead >
+    <tr>
+      <th scope="col">EmpCode</th>
+      <th scope="col">Full Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Primary</th>
+      <th scope="col">Secondary</th>
+      <th scope="col">Location</th>
+      <th scope="col">Date</th>
+      <th scope="col">Remarks</th>
+      <th scope="col">Status</th>
+      <th scope="col">Designation</th>
+      <th scope="col">Bench Manager</th>
+    </tr>
+</thead>
+<tbody>
+{% for employee in employees %}
+<tr>
+<td>
+    {{employee.emp_code}}
+</td> 
+<td>
+    {{employee.fullname}}
+</td>
+<td>
+	{{employee.email}}
+</td>
+<td>
+	{{employee.primary}}
+</td>
+<td>
+	{{employee.secondary}}
+</td>
+<td>
+    {{employee.location}}
+</td>
+<td>
+    {{employee.date}}
+</td>
+<td>
+    {{employee.remarks}}
+</td>
+<td>
+    {{employee.status}}
+</td>
+<td>
+    {{employee.designation}}
+</td>
+<td>
+    {{employee.benchmng}}
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{% endblock content %}
