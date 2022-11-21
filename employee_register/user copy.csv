@@ -1,3 +1,3 @@
-Name,Email,Primary Skill,Secondary Skill,Location,Date,Remarks,Status,Designation,Bench Manager
-Sima,simathapa111@gmail.com,Java, Python,Mumbai,20220122,None,Acc,Consultant,Maruthi
-Gita,geeta12@outlook.com,Scala, Python,Mumbai,20220122,None,Acc,Consultant,Maruthi
+Emp_Code,Name,Email,Primary Skill,Secondary Skill,Location,Designation,Bench Manager
+176,Vishal,vishal11@capgemini.com,Java, js,Mumbai,Consultant,Maruthi
+263,Gita D,geeta.d12@outlook.com,SQL, Python,Pune,Consultant,Maruthi

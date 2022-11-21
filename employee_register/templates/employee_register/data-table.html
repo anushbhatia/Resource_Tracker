@@ -362,7 +362,7 @@
                             {{employee.remarks}}
                         </td>
                         <td>
-                            <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{employee.emp_code}}','{{employee.fullname}}','{{employee.email}}','{{employee.primary}}','{{employee.secondary}}','{{employee.location}}','{{employee.status}}','{{employee.remarks}}','{{employee.designation}}','{{employee.benchmng}}')"><i class="material-icons">&#xE254;</i></a>
+                            <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{employee.emp_code}}','{{employee.fullname}}','{{employee.email}}','{{employee.primary}}','{{employee.secondary}}','{{employee.location}}','{{employee.status}}','{{employee.remarks}}','{{employee.designation}}','{{employee.benchmng}}','{{interviewers}}')"><i class="material-icons">&#xE254;</i></a>
                             <a href="/remove/{{employee.emp_code}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete {{employee.fullname}}?')"><i class="material-icons">&#xE872;</i></a>
                             <!-- <button onclick="document.getElementById('id01').style.display='block'">Open Modal</button> -->
                         </td>
@@ -397,12 +397,20 @@
           <label for="status"><b>Status</b></label>
           <select class="form-select" name="status" id="status">
             <option id="opt1" selected></option>
+            <option value="L1 Assigned">L1 Assigned</option>
             <option value="L1 Select">L1 Select</option>
             <option value="L1 Reject">L1 Reject</option>
             <option value="Client Reject">Client Reject</option>
             <option value="Client Select">Client Select</option>
             <option value="Others">Others</option>
           </select>
+          <label for="panel"><b>Panel</b></label>
+          <select class="form-select" name="panel">
+            <option id="opt2"  selected>NA</option>
+            {% for interviewer in interviewers %}
+            <option value="{{interviewer.name}}">hi/option>
+            {% endfor %}
+            </select>
           <label for="remarks"><b>Remarks</b></label>
           <input class = "form-control text-wrap" col="2" rows = "3" type="text" value="remarks" name="remarks" id="remarks">
 
@@ -412,7 +420,7 @@
       </div>
 
   <script>
-        function openForm(id,name,mail,prim,sec,loc,sts,remk,desg,mang) {
+        function openForm(id,name,mail,prim,sec,loc,sts,remk,desg,mang,panelName) {
           document.getElementById("updateForm").style.display = "block";
           document.getElementById("emp_code").value=id;
           document.getElementById("fullname").value=name;
@@ -423,6 +431,9 @@
           var ddl = $("#opt1");
           ddl.empty();
           ddl.append($("<option selected></option>").val(sts).html(sts));
+          var dd2 = $("#opt2");
+          dd2.empty();
+          dd2.append($("<option selected></option>").val(panelName).html(panelName));
           document.getElementById("remarks").value=remk;
           document.getElementById("designation").value=desg;
           document.getElementById("benchmng").value=mang;

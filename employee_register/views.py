@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from .models import Employee
 from .models import Employee, Interviewer
 import csv, io
 from django.contrib import messages
@@ -19,17 +18,27 @@ def insert_emp(request,template_name="employee_register\employee_list.html"):
       primary = request.POST['primary']       
       secondary= request.POST['secondary'] 
       location= request.POST['location']
-      #remarks=request.POST['remarks']
-      #status=request.POST['status']
       designation=request.POST['designation']
       benchmng=request.POST['benchmng']  
       data = Employee(emp_code=emp_code, fullname=fullname, email=email, primary=primary, 
       secondary= secondary, location=location, designation=designation,
       benchmng=benchmng)        
       data.save()          
+      messages.success(request, 'Profile added sucessfully.')
       return redirect('../upload-csv/')
     else:
-      
+      empId= request.POST['emp_code']
+      employee = Employee.objects.get(emp_code=empId)
+
+      employee.fullname = request.POST['fullname']       
+      employee.email = request.POST['email']       
+      employee.primary = request.POST['primary']       
+      employee.secondary= request.POST['secondary'] 
+      employee.location= request.POST['location']
+      employee.designation=request.POST['designation']
+      employee.benchmng=request.POST['benchmng']
+      employee.save() 
+      messages.success(request, 'Profile updated sucessfully.')
       return render(request, 'employee_register\profile_upload.html')
   else:        
       return render(request, 'employee_register\profile_upload.html')
@@ -46,7 +55,8 @@ def home(request):
 #show page view
 def show_emp(request):  
   employees = Employee.objects.all()
-  return render(request, "employee_register\data-table.html",{'employees':employees} )
+  interviewers = Interviewer.objects.values('name')
+  return render(request, "employee_register\data-table.html",{'employees':employees,'interviwers':interviewers} )
 
 #edit page view
 def edit_emp(request,emp_code): 
@@ -66,6 +76,7 @@ def edit_emp(request,emp_code):
     employee.designation=request.POST['designation']
     employee.benchmng=request.POST['benchmng']
     employee.save() 
+    messages.success(request, 'Profile updated sucessfully.')
     return redirect('/show')
 
   return render(request,'employee_register\edit.html',{'employees':employee,'interviewers':interviewers})
@@ -73,6 +84,10 @@ def edit_emp(request,emp_code):
 #remove page view
 def remove_emp(request,emp_code):
   employees = Employee.objects.get(emp_code=emp_code)
+  employees.delete()
+  messages.success(request, 'Profile deleted sucessfully.')
+  return redirect('/show')
+  '''#if we use post contidition using form popup
   if request.method == 'POST':
       employees.delete()
       return redirect('/show')
@@ -83,6 +98,7 @@ def remove_emp(request,emp_code):
   }
   
   return render(request, 'employee_register\delete.html', context)
+  '''
 
 
 # insert page view for csv upload
@@ -92,7 +108,7 @@ def profile_upload(request):
       data = Employee.objects.all()
       # prompt is a context variable that can have different values depending on their context
       prompt = {
-          'order': 'Order of the CSV should be name, email, address, phone, profile',
+          'order': 'Order of the CSV should be:- Id, Name, Email, Primary skill, Secondary skill, Location, Designation, Bench manager',
           'profiles': data    
                 }
       # GET request returns the value of the data with the specified key.
@@ -115,13 +131,11 @@ def profile_upload(request):
         primary = column[3],       
         secondary= column[4],
         location= column[5],
-        date= column[6],
-        remarks=column[7],
-        designation=column[8],
-        benchmng=column[9] ,
-        status="Not Assigned"
+        designation=column[6],
+        benchmng=column[7],
         )
       context = {}
+      messages.success(request, 'Profiles from csv added sucessfully.')
       return render(request, template, context)
 
 #Login page view
