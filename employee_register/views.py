@@ -56,7 +56,7 @@ def home(request):
 def show_emp(request):  
   employees = Employee.objects.all()
   interviewers = Interviewer.objects.values('name')
-  return render(request, "employee_register\data-table.html",{'employees':employees,'interviwers':interviewers} )
+  return render(request, "employee_register\data-table.html",{'employees':employees,'interveiwers':interviewers} )
 
 #edit page view
 def edit_emp(request,emp_code): 

@@ -362,7 +362,7 @@
                             {{employee.remarks}}
                         </td>
                         <td>
-                            <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{employee.emp_code}}','{{employee.fullname}}','{{employee.email}}','{{employee.primary}}','{{employee.secondary}}','{{employee.location}}','{{employee.status}}','{{employee.remarks}}','{{employee.designation}}','{{employee.benchmng}}','{{interviewers}}')"><i class="material-icons">&#xE254;</i></a>
+                            <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{employee.emp_code}}','{{employee.fullname}}','{{employee.email}}','{{employee.primary}}','{{employee.secondary}}','{{employee.location}}','{{employee.status}}','{{employee.remarks}}','{{employee.designation}}','{{employee.benchmng}}','{{employee.panel}}')"><i class="material-icons">&#xE254;</i></a>
                             <a href="/remove/{{employee.emp_code}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete {{employee.fullname}}?')"><i class="material-icons">&#xE872;</i></a>
                             <!-- <button onclick="document.getElementById('id01').style.display='block'">Open Modal</button> -->
                         </td>
@@ -406,9 +406,9 @@
           </select>
           <label for="panel"><b>Panel</b></label>
           <select class="form-select" name="panel">
-            <option id="opt2"  selected>NA</option>
-            {% for interviewer in interviewers %}
-            <option value="{{interviewer.name}}">hi/option>
+            <option id="opt2"  selected></option>
+            {% for interviewer in interveiwers %}
+            <option value="{{interviewer.name}}">{{interviewer.name}}</option>
             {% endfor %}
             </select>
           <label for="remarks"><b>Remarks</b></label>
