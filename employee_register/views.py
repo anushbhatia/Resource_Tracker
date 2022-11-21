@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Employee
-from .models import EmpStatus
+from .models import Employee, Interviewer
 import csv, io
 from django.contrib import messages
 
@@ -24,7 +23,7 @@ def insert_emp(request,template_name="employee_register\employee_list.html"):
       designation=request.POST['designation']
       benchmng=request.POST['benchmng']  
       data = Employee(emp_code=emp_code, fullname=fullname, email=email, primary=primary, 
-      secondary= secondary, location=location,status_id=1, designation=designation,
+      secondary= secondary, location=location, designation=designation,
       benchmng=benchmng)        
       data.save()          
       return redirect('../upload-csv/')
@@ -51,6 +50,7 @@ def show_emp(request):
 #edit page view
 def edit_emp(request,emp_code):  
   employee = Employee.objects.get(emp_code=emp_code)
+  interviewers = Interviewer.objects.values('name')
   if request.method == 'POST':
     employee.emp_code= request.POST['emp_code']       
     employee.fullname = request.POST['fullname']       
@@ -60,12 +60,13 @@ def edit_emp(request,emp_code):
     employee.location= request.POST['location']
     employee.remarks=request.POST['remarks']
     employee.status=request.POST['status']
+    employee.panel=request.POST['panel']
     employee.designation=request.POST['designation']
-    employee.benchmng=request.POST['benchmng'] 
+    employee.benchmng=request.POST['benchmng']
     employee.save() 
     return redirect('/show')
 
-  return render(request,'employee_register\edit.html',{'employees':employee})
+  return render(request,'employee_register\edit.html',{'employees':employee,'interviewers':interviewers})
   
 #remove page view
 def remove_emp(request,emp_code):
@@ -76,8 +77,9 @@ def remove_emp(request,emp_code):
 
   context = {
         'employees': employees,
+        'interviewers':interviewers
   }
-
+  
   return render(request, 'employee_register\delete.html', context)
 
 

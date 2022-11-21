@@ -34,6 +34,7 @@
                 <td>Status</td>
                 <td><select class="form-select" name="status">
                     <option value="" selected></option>
+                    <option value="L1 Assigned">L1 Assigned</option>
                     <option value="L1 Select">L1 Select</option>
                     <option value="L1 Reject">L1 Reject</option>
                     <option value="Client Reject">Client Reject</option>
@@ -44,6 +45,17 @@
             <tr>
                 <td>Remarks</td>
                 <td><input class = "form-control text-wrap" col="2" rows = "3" type="text" value="{{ employees.remarks}}" name="remarks"></td>
+            </tr>
+            <tr>
+                <td>Panel</td>
+                <td>
+                    <select class="form-select" name="panel">
+                        <option value="NA" selected>NA</option>
+                        {% for interviewer in interviewers %}
+                        <option value="{{interviewer.name}}">{{interviewer.name}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
             </tr>
             <tr>
                 <td>Designation</td>
