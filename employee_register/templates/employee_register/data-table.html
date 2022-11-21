@@ -222,6 +222,60 @@
             margin-top: 10px;
             font-size: 13px;
         }
+        /* The popup form - hidden by default */
+        .form-popup {
+            display: none;
+            position:fixed;
+            top:100px;
+            bottom: 0;
+            right: 15px;
+            border: 3px solid #f1f1f1;
+            z-index: 9;
+            overflow-y:auto;
+          }
+        /* Add styles to the form container */
+        .form-container {
+            max-width: 400px;
+            padding: 10px;
+            background-color: white;
+        }
+        
+        /* Full-width input fields */
+        .form-container input[type=text], .form-container select {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            border: none;
+            background: #f1f1f1;
+        }
+        
+        /* When the inputs get focus, do something */
+        .form-container input[type=text]:focus, .form-container select:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+        
+        /* Set a style for the submit/login button */
+        .form-container .btn {
+            background-color: #04AA6D;
+            color: white;
+            padding: 16px 20px;
+            border: none;
+            cursor: pointer;
+            width: 40%;
+            margin-bottom:10px;
+            opacity: 0.8;
+        }
+        
+        /* Add a red background color to the cancel button */
+        .form-container .cancel {
+            background-color: red;
+        }
+        
+        /* Add some hover effects to buttons */
+        .form-container .btn:hover, .open-button:hover {
+            opacity: 1;
+        }
     </style>
 
         
@@ -233,6 +287,7 @@
                 </div>
             <div class="table-filter">
                 <input type="text" id="myInput" onkeyup="myFunction()" class="form-control" placeholder="What you looking for?">
+                
                 <span class="counter pull-right"></span>
                         <script>
                             $(document).ready(function () {
@@ -249,7 +304,7 @@
             data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
                 <thead>
                     <tr>
-                        <th data-field="state" data-checkbox="true">#</th>
+                        <th data-field="state" data-checkbox="true" >#</th>
                         <th data-field="date" data-editable="true">Date</th>
                         <th data-field="id">ID</th>
                         <th data-field="name" data-editable="true">Name</th>
@@ -303,8 +358,9 @@
                             {{employee.remarks}}
                         </td>
                         <td>
-                            <a href="/edit/{{employee.emp_code}}" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                            <a href="/remove/{{employee.emp_code}}" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+                            <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{employee.emp_code}}','{{employee.fullname}}','{{employee.email}}','{{employee.primary}}','{{employee.secondary}}','{{employee.location}}','{{employee.status}}','{{employee.remarks}}','{{employee.designation}}','{{employee.benchmng}}')"><i class="material-icons">&#xE254;</i></a>
+                            <a href="/remove/{{employee.emp_code}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete {{employee.fullname}}?')"><i class="material-icons">&#xE872;</i></a>
+                            <!-- <button onclick="document.getElementById('id01').style.display='block'">Open Modal</button> -->
                         </td>
                     </tr>
                 {% endfor %}
@@ -312,8 +368,66 @@
             </table>
         </div>
     </div>   
+    <div class="form-popup" id="updateForm" name="update_Form">
+        <form id="formUpdate" class="form-container" method="POST">
+            {% csrf_token %}
+          <h5>Update Details of Employee <span onclick=closeForm() class="close" title="Close Modal" style="color:red; text-align:end">×</span></h5>
+
+          <label for="emp_code"><b>ID</b></label>
+          <!--Disabled for input-->
+          <input type="text" value="emp_code" id="emp_code" name="emp_code" disabled>
+          <label for="fullname"><b>Name</b></label>
+          <input type="text" value="fullname" name="fullname" id="fullname">
+          <label for="email"><b>Email</b></label>
+          <input type="text" value="email" name="email" id="email">
+          <label for="location"><b>Location</b></label>
+          <input type="text" value="location" name="location" id="location" >
+          <label for="designation"><b>Designation</b></label>
+          <input type="text" value="designation" name="designation" id="designation">
+          <label for="benchmng"><b>Bench Manager</b></label>
+          <input type="text" value="benchmng" name="benchmng" id="benchmng">
+          <label for="primary"><b>Primary Skill</b></label>
+          <input type="text" value="primary" name="primary" id="primary">
+          <label for="secondary"><b>Secondary Skill</b></label>
+          <input type="text" value="secondary" name="secondary" id="secondary">
+          <label for="status"><b>Status</b></label>
+          <select class="form-select" name="status" id="status">
+            <option id="opt1" selected></option>
+            <option value="L1 Select">L1 Select</option>
+            <option value="L1 Reject">L1 Reject</option>
+            <option value="Client Reject">Client Reject</option>
+            <option value="Client Select">Client Select</option>
+            <option value="Others">Others</option>
+          </select>
+          <label for="remarks"><b>Remarks</b></label>
+          <input class = "form-control text-wrap" col="2" rows = "3" type="text" value="remarks" name="remarks" id="remarks">
+
+          <button type="submit" class="btn">Update</button>
+          <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+        </form>
+      </div>
 
   <script>
+        function openForm(id,name,mail,prim,sec,loc,sts,remk,desg,mang) {
+          document.getElementById("updateForm").style.display = "block";
+          document.getElementById("emp_code").value=id;
+          document.getElementById("fullname").value=name;
+          document.getElementById("email").value=mail;
+          document.getElementById("primary").value=prim;
+          document.getElementById("secondary").value=sec;
+          document.getElementById("location").value=loc;
+          var ddl = $("#opt1");
+          ddl.empty();
+          ddl.append($("<option selected></option>").val(sts).html(sts));
+          document.getElementById("remarks").value=remk;
+          document.getElementById("designation").value=desg;
+          document.getElementById("benchmng").value=mang;
+          document.getElementById("formUpdate").action = "../edit/"+ id;
+        }
+        
+        function closeForm() {
+          document.getElementById("updateForm").style.display = "none";
+        }
     // Use the plugin once the DOM has been loaded.
     $(function () {
       // Apply the plugin 
@@ -321,4 +435,4 @@
     });
   </script>
 
-  {% endblock content %}
+{% endblock content %}

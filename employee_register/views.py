@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from .models import Employee
-from .models import EmpStatus
 import csv, io
 from django.contrib import messages
 
@@ -24,7 +23,7 @@ def insert_emp(request,template_name="employee_register\employee_list.html"):
       designation=request.POST['designation']
       benchmng=request.POST['benchmng']  
       data = Employee(emp_code=emp_code, fullname=fullname, email=email, primary=primary, 
-      secondary= secondary, location=location,status_id=1, designation=designation,
+      secondary= secondary, location=location,status="Not Assigned", designation=designation,
       benchmng=benchmng)        
       data.save()          
       return redirect('../upload-csv/')
@@ -49,10 +48,12 @@ def show_emp(request):
   return render(request, "employee_register\data-table.html",{'employees':employees} )
 
 #edit page view
-def edit_emp(request,emp_code):  
+def edit_emp(request,emp_code): 
+  print('hi') 
   employee = Employee.objects.get(emp_code=emp_code)
+  print(employee)
   if request.method == 'POST':
-    employee.emp_code= request.POST['emp_code']       
+    #employee.emp_code= request.POST['emp_code']       
     employee.fullname = request.POST['fullname']       
     employee.email = request.POST['email']       
     employee.primary = request.POST['primary']       
@@ -113,9 +114,9 @@ def profile_upload(request):
         location= column[5],
         date= column[6],
         remarks=column[7],
-        status=column[8],
-        designation=column[9],
-        benchmng=column[10] 
+        designation=column[8],
+        benchmng=column[9] ,
+        status="Not Assigned"
         )
       context = {}
       return render(request, template, context)
