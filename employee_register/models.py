@@ -22,11 +22,13 @@ class Employee(models.Model):
 class Meta:        
     db_table="Employee"
 
-# Forward ForeignKey relationship
-#Employee.objects.select_related('status').all()
- 
-# Reverse ForeignKey relationship
-#EmpStatus.objects.prefetch_related('Employee').all()
+class Requirement(models.Model):
+    requestor=models.CharField(max_length=100)
+    primary=models.CharField(max_length=100)
+    secondary=models.CharField(max_length=100)
+    location=models.CharField(max_length=100)
+    grade=models.CharField(max_length=10)
+    reqCount=models.SmallIntegerField()
 '''
 KID/User ID
 Name

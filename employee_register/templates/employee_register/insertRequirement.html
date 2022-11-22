@@ -1,0 +1,64 @@
+{% extends 'employee_register/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+  #RequirementActive {
+    color: #49b5e7;
+    
+  }
+  </style>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+
+    <div class="content">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-md-1 text-center">
+            </div>
+            <div class="col-md-5 contents">
+              <div class="form-block">
+              <div class="mb-4">
+                    <h3>Add <strong>Requirement</strong></h3>
+                  </div>
+                  <form action="#" method="post">
+                    {% csrf_token %}
+                      <div class="form-group first" >
+                        <label for="requestor">Requestor name</label>
+                        <input type="text" class="form-control" id="requestor" name="requestor" required>
+                      </div>
+                      <div class="form-group first">
+                        <label for="primary">Primary Skill</label>
+                        <input type="text" class="form-control" id="primary" name="primary">
+                      </div>
+                      <div class="form-group first">
+                        <label for="secondary">Secondary Skill</label>
+                        <input type="text" class="form-control" id="secondary" name="secondary">
+                      </div>
+                      <div class="form-group first">
+                        <label for="location">location</label>
+                        <input type="text" class="form-control" id="location" name="location">
+                      </div>
+                      <div class="form-group first">
+                        <label for="grade">Grade</label>
+                        <input type="text" class="form-control" id="grade" name="grade">
+                      </div>
+                      <div class="form-group first">
+                        <label for="reqCount">Requirement Count</label>
+                        <input type="text" class="form-control" id="reqCount" name="reqCount">
+                      </div>
+                      <input type="submit" value="Submit" class="btn btn-pill text-white btn-block btn-primary">
+                  </form>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+              <span class="d-block text-center my-4 text-muted"></span>
+              <div class="social-login text-center">
+                    <img src="{% static 'insertAsset/img/use-laptop.jpg' %}" alt="Image" class="img-fluid">
+              </div>
+  
+            </div>
+          </div>
+        </div>
+      </div>
+      
+{% endblock content %}
