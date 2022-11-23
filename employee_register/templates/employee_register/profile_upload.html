@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 <style>
-  #insertActive {
+  #insertActive, #insertEmpActive {
     color: #49b5e7;
     
   }
@@ -14,7 +14,6 @@
           <div class="alert alert-success" role="alert" style="left:10px; width:fit-content">
             {% for message in messages %}
               {{message}}
-              {{warningMsg}}
             {% endfor %}
           </div>
       {% endif %}

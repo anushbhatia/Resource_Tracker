@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
-from .models import Employee, Interviewer
+from .models import Employee, Interviewer, Requirement
 import csv, io
 from django.contrib import messages
 
 # insert view page for form
-def insert_emp(request,template_name="employee_register\employee_list.html"):  
+def insert_emp(request,template_name="employee_register/employee_list.html"):  
   if request.method == "POST":  
     empId = None
     try:
@@ -25,7 +25,7 @@ def insert_emp(request,template_name="employee_register\employee_list.html"):
       benchmng=benchmng)        
       data.save()          
       messages.success(request, 'Profile added sucessfully.')
-      return redirect('employee_register/upload-csv/')
+      return redirect('../upload-csv/')
     else:
       empId= request.POST['emp_code']
       employee = Employee.objects.get(emp_code=empId)
@@ -39,24 +39,34 @@ def insert_emp(request,template_name="employee_register\employee_list.html"):
       employee.benchmng=request.POST['benchmng']
       employee.save() 
       messages.success(request, 'Profile updated sucessfully.')
-      return render(request, 'employee_register\profile_upload.html')
-  else:        
-      return render(request, 'employee_register\profile_upload.html')
+      return render(request, 'employee_register/profile_upload.html')
+  else:   
+    messages.add_message(request=None, message='',level='1')
+    return render(request, 'employee_register/profile_upload.html')
 
 #Home page view
 def home(request): 
   employees = Employee.objects.all()
   profileCount = 0
+  deployedCount = 0
+  progessCount = 0
+  rejectCount = 0
   for employee in employees:
     profileCount = profileCount+1
-  
-  return render(request, "employee_register/home.html",{'profileCount':profileCount})
+    if(employee.status=='Client Select'):
+      deployedCount=deployedCount+1
+    elif(employee.status=='NA' or employee.status=='L1 Assigned' or employee.status=='L1 Select'):
+      progessCount=progessCount+1
+    elif(employee.status=='L1 Reject' or employee.status=='Client Reject' or employee.status=='Others'):
+      rejectCount=rejectCount+1
+
+  return render(request, "employee_register/home.html",{'profileCount':profileCount,'deployedCount':deployedCount,'progessCount':progessCount,'rejectCount':rejectCount})
 
 #show page view
 def show_emp(request):  
   employees = Employee.objects.all()
   interviewers = Interviewer.objects.values('name')
-  return render(request, "employee_register/data-table.html",{'employees':employees,'interveiwers':interviewers} )
+  return render(request, "employee_register/showEmp.html",{'employees':employees,'interveiwers':interviewers} )
 
 #edit page view
 def edit_emp(request,emp_code): 
@@ -78,8 +88,9 @@ def edit_emp(request,emp_code):
     employee.save() 
     messages.success(request, 'Profile updated sucessfully.')
     return redirect('/show')
-
-  return render(request,'employee_register\edit.html',{'employees':employee,'interviewers':interviewers})
+  else:
+    messages.add_message(request=None, message='')
+    return render(request,'employee_register/edit.html' ''',{'employees':employee,'interviewers':interviewers}''')
   
 #remove page view
 def remove_emp(request,emp_code):
@@ -97,20 +108,19 @@ def remove_emp(request,emp_code):
         'interviewers':interviewers
   }
   
-  return render(request, 'employee_register\delete.html', context)
+  return render(request, 'employee_register/delete.html', context)
   '''
 
 
 # insert page view for csv upload
 # one parameter named request
 def profile_upload(request):
-      template = "employee_register\profile_upload.html"
+      template = "employee_register/profile_upload.html"
       data = Employee.objects.all()
       # prompt is a context variable that can have different values depending on their context
       prompt = {
           'order': 'Order of the CSV should be:- Id, Name, Email, Primary skill, Secondary skill, Location, Designation, Bench manager',
           'profiles': data   
-           
                 }
       # GET request returns the value of the data with the specified key.
       if request.method == "GET":
@@ -123,7 +133,7 @@ def profile_upload(request):
           'warningMsg': 'THIS IS NOT A CSV FILE',
           'profiles': data 
                 }
-          return redirect('employee_register/upload-csv/')
+          return redirect('../upload-csv/')
       data_set = csv_file.read().decode('UTF-8')
       # setup a stream which is when we loop through each line we are able to handle a data in a stream
       io_string = io.StringIO(data_set)
@@ -143,28 +153,21 @@ def profile_upload(request):
       messages.success(request, 'Profiles from csv added sucessfully.')
       return render(request, template, context)
 
-#Login page view
-def login_emp(request):
-   return render(request, "employee_register\login.html")
-
 def insert_requirement(request):
-  # if request.method == "POST":  
-  #     emp_code= request.POST['emp_code']       
-  #     fullname = request.POST['fullname']       
-  #     email = request.POST['email']       
-  #     primary = request.POST['primary']       
-  #     secondary= request.POST['secondary'] 
-  #     location= request.POST['location']
-  #     designation=request.POST['designation']
-  #     benchmng=request.POST['benchmng']  
-  #     data = Employee(emp_code=emp_code, fullname=fullname, email=email, primary=primary, 
-  #     secondary= secondary, location=location, designation=designation,
-  #     benchmng=benchmng)        
-  #     data.save()          
-  #     messages.success(request, 'Profile added sucessfully.')
-  #     return redirect('employee_register/insertRequirement.html')
-  # else:        
-      return render(request, "employee_register/insertRequirement.html")
+  if request.method == "POST":  
+      requestor= request.POST['requestor']       
+      primary = request.POST['primary']       
+      secondary = request.POST['secondary']       
+      location = request.POST['location']       
+      grade= request.POST['grade'] 
+      reqCount= request.POST['reqCount'] 
+      reqData = Requirement(requestor=requestor,primary=primary,secondary=secondary,location=location,grade=grade,reqCount=reqCount)      
+      reqData.save()          
+      messages.success(request, 'requirement added sucessfully.')
+      return redirect('../insertRequirement/')
+  else:   
+    messages.add_message(request=None, message='')
+    return render(request, "employee_register/insertRequirement.html")
       
 
 

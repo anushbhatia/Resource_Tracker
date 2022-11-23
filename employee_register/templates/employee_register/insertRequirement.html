@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 <style>
-  #RequirementActive {
+  #insertActive, #insertReqActive {
     color: #49b5e7;
     
   }
@@ -10,6 +10,13 @@
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
 
     <div class="content">
+      {% if messages %}
+          <div class="alert alert-success" role="alert" style="left:10px; width:fit-content">
+            {% for message in messages %}
+              {{message}}
+            {% endfor %}
+          </div>
+      {% endif %}
         <div class="container">
           <div class="row align-items-center">
             <div class="col-md-1 text-center">
@@ -19,7 +26,7 @@
               <div class="mb-4">
                     <h3>Add <strong>Requirement</strong></h3>
                   </div>
-                  <form action="#" method="post">
+                  <form action="../insertRequirement/" method="post">
                     {% csrf_token %}
                       <div class="form-group first" >
                         <label for="requestor">Requestor name</label>

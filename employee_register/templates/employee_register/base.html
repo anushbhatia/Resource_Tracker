@@ -19,7 +19,7 @@
     <!-- Template Main CSS File============================================ -->
     <link href="{% static 'baseAsset/css/style.css' %}" rel="stylesheet">
     <!-- Google Fonts============================================ -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet"> -->
     <link rel="stylesheet" href="{% static 'insertAsset/fonts/icomoon/style.css' %}">
     <link rel="stylesheet" href="{% static 'insertAsset/css/owl.carousel.min.css' %}">
     <!-- Bootstrap CSS ============================================-->
@@ -45,8 +45,12 @@
       <nav id="navbar" class="navbar">
         <ul>
           <li><a class="nav-link scrollto" id="homeActive" href="../">Home</a></li>
-          <li><a class="nav-link scrollto" id="RequirementActive" href="../insertRequirement/">Insert Requirement</a></li>
-          <li><a class="nav-link scrollto" id="insertActive" href="../upload-csv/">Insert Employee</a></li>
+          <li class="dropdown"><a href="#" id="insertActive"><span>Insert</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a class="nav-link scrollto" id="insertReqActive" href="../insertRequirement/">Insert Requirement</a></li>
+              <li><a class="nav-link scrollto" id="insertEmpActive" href="../upload-csv/">Insert Employee</a></li>
+            </ul>
+          </li>
           <li><a class="nav-link scrollto " id="showActive" href="../show/">Show Employee</a></li>
           <!--<li><a class="nav-link scrollto" href="#">Team</a></li>-->
           <li class="dropdown"><a href="#"><span>User name</span> <i class="bi bi-chevron-down"></i></a>
