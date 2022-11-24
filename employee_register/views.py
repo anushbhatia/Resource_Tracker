@@ -41,7 +41,9 @@ def insert_emp(request,template_name="employee_register/employee_list.html"):
       messages.success(request, 'Profile updated sucessfully.')
       return render(request, 'employee_register/profile_upload.html')
   else:   
-    messages.add_message(request=None, message='',level='1')
+    storage = messages.get_messages(request)
+    for _ in storage: 
+        pass
     return render(request, 'employee_register/profile_upload.html')
 
 #Home page view
@@ -89,7 +91,9 @@ def edit_emp(request,emp_code):
     messages.success(request, 'Profile updated sucessfully.')
     return redirect('/show')
   else:
-    messages.add_message(request=None, message='')
+    storage = messages.get_messages(request)
+    for _ in storage: 
+        pass
     return render(request,'employee_register/edit.html' ''',{'employees':employee,'interviewers':interviewers}''')
   
 #remove page view
@@ -166,7 +170,9 @@ def insert_requirement(request):
       messages.success(request, 'requirement added sucessfully.')
       return redirect('../insertRequirement/')
   else:   
-    messages.add_message(request=None, message='')
+    storage = messages.get_messages(request)
+    for _ in storage: 
+        pass
     return render(request, "employee_register/insertRequirement.html")
       
 
