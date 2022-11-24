@@ -1,0 +1,139 @@
+{% extends 'employee_register/base.html' %}
+
+{% load static %}
+{% block content %}
+<style>
+    #showActive, #showReqActive {
+      color: #49b5e7;
+    }
+</style>
+
+<script src="{% static 'showAsset/excel-bootstrap-table-filter-bundle.js' %}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" />
+<link rel="stylesheet" href="{% static 'showAsset/excel-bootstrap-table-filter-style.css' %}" />
+<link rel="stylesheet" href="{% static 'showAsset/styleMain.css' %}" />
+
+        <!--Table Start -->
+        <div class="content">
+            <div class="main-sparkline13-hd">
+                <h4>Requirements Data Table</h4>
+            </div>
+            <div class="table-filter">
+                {% if messages %}
+                    <div class="alert alert-success" role="alert" style="left:10px; width:fit-content">
+                        {% for message in messages %}
+                        {{message}}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <span class="counter pull-right"><input type="text" id="myInput" onkeyup="myFunction()" class="form-control" placeholder="What you looking for?"></span>
+                        <script>
+                            $(document).ready(function () {
+                                $("#myInput").on("keyup", function () {
+                                    var value = $(this).val().toLowerCase();
+                                    $("#divTable tr").filter(function () {
+                                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                                    });
+                                });
+                            });
+                        </script> 
+            </div>
+            <table id="divTable" class="table table-striped table-hover" data-toggle="table" data-pagination="true" data-search="true" data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true"
+            data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
+                <thead>
+                    <tr>
+                        <th data-field="state" data-checkbox="true" >#</th>
+                        <th data-field="requestor" data-editable="true">Requestor</th>
+                        <th data-field="reqPrimary" data-editable="true">Primary Skill</th>
+                        <th data-field="reqSecondary" data-editable="true">Secondary Skill</th>
+                        <th data-field="reqLocation" data-editable="true">Location</th>
+                        <th data-field="reqGrade" data-editable="true">Grade</th>
+                        <th data-field="reqCount" data-editable="true">Req Count</th>
+                        <th data-field="action">Action</th>
+                    </tr>
+                </thead>
+                {% for requirement in requirements %}
+                    <tr>
+                        <td>
+                            {{forloop.counter}}
+                        </td>
+                        <td>
+                            {{requirement.requestor}}
+                        </td>
+                        <td>
+                            {{requirement.reqPrimary}}
+                        </td> 
+                        <td>
+                            {{requirement.reqSecondary}}
+                        </td>
+                        <td>
+                            {{requirement.reqLocation}}
+                        </td>
+                        <td>
+                            {{requirement.reqGrade}}
+                        </td>
+                        <td>
+                            {{requirement.reqCount}}
+                        </td>
+                        <td>
+                            <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{requirement.id}}','{{requirement.requestor}}','{{requirement.reqPrimary}}','{{requirement.reqSecondary}}','{{requirement.reqLocation}}','{{requirement.reqGrade}}','{{requirement.reqCount}}')"><i class="material-icons">&#xE254;</i></a>
+                            <a href="/removeReq/{{requirement.id}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete {{employee.fullname}}?')"><i class="material-icons">&#xE872;</i></a>
+                            <!-- <button onclick="document.getElementById('id01').style.display='block'">Open Modal</button> -->
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tbody>
+            </table>
+        </div>
+    </div>   
+    <!-- Update form start -->
+    <div class="form-popup" id="updateForm" name="update_Form">
+        <form id="formUpdate" class="form-container" method="POST">
+            {% csrf_token %}
+          <h5>Update Details of Employee <span onclick=closeForm() class="close" title="Close Modal" style="color:red; text-align:end">×</span></h5>
+
+          <!-- <label for="id" ><b>ID</b></label> -->
+          <!--Disabled for input-->
+          <!-- <input type="text" value="id" id="id" name="id" disabled > -->
+          <label for="requestor"><b>Requestor name</b></label>
+          <input type="text" value="requestor" name="requestor" id="requestor">
+          <label for="reqPrimary"><b>Primary Skill</b></label>
+          <input type="text" value="reqPrimary" name="reqPrimary" id="reqPrimary">
+          <label for="reqSecondary"><b>Secondary Skill</b></label>
+          <input type="text" value="reqSecondary" name="reqSecondary" id="reqSecondary">
+          <label for="reqLocation"><b>Location</b></label>
+          <input type="text" value="reqLocation" name="reqLocation" id="reqLocation" >
+          <label for="reqGrade"><b>Grade</b></label>
+          <input type="text" value="reqGrade" name="reqGrade" id="reqGrade" >
+          <label for="reqCount"><b>Grade</b></label>
+          <input type="text" value="reqCount" name="reqCount" id="reqCount" >
+
+          <button type="submit" class="btn">Update</button>
+          <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+        </form>
+      </div>
+      <!-- Update form end -->
+  <script>
+    function openForm(id,requestor,prim,sec,loc,grade,count) {
+        document.getElementById("updateForm").style.display = "block";
+        document.getElementById("id").value=id;
+        document.getElementById("requestor").value=requestor;
+        document.getElementById("reqPrimary").value=prim;
+        document.getElementById("reqSecondary").value=sec;
+        document.getElementById("reqLocation").value=loc;
+        document.getElementById("reqGrade").value=grade;
+        document.getElementById("reqCount").value=count;
+        document.getElementById("formUpdate").action = "../editReq/"+ id;
+      }
+      
+      function closeForm() {
+        document.getElementById("updateForm").style.display = "none";
+      }
+    // Use the plugin once the DOM has been loaded.
+    $(function () {
+      // Apply the plugin 
+      $('table').excelTableFilter();
+    });
+  </script>
+
+{% endblock content %}

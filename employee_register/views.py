@@ -3,7 +3,7 @@ from .models import Employee, Interviewer, Requirement
 import csv, io
 from django.contrib import messages
 
-# insert view page for form
+# insert employee from form
 def insert_emp(request,template_name="employee_register/employee_list.html"):  
   if request.method == "POST":  
     empId = None
@@ -13,16 +13,16 @@ def insert_emp(request,template_name="employee_register/employee_list.html"):
       pass
     if(empId==None):
       emp_code= request.POST['emp_code']       
-      fullname = request.POST['fullname']       
-      email = request.POST['email']       
-      primary = request.POST['primary']       
-      secondary= request.POST['secondary'] 
-      location= request.POST['location']
-      designation=request.POST['designation']
-      benchmng=request.POST['benchmng']  
-      data = Employee(emp_code=emp_code, fullname=fullname, email=email, primary=primary, 
-      secondary= secondary, location=location, designation=designation,
-      benchmng=benchmng)        
+      empFullname = request.POST['empFullname']       
+      empEmail = request.POST['empEmail']       
+      empPrimary = request.POST['empPrimary']       
+      empSecondary= request.POST['empSecondary'] 
+      empLocation= request.POST['empLocation']
+      empDesignation=request.POST['empDesignation']
+      empBenchmng=request.POST['empBenchmng']  
+      data = Employee(emp_code=emp_code, empFullname=empFullname, empEmail=empEmail, empPrimary=empPrimary, 
+      empSecondary= empSecondary, empLocation=empLocation, empDesignation=empDesignation,
+      empBenchmng=empBenchmng)        
       data.save()          
       messages.success(request, 'Profile added sucessfully.')
       return redirect('../upload-csv/')
@@ -30,23 +30,22 @@ def insert_emp(request,template_name="employee_register/employee_list.html"):
       empId= request.POST['emp_code']
       employee = Employee.objects.get(emp_code=empId)
 
-      employee.fullname = request.POST['fullname']       
-      employee.email = request.POST['email']       
-      employee.primary = request.POST['primary']       
-      employee.secondary= request.POST['secondary'] 
-      employee.location= request.POST['location']
-      employee.designation=request.POST['designation']
-      employee.benchmng=request.POST['benchmng']
+      employee.empFullname = request.POST['empFullname']       
+      employee.empEmail = request.POST['empEmail']       
+      employee.empPrimary = request.POST['empPrimary']       
+      employee.empSecondary= request.POST['empSecondary'] 
+      employee.empLocation= request.POST['empLocation']
+      employee.empDesignation=request.POST['empDesignation']
+      employee.empBenchmng=request.POST['empBenchmng']
       employee.save() 
       messages.success(request, 'Profile updated sucessfully.')
       return render(request, 'employee_register/profile_upload.html')
   else:   
     storage = messages.get_messages(request)
-    for _ in storage: 
-        pass
+    storage.used = True
     return render(request, 'employee_register/profile_upload.html')
 
-#Home page view
+#Home page 
 def home(request): 
   employees = Employee.objects.all()
   profileCount = 0
@@ -55,48 +54,47 @@ def home(request):
   rejectCount = 0
   for employee in employees:
     profileCount = profileCount+1
-    if(employee.status=='Client Select'):
+    if(employee.empStatus=='Client Select'):
       deployedCount=deployedCount+1
-    elif(employee.status=='NA' or employee.status=='L1 Assigned' or employee.status=='L1 Select'):
+    elif(employee.empStatus=='NA' or employee.empStatus=='L1 Assigned' or employee.empStatus=='L1 Select'):
       progessCount=progessCount+1
-    elif(employee.status=='L1 Reject' or employee.status=='Client Reject' or employee.status=='Others'):
+    elif(employee.empStatus=='L1 Reject' or employee.empStatus=='Client Reject' or employee.empStatus=='Others'):
       rejectCount=rejectCount+1
 
   return render(request, "employee_register/home.html",{'profileCount':profileCount,'deployedCount':deployedCount,'progessCount':progessCount,'rejectCount':rejectCount})
 
-#show page view
+#show employee 
 def show_emp(request):  
   employees = Employee.objects.all()
   interviewers = Interviewer.objects.values('name')
   return render(request, "employee_register/showEmp.html",{'employees':employees,'interveiwers':interviewers} )
 
-#edit page view
+#edit employee
 def edit_emp(request,emp_code): 
   print('hi') 
   employee = Employee.objects.get(emp_code=emp_code)
   interviewers = Interviewer.objects.values('name')
   if request.method == 'POST':
     #employee.emp_code= request.POST['emp_code']       
-    employee.fullname = request.POST['fullname']       
-    employee.email = request.POST['email']       
-    employee.primary = request.POST['primary']       
-    employee.secondary= request.POST['secondary'] 
-    employee.location= request.POST['location']
-    employee.remarks=request.POST['remarks']
-    employee.status=request.POST['status']
-    employee.panel=request.POST['panel']
-    employee.designation=request.POST['designation']
-    employee.benchmng=request.POST['benchmng']
+    employee.empFullname = request.POST['empFullname']       
+    employee.empEmail = request.POST['empEmail']       
+    employee.empPrimary = request.POST['empPrimary']       
+    employee.empSecondary= request.POST['empSecondary'] 
+    employee.empLocation= request.POST['empLocation']
+    employee.empRemarks=request.POST['empRemarks']
+    employee.empStatus=request.POST['empStatus']
+    employee.empPanel=request.POST['empPanel']
+    employee.empDesignation=request.POST['empDesignation']
+    employee.empBenchmng=request.POST['empBenchmng']
     employee.save() 
     messages.success(request, 'Profile updated sucessfully.')
     return redirect('/show')
   else:
     storage = messages.get_messages(request)
-    for _ in storage: 
-        pass
-    return render(request,'employee_register/edit.html' ''',{'employees':employee,'interviewers':interviewers}''')
+    storage.used = True
+    return render(request,'employee_register/edit.html' ,{'employees':employee,'interviewers':interviewers})
   
-#remove page view
+#remove employee
 def remove_emp(request,emp_code):
   employees = Employee.objects.get(emp_code=emp_code)
   employees.delete()
@@ -115,8 +113,7 @@ def remove_emp(request,emp_code):
   return render(request, 'employee_register/delete.html', context)
   '''
 
-
-# insert page view for csv upload
+# insert employee from csv upload
 # one parameter named request
 def profile_upload(request):
       template = "employee_register/profile_upload.html"
@@ -145,36 +142,39 @@ def profile_upload(request):
       for column in csv.reader(io_string, delimiter=',', quotechar="|"):
         _, created = Employee.objects.update_or_create(
         emp_code= column[0],      
-        fullname = column[1],      
-        email = column[2],    
-        primary = column[3],       
-        secondary= column[4],
-        location= column[5],
-        designation=column[6],
-        benchmng=column[7],
+        empFullname = column[1],      
+        empEmail = column[2],    
+        empPrimary = column[3],       
+        empSecondary= column[4],
+        empLocation= column[5],
+        empDesignation=column[6],
+        empBenchmng=column[7],
         )
       context = {}
       messages.success(request, 'Profiles from csv added sucessfully.')
       return render(request, template, context)
 
+# insert requirements
 def insert_requirement(request):
   if request.method == "POST":  
       requestor= request.POST['requestor']       
-      primary = request.POST['primary']       
-      secondary = request.POST['secondary']       
-      location = request.POST['location']       
-      grade= request.POST['grade'] 
+      reqPrimary = request.POST['reqPrimary']       
+      reqSecondary = request.POST['reqSecondary']       
+      reqLocation = request.POST['reqLocation']       
+      reqGrade= request.POST['reqGrade'] 
       reqCount= request.POST['reqCount'] 
-      reqData = Requirement(requestor=requestor,primary=primary,secondary=secondary,location=location,grade=grade,reqCount=reqCount)      
+      reqData = Requirement(requestor=requestor,reqPrimary=reqPrimary,reqSecondary=reqSecondary,reqLocation=reqLocation,reqGrade=reqGrade,reqCount=reqCount)      
       reqData.save()          
       messages.success(request, 'requirement added sucessfully.')
       return redirect('../insertRequirement/')
   else:   
     storage = messages.get_messages(request)
-    for _ in storage: 
-        pass
+    storage.used = True
     return render(request, "employee_register/insertRequirement.html")
       
-
+# show requirements
+def show_Req(request):
+  requirements = Requirement.objects.all()
+  return render(request, "employee_register/showReq.html", {'requirements':requirements})
 
   

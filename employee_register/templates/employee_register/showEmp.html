@@ -3,7 +3,7 @@
 {% load static %}
 {% block content %}
 <style>
-    #showActive {
+    #showActive, #showEmpActive {
       color: #49b5e7;
     }
 </style>
@@ -11,282 +11,21 @@
 <script src="{% static 'showAsset/excel-bootstrap-table-filter-bundle.js' %}"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" />
 <link rel="stylesheet" href="{% static 'showAsset/excel-bootstrap-table-filter-style.css' %}" />
-
-    <style>
-        body {
-            color: #566787cf;
-            background: #f9f9f9;
-            font-family: 'Varela Round', sans-serif;
-            font-size: 13px;
-        }
-        .table-responsive {
-            margin: 30px 0;
-        }
-        .table-wrapper {
-            min-width: 1000px;
-            background: #fff;
-            padding: 20px 25px;
-            border-radius: 3px;
-            box-shadow: 0 1px 1px rgba(0,0,0,.05);
-        }
-        .table-wrapper .btn {
-            float: right;
-            color: #333;
-            background-color: #fff;
-            border-radius: 3px;
-            border: none;
-            outline: none !important;
-            margin-left: 10px;
-        }
-        .table-wrapper .btn:hover {
-            color: #333;
-            background: #f2f2f2;
-        }
-        .table-wrapper .btn.btn-primary {
-            color: #fff;
-            background: #03A9F4;
-        }
-        .table-wrapper .btn.btn-primary:hover {
-            background: #03a3e7;
-        }
-        .table-title .btn {		
-            font-size: 13px;
-            border: none;
-        }
-        .table-title .btn i {
-            float: left;
-            font-size: 21px;
-            margin-right: 5px;
-        }
-        .table-title .btn span {
-            float: left;
-            margin-top: 2px;
-        }
-        .table-title {
-            color: #fff;
-            background: #4b5366;		
-            padding: 16px 25px;
-            margin: -20px -25px 10px;
-            border-radius: 3px 3px 0 0;
-        }
-        .table-title h2 {
-            margin: 5px 0 0;
-            font-size: 24px;
-        }
-        .show-entries select.form-control {        
-            width: 60px;
-            margin: 0 5px;
-        }
-        .table-filter .filter-group {
-            float: right;
-            margin-left: 15px;
-        }
-        .table-filter input, .table-filter select {
-            height: 34px;
-            border-radius: 3px;
-            border-color: #ddd;
-            box-shadow: none;
-        }
-        .table-filter {
-            padding: 5px 0 15px;
-            border-bottom: 1px solid #e9e9e9;
-            margin-bottom: 5px;
-        }
-        .table-filter .btn {
-            height: 34px;
-        }
-        .table-filter label {
-            font-weight: normal;
-            margin-left: 10px;
-        }
-        .table-filter select, .table-filter input {
-            display: inline-block;
-            margin-left: 5px;
-        }
-        .table-filter input {
-            width: 200px;
-            display: inline-block;
-        }
-        .filter-group select.form-control {
-            width: 110px;
-        }
-        .filter-icon {
-            float: right;
-            margin-top: 7px;
-        }
-        .filter-icon i {
-            font-size: 18px;
-            opacity: 0.7;
-        }	
-        table.table tr th, table.table tr td {
-            border-color: #e9e9e9;
-            padding: 12px 15px;
-            vertical-align: middle;
-        }
-        table.table tr th:first-child {
-            width: 60px;
-        }
-        table.table tr th:last-child {
-            width: 80px;
-        }
-        table.table-striped tbody tr:nth-of-type(odd) {
-            background-color: #fcfcfc;
-        }
-        table.table-striped.table-hover tbody tr:hover {
-            background: #f5f5f5;
-        }
-        table.table th i {
-            font-size: 13px;
-            margin: 0 5px;
-            cursor: pointer;
-        }	
-        table.table td a {
-            font-weight: bold;
-            color: #566787;
-            display: inline-block;
-            text-decoration: none;
-        }
-        table.table td a:hover {
-            color: #2196F3;
-        }
-        table.table td a.view {        
-            width: 30px;
-            height: 30px;
-            color: #2196F3;
-            border: 2px solid;
-            border-radius: 30px;
-            text-align: center;
-        }
-        table.table td a.view i {
-            font-size: 22px;
-            margin: 2px 0 0 1px;
-        }   
-        table.table .avatar {
-            border-radius: 50%;
-            vertical-align: middle;
-            margin-right: 10px;
-        }
-        .status {
-            font-size: 30px;
-            margin: 2px 2px 0 0;
-            display: inline-block;
-            vertical-align: middle;
-            line-height: 10px;
-        }
-        .text-success {
-            color: #10c469;
-        }
-        .text-info {
-            color: #62c9e8;
-        }
-        .text-warning {
-            color: #FFC107;
-        }
-        .text-danger {
-            color: #ff5b5b;
-        }
-        .pagination {
-            float: right;
-            margin: 0 0 5px;
-        }
-        .pagination li a {
-            border: none;
-            font-size: 13px;
-            min-width: 30px;
-            min-height: 30px;
-            color: #999;
-            margin: 0 2px;
-            line-height: 30px;
-            border-radius: 2px !important;
-            text-align: center;
-            padding: 0 6px;
-        }
-        .pagination li a:hover {
-            color: #666;
-        }	
-        .pagination li.active a {
-            background: #03A9F4;
-        }
-        .pagination li.active a:hover {        
-            background: #0397d6;
-        }
-        .pagination li.disabled i {
-            color: #ccc;
-        }
-        .pagination li i {
-            font-size: 16px;
-            padding-top: 6px
-        }
-        .hint-text {
-            float: left;
-            margin-top: 10px;
-            font-size: 13px;
-        }
-        /* The popup form - hidden by default */
-        .form-popup {
-            display: none;
-            position:fixed;
-            top:100px;
-            bottom: 0;
-            right: 15px;
-            border: 3px solid #f1f1f1;
-            z-index: 9;
-            overflow-y:auto;
-          }
-        /* Add styles to the form container */
-        .form-container {
-            max-width: 400px;
-            padding: 10px;
-            background-color: white;
-        }
-        
-        /* Full-width input fields */
-        .form-container input[type=text], .form-container select {
-            width: 100%;
-            padding: 15px;
-            margin: 5px 0 22px 0;
-            border: none;
-            background: #f1f1f1;
-        }
-        
-        /* When the inputs get focus, do something */
-        .form-container input[type=text]:focus, .form-container select:focus {
-            background-color: #ddd;
-            outline: none;
-        }
-        
-        /* Set a style for the submit/login button */
-        .form-container .btn {
-            background-color: #04AA6D;
-            color: white;
-            padding: 16px 20px;
-            border: none;
-            cursor: pointer;
-            width: 40%;
-            margin-bottom:10px;
-            opacity: 0.8;
-        }
-        
-        /* Add a red background color to the cancel button */
-        .form-container .cancel {
-            background-color: red;
-        }
-        
-        /* Add some hover effects to buttons */
-        .form-container .btn:hover, .open-button:hover {
-            opacity: 1;
-        }
-    </style>
-
-        
+<link rel="stylesheet" href="{% static 'showAsset/styleMain.css' %}" />  
 
         <!--Table Start -->
         <div class="content">
             <div class="main-sparkline13-hd">
-                <h4>Projects Data Table</h4>
+                <h4>Profiles Data Table</h4>
             </div>
             <div class="table-filter">
-                
+                {% if messages %}
+                    <div class="alert alert-success" role="alert" style="left:10px; width:fit-content">
+                        {% for message in messages %}
+                        {{message}}
+                        {% endfor %}
+                    </div>
+                {% endif %}
                 <span class="counter pull-right"><input type="text" id="myInput" onkeyup="myFunction()" class="form-control" placeholder="What you looking for?"></span>
                         <script>
                             $(document).ready(function () {
@@ -304,18 +43,18 @@
                 <thead>
                     <tr>
                         <th data-field="state" data-checkbox="true" >#</th>
-                        <th data-field="date" data-editable="true">Date</th>
-                        <th data-field="id">ID</th>
-                        <th data-field="name" data-editable="true">Name</th>
-                        <th data-field="email" data-editable="true">Email</th>
-                        <th data-field="primary" data-editable="true">Primary Skill</th>
-                        <th data-field="secondary" data-editable="true">Secondary Skill</th>
-                        <th data-field="location" data-editable="true">Location</th>
-                        <th data-field="designation" data-editable="true">Designation</th>
-                        <th data-field="benchmng" data-editable="true">Bench Manager</th>
-                        <th data-field="status" data-editable="true">Status</th>
-                        <th data-field="panel" data-editable="true">Panel</th>
-                        <th data-field="remarks" data-editable="true">Remarks</th>
+                        <th data-field="empDate" data-editable="true">Date</th>
+                        <th data-field="emp_code">ID</th>
+                        <th data-field="empFullname" data-editable="true">empame</th>
+                        <th data-field="empEmail" data-editable="true">Email</th>
+                        <th data-field="empPrimary" data-editable="true">Primary Skill</th>
+                        <th data-field="empSecondary" data-editable="true">Secondary Skill</th>
+                        <th data-field="empLocation" data-editable="true">Location</th>
+                        <th data-field="empDesignation" data-editable="true">Designation</th>
+                        <th data-field="empBenchmng" data-editable="true">Bench Manager</th>
+                        <th data-field="empStatus" data-editable="true">Status</th>
+                        <th data-field="empPanel" data-editable="true">Panel</th>
+                        <th data-field="empRemarks" data-editable="true">Remarks</th>
                         <th data-field="action">Action</th>
                     </tr>
                 </thead>
@@ -325,44 +64,44 @@
                             {{forloop.counter}}
                         </td>
                         <td>
-                            {{employee.date}}
+                            {{employee.empDate}}
                         </td>
                         <td>
                             {{employee.emp_code}}
                         </td> 
                         <td>
-                            {{employee.fullname}}
+                            {{employee.empFullname}}
                         </td>
                         <td>
-                            {{employee.email}}
+                            {{employee.empEmail}}
                         </td>
                         <td>
-                            {{employee.primary}}
+                            {{employee.empPrimary}}
                         </td>
                         <td>
-                            {{employee.secondary}}
+                            {{employee.empSecondary}}
                         </td>
                         <td>
-                            {{employee.location}}
+                            {{employee.empLocation}}
                         </td>
                         <td>
-                            {{employee.designation}}
+                            {{employee.empDesignation}}
                         </td>
                         <td>
-                            {{employee.benchmng}}
+                            {{employee.empBenchmng}}
                         </td>
                         <td>
-                            {{employee.status}}
+                            {{employee.empStatus}}
                         </td>
                         <td>
-                            {{employee.panel}}
+                            {{employee.empPanel}}
                         </td>
                         <td>
-                            {{employee.remarks}}
+                            {{employee.empRemarks}}
                         </td>
                         <td>
-                            <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{employee.emp_code}}','{{employee.fullname}}','{{employee.email}}','{{employee.primary}}','{{employee.secondary}}','{{employee.location}}','{{employee.status}}','{{employee.remarks}}','{{employee.designation}}','{{employee.benchmng}}','{{employee.panel}}')"><i class="material-icons">&#xE254;</i></a>
-                            <a href="/remove/{{employee.emp_code}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete {{employee.fullname}}?')"><i class="material-icons">&#xE872;</i></a>
+                            <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{employee.emp_code}}','{{employee.empFullname}}','{{employee.empEmail}}','{{employee.empPrimary}}','{{employee.empSecondary}}','{{employee.empLocation}}','{{employee.empStatus}}','{{employee.empRemarks}}','{{employee.empDesignation}}','{{employee.empBenchmng}}','{{employee.empPanel}}')"><i class="material-icons">&#xE254;</i></a>
+                            <a href="/removeEmp/{{employee.emp_code}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete {{employee.fullname}}?')"><i class="material-icons">&#xE872;</i></a>
                             <!-- <button onclick="document.getElementById('id01').style.display='block'">Open Modal</button> -->
                         </td>
                     </tr>
@@ -371,6 +110,7 @@
             </table>
         </div>
     </div>   
+    <!-- update form start -->
     <div class="form-popup" id="updateForm" name="update_Form">
         <form id="formUpdate" class="form-container" method="POST">
             {% csrf_token %}
@@ -379,22 +119,22 @@
           <label for="emp_code"><b>ID</b></label>
           <!--Disabled for input-->
           <input type="text" value="emp_code" id="emp_code" name="emp_code" disabled>
-          <label for="fullname"><b>Name</b></label>
-          <input type="text" value="fullname" name="fullname" id="fullname">
-          <label for="email"><b>Email</b></label>
-          <input type="text" value="email" name="email" id="email">
-          <label for="location"><b>Location</b></label>
-          <input type="text" value="location" name="location" id="location" >
-          <label for="designation"><b>Designation</b></label>
-          <input type="text" value="designation" name="designation" id="designation">
-          <label for="benchmng"><b>Bench Manager</b></label>
-          <input type="text" value="benchmng" name="benchmng" id="benchmng">
-          <label for="primary"><b>Primary Skill</b></label>
-          <input type="text" value="primary" name="primary" id="primary">
-          <label for="secondary"><b>Secondary Skill</b></label>
-          <input type="text" value="secondary" name="secondary" id="secondary">
-          <label for="status"><b>Status</b></label>
-          <select class="form-select" name="status" id="status">
+          <label for="empFullname"><b>Name</b></label>
+          <input type="text" value="empFullname" name="empFullname" id="empFullname">
+          <label for="empEmail"><b>Email</b></label>
+          <input type="text" value="empEmail" name="empEmail" id="empEmail">
+          <label for="empLocation"><b>Location</b></label>
+          <input type="text" value="empLocation" name="empLocation" id="empLocation" >
+          <label for="empDesignation"><b>Designation</b></label>
+          <input type="text" value="empDesignation" name="empDesignation" id="empDesignation">
+          <label for="empBenchmng"><b>Bench Manager</b></label>
+          <input type="text" value="empBenchmng" name="empBenchmng" id="empBenchmng">
+          <label for="empPrimary"><b>Primary Skill</b></label>
+          <input type="text" value="empPrimary" name="empPrimary" id="empPrimary">
+          <label for="empSecondary"><b>Secondary Skill</b></label>
+          <input type="text" value="empSecondary" name="empSecondary" id="empSecondary">
+          <label for="empStatus"><b>Status</b></label>
+          <select class="form-select" name="empStatus" id="empStatus">
             <option id="opt1" selected></option>
             <option value="L1 Assigned">L1 Assigned</option>
             <option value="L1 Select">L1 Select</option>
@@ -403,40 +143,41 @@
             <option value="Client Select">Client Select</option>
             <option value="Others">Others</option>
           </select>
-          <label for="panel"><b>Panel</b></label>
-          <select class="form-select" name="panel">
+          <label for="empPanel"><b>Panel</b></label>
+          <select class="form-select" name="empPanel" id="empPanel">
             <option id="opt2"  selected></option>
             {% for interviewer in interveiwers %}
             <option value="{{interviewer.name}}">{{interviewer.name}}</option>
             {% endfor %}
             </select>
-          <label for="remarks"><b>Remarks</b></label>
-          <input class = "form-control text-wrap" col="2" rows = "3" type="text" value="remarks" name="remarks" id="remarks">
+          <label for="empRemarks"><b>Remarks</b></label>
+          <input class = "form-control text-wrap" col="2" rows = "3" type="text" value="empRemarks" name="empRemarks" id="empRemarks">
 
           <button type="submit" class="btn">Update</button>
           <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
         </form>
       </div>
+    <!-- Update form end -->
 
   <script>
         function openForm(id,name,mail,prim,sec,loc,sts,remk,desg,mang,panelName) {
           document.getElementById("updateForm").style.display = "block";
           document.getElementById("emp_code").value=id;
-          document.getElementById("fullname").value=name;
-          document.getElementById("email").value=mail;
-          document.getElementById("primary").value=prim;
-          document.getElementById("secondary").value=sec;
-          document.getElementById("location").value=loc;
+          document.getElementById("empFullname").value=name;
+          document.getElementById("empEmail").value=mail;
+          document.getElementById("empPrimary").value=prim;
+          document.getElementById("empSecondary").value=sec;
+          document.getElementById("empLocation").value=loc;
           var ddl = $("#opt1");
           ddl.empty();
           ddl.append($("<option selected></option>").val(sts).html(sts));
           var dd2 = $("#opt2");
           dd2.empty();
           dd2.append($("<option selected></option>").val(panelName).html(panelName));
-          document.getElementById("remarks").value=remk;
-          document.getElementById("designation").value=desg;
-          document.getElementById("benchmng").value=mang;
-          document.getElementById("formUpdate").action = "../edit/"+ id;
+          document.getElementById("empRemarks").value=remk;
+          document.getElementById("empDesignation").value=desg;
+          document.getElementById("empBenchmng").value=mang;
+          document.getElementById("formUpdate").action = "../editEmp/"+ id;
         }
         
         function closeForm() {
