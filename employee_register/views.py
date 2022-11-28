@@ -3,7 +3,20 @@ from .models import Employee, Interviewer, Requirement
 import csv, io
 from django.contrib import messages
 from django.core import serializers
-
+'''
+LOCATION: 30
+GRADE:30
+IF PRIMARY: 30 THEN SECONDARY: 10
+'''
+def profile_percentange():
+  percent=0
+  employees = Employee.objects.all()
+  requirements=Requirement.objects.all()
+  for employee in employees:
+    for requirement in requirements:
+      if(employee.empPrimary.lower()==requirement.reqPrimary.lower()):
+        percent=50
+  return percent
 # insert employee from form
 def insert_emp(request,template_name="employee_register/employee_list.html"):  
   if request.method == "POST":  
@@ -203,3 +216,29 @@ def count_interview():
         count=count+1
     interviewer.count=count
     interviewer.save()
+
+def edit_req(request,req_id): 
+  if request.method == 'POST':
+    requirement = Requirement.objects.get(id=req_id)
+
+    requirement.requestor = request.POST['requestor']       
+    requirement.reqPrimary = request.POST['reqPrimary']       
+    requirement.reqSecondary = request.POST['reqSecondary']       
+    requirement.reqLocation= request.POST['reqLocation'] 
+    requirement.reqGrade= request.POST['reqGrade']
+    requirement.reqCount=request.POST['reqCount']
+    requirement.save() 
+    messages.success(request, 'Requirement updated sucessfully.')
+    return redirect('/showReq')
+  else:
+    requirements = Requirement.objects.all()
+    storage = messages.get_messages(request)
+    storage.used = True
+    return render(request,'employee_register/showReq.html' ,{'requirements':requirements})
+
+# remove requirement
+def remove_req(request,req_id):
+  requirement = Requirement.objects.get(id=req_id)
+  requirement.delete()
+  messages.success(request, 'Requirement deleted sucessfully.')
+  return redirect('/showReq')
