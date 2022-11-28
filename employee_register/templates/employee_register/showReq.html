@@ -90,11 +90,12 @@
     <div class="form-popup" id="updateForm" name="update_Form">
         <form id="formUpdate" class="form-container" method="POST">
             {% csrf_token %}
-          <h5>Update Details of Employee <span onclick=closeForm() class="close" title="Close Modal" style="color:red; text-align:end">×</span></h5>
+          <h5>Update Details of Requirement <span onclick=closeForm() class="close" title="Close Modal" style="color:red; text-align:end">×</span></h5>
 
           <!-- <label for="id" ><b>ID</b></label> -->
           <!--Disabled for input-->
           <!-- <input type="text" value="id" id="id" name="id" disabled > -->
+          
           <label for="requestor"><b>Requestor name</b></label>
           <input type="text" value="requestor" name="requestor" id="requestor">
           <label for="reqPrimary"><b>Primary Skill</b></label>
@@ -114,10 +115,10 @@
       </div>
       <!-- Update form end -->
   <script>
-    function openForm(id,requestor,prim,sec,loc,grade,count) {
+    function openForm(id,reqr,prim,sec,loc,grade,count) {
         document.getElementById("updateForm").style.display = "block";
-        document.getElementById("id").value=id;
-        document.getElementById("requestor").value=requestor;
+        
+        document.getElementById("requestor").value=reqr;
         document.getElementById("reqPrimary").value=prim;
         document.getElementById("reqSecondary").value=sec;
         document.getElementById("reqLocation").value=loc;

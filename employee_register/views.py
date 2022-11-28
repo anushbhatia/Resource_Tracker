@@ -45,7 +45,7 @@ def insert_emp(request,template_name="employee_register/employee_list.html"):
     storage.used = True
     return render(request, 'employee_register/profile_upload.html')
 
-#Home page 
+# Home page 
 def home(request): 
   employees = Employee.objects.all()
   profileCount = 0
@@ -69,12 +69,10 @@ def show_emp(request):
   interviewers = Interviewer.objects.values('name')
   return render(request, "employee_register/showEmp.html",{'employees':employees,'interveiwers':interviewers} )
 
-#edit employee
+# edit employee
 def edit_emp(request,emp_code): 
-  print('hi') 
-  employee = Employee.objects.get(emp_code=emp_code)
-  interviewers = Interviewer.objects.values('name')
   if request.method == 'POST':
+    employee = Employee.objects.get(emp_code=emp_code)
     #employee.emp_code= request.POST['emp_code']       
     employee.empFullname = request.POST['empFullname']       
     employee.empEmail = request.POST['empEmail']       
@@ -90,11 +88,13 @@ def edit_emp(request,emp_code):
     messages.success(request, 'Profile updated sucessfully.')
     return redirect('/show')
   else:
+    employees = Employee.objects.all()
+    interviewers = Interviewer.objects.values('name')
     storage = messages.get_messages(request)
     storage.used = True
     return render(request,'employee_register/edit.html' ,{'employees':employee,'interviewers':interviewers})
   
-#remove employee
+# remove employee
 def remove_emp(request,emp_code):
   employees = Employee.objects.get(emp_code=emp_code)
   employees.delete()
@@ -177,4 +177,30 @@ def show_Req(request):
   requirements = Requirement.objects.all()
   return render(request, "employee_register/showReq.html", {'requirements':requirements})
 
-  
+# Edit requirement
+def edit_req(request,req_id): 
+  if request.method == 'POST':
+    requirement = Requirement.objects.get(id=req_id)
+    
+    requirement.requestor = request.POST['requestor']       
+    requirement.reqPrimary = request.POST['reqPrimary']       
+    requirement.reqSecondary = request.POST['reqSecondary']       
+    requirement.reqLocation= request.POST['reqLocation'] 
+    requirement.reqGrade= request.POST['reqGrade']
+    requirement.reqCount=request.POST['reqCount']
+    requirement.save() 
+    messages.success(request, 'Requirement updated sucessfully.')
+    return redirect('/showReq')
+  else:
+    requirements = Requirement.objects.all()
+    storage = messages.get_messages(request)
+    storage.used = True
+    return render(request,'employee_register/showReq.html' ,{'requirements':requirements})
+
+# remove requirement
+def remove_req(request,req_id):
+  requirement = Requirement.objects.get(id=req_id)
+  requirement.delete()
+  messages.success(request, 'Requirement deleted sucessfully.')
+  return redirect('/showReq')
+
