@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Employee, Interviewer, Requirement
 import csv, io
 from django.contrib import messages
+from django.core import serializers
 
 # insert employee from form
 def insert_emp(request,template_name="employee_register/employee_list.html"):  
@@ -45,7 +46,7 @@ def insert_emp(request,template_name="employee_register/employee_list.html"):
     storage.used = True
     return render(request, 'employee_register/profile_upload.html')
 
-# Home page 
+#Home page 
 def home(request): 
   employees = Employee.objects.all()
   profileCount = 0
@@ -63,16 +64,21 @@ def home(request):
 
   return render(request, "employee_register/home.html",{'profileCount':profileCount,'deployedCount':deployedCount,'progessCount':progessCount,'rejectCount':rejectCount})
 
+class Interviewerc(object):
+        def __init__(self, interviewer_id, name):
+            self.interviewer_id = interviewer_id
+            self.name = name
 #show employee 
 def show_emp(request):  
   employees = Employee.objects.all()
-  interviewers = Interviewer.objects.values('name')
-  return render(request, "employee_register/showEmp.html",{'employees':employees,'interveiwers':interviewers} )
+  interviewers = serializers.serialize("json", Interviewer.objects.all())
+  return render(request, "employee_register/showEmp.html",{'employees':employees,'interviewers':interviewers} )
 
-# edit employee
+#edit employee
 def edit_emp(request,emp_code): 
+  employee = Employee.objects.get(emp_code=emp_code)
+  interviewers = Interviewer.objects.all()
   if request.method == 'POST':
-    employee = Employee.objects.get(emp_code=emp_code)
     #employee.emp_code= request.POST['emp_code']       
     employee.empFullname = request.POST['empFullname']       
     employee.empEmail = request.POST['empEmail']       
@@ -81,20 +87,30 @@ def edit_emp(request,emp_code):
     employee.empLocation= request.POST['empLocation']
     employee.empRemarks=request.POST['empRemarks']
     employee.empStatus=request.POST['empStatus']
+    temppanel=employee.empPanel
     employee.empPanel=request.POST['empPanel']
     employee.empDesignation=request.POST['empDesignation']
     employee.empBenchmng=request.POST['empBenchmng']
+    for i in interviewers:
+      print(temppanel,employee.empPanel,i.name,employee.empPanel,employee.empStatus)
+      if(temppanel!=employee.empPanel and i.name==employee.empPanel and employee.empStatus=='NA' and i.name!='NA'):
+        employee.interviewer=i
+        employee.empStatus='L1 Assigned'
+      elif(temppanel!=employee.empPanel and i.name==employee.empPanel and employee.empStatus!='NA' and i.name=='NA'):
+        employee.interviewer=i
+        employee.empStatus='NA' 
+      elif(temppanel!=employee.empPanel and i.name==employee.empPanel):
+        employee.interviewer=i
     employee.save() 
     messages.success(request, 'Profile updated sucessfully.')
+    count_interview()
     return redirect('/show')
   else:
-    employees = Employee.objects.all()
-    interviewers = Interviewer.objects.values('name')
     storage = messages.get_messages(request)
     storage.used = True
     return render(request,'employee_register/edit.html' ,{'employees':employee,'interviewers':interviewers})
   
-# remove employee
+#remove employee
 def remove_emp(request,emp_code):
   employees = Employee.objects.get(emp_code=emp_code)
   employees.delete()
@@ -177,30 +193,13 @@ def show_Req(request):
   requirements = Requirement.objects.all()
   return render(request, "employee_register/showReq.html", {'requirements':requirements})
 
-# Edit requirement
-def edit_req(request,req_id): 
-  if request.method == 'POST':
-    requirement = Requirement.objects.get(id=req_id)
-    
-    requirement.requestor = request.POST['requestor']       
-    requirement.reqPrimary = request.POST['reqPrimary']       
-    requirement.reqSecondary = request.POST['reqSecondary']       
-    requirement.reqLocation= request.POST['reqLocation'] 
-    requirement.reqGrade= request.POST['reqGrade']
-    requirement.reqCount=request.POST['reqCount']
-    requirement.save() 
-    messages.success(request, 'Requirement updated sucessfully.')
-    return redirect('/showReq')
-  else:
-    requirements = Requirement.objects.all()
-    storage = messages.get_messages(request)
-    storage.used = True
-    return render(request,'employee_register/showReq.html' ,{'requirements':requirements})
-
-# remove requirement
-def remove_req(request,req_id):
-  requirement = Requirement.objects.get(id=req_id)
-  requirement.delete()
-  messages.success(request, 'Requirement deleted sucessfully.')
-  return redirect('/showReq')
-
+def count_interview():
+  interviewers = Interviewer.objects.all()
+  employees = Employee.objects.all()
+  for interviewer in interviewers:
+    count=0
+    for employee in employees:
+      if(interviewer.interviewer_id==employee.interviewer):
+        count=count+1
+    interviewer.count=count
+    interviewer.save()

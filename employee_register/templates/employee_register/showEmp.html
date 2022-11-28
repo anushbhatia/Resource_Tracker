@@ -45,7 +45,7 @@
                         <th data-field="state" data-checkbox="true" >#</th>
                         <th data-field="empDate" data-editable="true">Date</th>
                         <th data-field="emp_code">ID</th>
-                        <th data-field="empFullname" data-editable="true">empame</th>
+                        <th data-field="empFullname" data-editable="true">Name</th>
                         <th data-field="empEmail" data-editable="true">Email</th>
                         <th data-field="empPrimary" data-editable="true">Primary Skill</th>
                         <th data-field="empSecondary" data-editable="true">Secondary Skill</th>
@@ -97,15 +97,18 @@
                             {{employee.empPanel}}
                         </td>
                         <td>
+                            
                             {{employee.empRemarks}}
                         </td>
                         <td>
-                            <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{employee.emp_code}}','{{employee.empFullname}}','{{employee.empEmail}}','{{employee.empPrimary}}','{{employee.empSecondary}}','{{employee.empLocation}}','{{employee.empStatus}}','{{employee.empRemarks}}','{{employee.empDesignation}}','{{employee.empBenchmng}}','{{employee.empPanel}}')"><i class="material-icons">&#xE254;</i></a>
+                           
+                            <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{employee.emp_code}}','{{employee.empFullname}}','{{employee.empEmail}}','{{employee.empPrimary}}','{{employee.empSecondary}}','{{employee.empLocation}}','{{employee.empStatus}}','{{employee.empRemarks}}','{{employee.empDesignation}}','{{employee.empBenchmng}}','{{employee.empPanel}}','{{employee.interviewer_id}}','{{interviewers}}')"><i class="material-icons">&#xE254;</i></a>
                             <a href="/removeEmp/{{employee.emp_code}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete {{employee.fullname}}?')"><i class="material-icons">&#xE872;</i></a>
                             <!-- <button onclick="document.getElementById('id01').style.display='block'">Open Modal</button> -->
                         </td>
                     </tr>
                 {% endfor %}
+               
                 <tbody>
             </table>
         </div>
@@ -116,7 +119,7 @@
             {% csrf_token %}
           <h5>Update Details of Employee <span onclick=closeForm() class="close" title="Close Modal" style="color:red; text-align:end">×</span></h5>
 
-          <label for="emp_code"><b>Emp ID</b></label>
+          <label for="emp_code"><b>ID</b></label>
           <!--Disabled for input-->
           <input type="text" value="emp_code" id="emp_code" name="emp_code" disabled>
           <label for="empFullname"><b>Name</b></label>
@@ -134,8 +137,7 @@
           <label for="empSecondary"><b>Secondary Skill</b></label>
           <input type="text" value="empSecondary" name="empSecondary" id="empSecondary">
           <label for="empStatus"><b>Status</b></label>
-          <select class="form-select" name="empStatus" id="empStatus">
-            <option id="opt1" selected></option>
+          <select id="opt1" class="form-select" name="empStatus" id="empStatus">
             <option value="L1 Assigned">L1 Assigned</option>
             <option value="L1 Select">L1 Select</option>
             <option value="L1 Reject">L1 Reject</option>
@@ -144,11 +146,7 @@
             <option value="Others">Others</option>
           </select>
           <label for="empPanel"><b>Panel</b></label>
-          <select class="form-select" name="empPanel" id="empPanel">
-            <option id="opt2"  selected></option>
-            {% for interviewer in interveiwers %}
-            <option value="{{interviewer.name}}">{{interviewer.name}}</option>
-            {% endfor %}
+          <select id="panel" class="form-select" name="empPanel" id="empPanel">
             </select>
           <label for="empRemarks"><b>Remarks</b></label>
           <input class = "form-control text-wrap" col="2" rows = "3" type="text" value="empRemarks" name="empRemarks" id="empRemarks">
@@ -160,7 +158,16 @@
     <!-- Update form end -->
 
   <script>
-        function openForm(id,name,mail,prim,sec,loc,sts,remk,desg,mang,panelName) {
+        function openForm(id,name,mail,prim,sec,loc,sts,remk,desg,mang,panelName,empintid,interviewer) {
+          var status=[
+            'NA',
+            'L1 Assigned',
+            'L1 Select',
+            'L1 Reject',
+            'Client Reject',
+            'Client Select',
+            'Others'
+        ]
           document.getElementById("updateForm").style.display = "block";
           document.getElementById("emp_code").value=id;
           document.getElementById("empFullname").value=name;
@@ -171,9 +178,21 @@
           var ddl = $("#opt1");
           ddl.empty();
           ddl.append($("<option selected></option>").val(sts).html(sts));
-          var dd2 = $("#opt2");
+         for (var s=0;s<status.length;s++)
+         {
+           
+            if(sts!=status[s])
+            ddl.append($("<option></option>").val(status[s]).html(status[s]));
+         }
+          var dd2 = $("#panel");
           dd2.empty();
           dd2.append($("<option selected></option>").val(panelName).html(panelName));
+          interviewer=eval(interviewer);
+          for(var i=0;i<interviewer.length;i++)
+          {
+            if(interviewer[i].pk!=empintid)
+            dd2.append($("<option></option>").val(interviewer[i].fields.name).html(interviewer[i].fields.name+' '+interviewer[i].fields.count));
+          }
           document.getElementById("empRemarks").value=remk;
           document.getElementById("empDesignation").value=desg;
           document.getElementById("empBenchmng").value=mang;

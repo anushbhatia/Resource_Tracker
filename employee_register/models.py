@@ -2,6 +2,7 @@ from django.db import models
 from datetime import date
 # Create your models here.
 class Interviewer(models.Model):
+    interviewer_id=models.AutoField(primary_key=True)
     name=models.CharField(max_length=100)
     skill=models.CharField(max_length=100)
     count=models.CharField(max_length=100,default=0)
@@ -19,6 +20,7 @@ class Employee(models.Model):
     empStatus=models.CharField(max_length=100,default='NA')
     empPanel=models.CharField(max_length=100,default='NA')
     empDate=models.DateField(default=date.today)
+    interviewer=models.ForeignKey(Interviewer,on_delete=models.PROTECT,default=0)
 class Meta:        
     db_table="Employee"
 
@@ -26,30 +28,7 @@ class Requirement(models.Model):
     requestor=models.CharField(max_length=100)
     reqPrimary=models.CharField(max_length=100)
     reqSecondary=models.CharField(max_length=100)
+    reqEmail=models.CharField(max_length=100)
     reqLocation=models.CharField(max_length=100)
     reqGrade=models.CharField(max_length=10)
     reqCount=models.SmallIntegerField()
-'''
-KID/User ID
-Name
-Email
-Primary Skill
-Secondary Skill
-Location
-Date
-Remarks
-Approve Reject (Status)
-Designation
-Add by (bench manager name.
-    emp_code = models.CharField(max_length=100)
-    fullname = models.CharField(max_length=100)
-    email= models.CharField(max_length=100)
-    primary=models.CharField(max_length=100)
-    seondary=models.CharField(max_length=100)
-    location=models.CharField(max_length=100)
-    date=models.DateField()
-    remarks=models.CharField(max_length=100)
-    status=models.CharField(max_length=100)
-    designation=models.CharField(max_length=100)
-    benchmng=models.CharField(max_length=100)
-'''
