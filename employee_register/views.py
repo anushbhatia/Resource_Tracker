@@ -2,7 +2,21 @@ from django.shortcuts import render, redirect
 from .models import Employee, Interviewer, Requirement
 import csv, io
 from django.contrib import messages
-
+from django.core import serializers
+'''
+LOCATION: 30
+GRADE:30
+IF PRIMARY: 30 THEN SECONDARY: 10
+'''
+def profile_percentange():
+  percent=0
+  employees = Employee.objects.all()
+  requirements=Requirement.objects.all()
+  for employee in employees:
+    for requirement in requirements:
+      if(employee.empPrimary.lower()==requirement.reqPrimary.lower()):
+        percent=50
+  return percent
 # insert employee from form
 def insert_emp(request,template_name="employee_register/employee_list.html"):  
   if request.method == "POST":  
@@ -43,7 +57,7 @@ def insert_emp(request,template_name="employee_register/employee_list.html"):
   else:   
     return render(request, 'employee_register/profile_upload.html')
 
-# Home page 
+#Home page 
 def home(request): 
   employees = Employee.objects.all()
   profileCount = 0
@@ -61,13 +75,17 @@ def home(request):
 
   return render(request, "employee_register/home.html",{'profileCount':profileCount,'deployedCount':deployedCount,'progessCount':progessCount,'rejectCount':rejectCount})
 
+class Interviewerc(object):
+        def __init__(self, interviewer_id, name):
+            self.interviewer_id = interviewer_id
+            self.name = name
 #show employee 
 def show_emp(request): 
   employees = Employee.objects.all()
-  interviewers = Interviewer.objects.values('name')
-  return render(request, "employee_register/showEmp.html",{'employees':employees,'interveiwers':interviewers} )
+  interviewers = serializers.serialize("json", Interviewer.objects.all())
+  return render(request, "employee_register/showEmp.html",{'employees':employees,'interviewers':interviewers} )
 
-# edit employee
+#edit employee
 def edit_emp(request,emp_code): 
   if request.method == 'POST':
     employee = Employee.objects.get(emp_code=emp_code)
@@ -79,23 +97,35 @@ def edit_emp(request,emp_code):
     employee.empLocation= request.POST['empLocation']
     employee.empRemarks=request.POST['empRemarks']
     employee.empStatus=request.POST['empStatus']
+    temppanel=employee.empPanel
     employee.empPanel=request.POST['empPanel']
     employee.empDesignation=request.POST['empDesignation']
     employee.empBenchmng=request.POST['empBenchmng']
+    for i in interviewers:
+      print(temppanel,employee.empPanel,i.name,employee.empPanel,employee.empStatus)
+      if(temppanel!=employee.empPanel and i.name==employee.empPanel and employee.empStatus=='NA' and i.name!='NA'):
+        employee.interviewer=i
+        employee.empStatus='L1 Assigned'
+      elif(temppanel!=employee.empPanel and i.name==employee.empPanel and employee.empStatus!='NA' and i.name=='NA'):
+        employee.interviewer=i
+        employee.empStatus='NA' 
+      elif(temppanel!=employee.empPanel and i.name==employee.empPanel):
+        employee.interviewer=i
     employee.save() 
     messages.success(request, 'Profile updated sucessfully.')
-    return redirect('/show')
+    count_interview()
+    return redirect('../show')
   else:
     employees = Employee.objects.all()
     interviewers = Interviewer.objects.values('name')
     return render(request,'employee_register/showEmp.html' ,{'employees':employees,'interviewers':interviewers})
   
-# remove employee
+#remove employee
 def remove_emp(request,emp_code):
   employees = Employee.objects.get(emp_code=emp_code)
   employees.delete()
   messages.success(request, 'Profile deleted sucessfully.')
-  return redirect('/show')
+  return redirect('../show')
   '''#if we use post contidition using form popup
   if request.method == 'POST':
       employees.delete()
@@ -170,6 +200,18 @@ def show_Req(request):
   requirements = Requirement.objects.all()
   return render(request, "employee_register/showReq.html", {'requirements':requirements})
 
+def count_interview():
+  interviewers = Interviewer.objects.all()
+  employees = Employee.objects.all()
+  for interviewer in interviewers:
+    count=0
+    for employee in employees:
+      if(interviewer.interviewer_id==employee.interviewer):
+        count=count+1
+    interviewer.count=count
+    interviewer.save()
+
+
 # Edit requirement
 def edit_req(request,req_id): 
   if request.method == 'POST':
@@ -193,4 +235,3 @@ def remove_req(request,req_id):
   requirement.delete()
   messages.success(request, 'Requirement deleted sucessfully.')
   return redirect('/showReq')
-
