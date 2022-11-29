@@ -41,8 +41,6 @@ def insert_emp(request,template_name="employee_register/employee_list.html"):
       messages.success(request, 'Profile updated sucessfully.')
       return render(request, 'employee_register/profile_upload.html')
   else:   
-    storage = messages.get_messages(request)
-    storage.used = True
     return render(request, 'employee_register/profile_upload.html')
 
 # Home page 
@@ -64,7 +62,7 @@ def home(request):
   return render(request, "employee_register/home.html",{'profileCount':profileCount,'deployedCount':deployedCount,'progessCount':progessCount,'rejectCount':rejectCount})
 
 #show employee 
-def show_emp(request):  
+def show_emp(request): 
   employees = Employee.objects.all()
   interviewers = Interviewer.objects.values('name')
   return render(request, "employee_register/showEmp.html",{'employees':employees,'interveiwers':interviewers} )
@@ -90,9 +88,7 @@ def edit_emp(request,emp_code):
   else:
     employees = Employee.objects.all()
     interviewers = Interviewer.objects.values('name')
-    storage = messages.get_messages(request)
-    storage.used = True
-    return render(request,'employee_register/edit.html' ,{'employees':employee,'interviewers':interviewers})
+    return render(request,'employee_register/showEmp.html' ,{'employees':employees,'interviewers':interviewers})
   
 # remove employee
 def remove_emp(request,emp_code):
@@ -131,7 +127,6 @@ def profile_upload(request):
       if not csv_file.name.endswith('.csv'):
           messages.error(request, 'THIS IS NOT A CSV FILE')
           prompt = {
-          'warningMsg': 'THIS IS NOT A CSV FILE',
           'profiles': data 
                 }
           return redirect('../upload-csv/')
@@ -168,8 +163,6 @@ def insert_requirement(request):
       messages.success(request, 'requirement added sucessfully.')
       return redirect('../insertRequirement/')
   else:   
-    storage = messages.get_messages(request)
-    storage.used = True
     return render(request, "employee_register/insertRequirement.html")
       
 # show requirements
@@ -181,7 +174,6 @@ def show_Req(request):
 def edit_req(request,req_id): 
   if request.method == 'POST':
     requirement = Requirement.objects.get(id=req_id)
-    
     requirement.requestor = request.POST['requestor']       
     requirement.reqPrimary = request.POST['reqPrimary']       
     requirement.reqSecondary = request.POST['reqSecondary']       
@@ -193,8 +185,6 @@ def edit_req(request,req_id):
     return redirect('/showReq')
   else:
     requirements = Requirement.objects.all()
-    storage = messages.get_messages(request)
-    storage.used = True
     return render(request,'employee_register/showReq.html' ,{'requirements':requirements})
 
 # remove requirement
