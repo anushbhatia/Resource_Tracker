@@ -14,7 +14,7 @@ def profile_percentange():
   requirements=Requirement.objects.all()
   for employee in employees:
     for requirement in requirements:
-      if(employee.empPrimary.lower()==requirement.reqPrimary.lower()):
+      if(employee.empDesignation==requirement.reqGrade and employee.empPrimary.lower()==requirement.reqPrimary.lower()):
         percent=50
   return percent
 # insert employee from form
@@ -87,6 +87,7 @@ def show_emp(request):
 
 #edit employee
 def edit_emp(request,emp_code): 
+  interviewers = Interviewer.objects.all()
   if request.method == 'POST':
     employee = Employee.objects.get(emp_code=emp_code)
     #employee.emp_code= request.POST['emp_code']       
