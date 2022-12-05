@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from .models import Employee, Interviewer, Requirement
 import csv, io
 from django.contrib import messages
+from django.contrib.auth.models import User
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 from django.core import serializers
 '''
 LOCATION: 30
@@ -17,7 +20,9 @@ def profile_percentange():
       if(employee.empDesignation==requirement.reqGrade and employee.empPrimary.lower()==requirement.reqPrimary.lower()):
         percent=50
   return percent
+
 # insert employee from form
+@login_required(login_url="auth/login/")
 def insert_emp(request,template_name="employee_register/employee_list.html"):  
   if request.method == "POST":  
     empId = None
@@ -58,9 +63,11 @@ def insert_emp(request,template_name="employee_register/employee_list.html"):
     return render(request, 'employee_register/profile_upload.html')
 
 #Home page 
+@login_required(login_url="auth/login/")
 def home(request): 
   employees = Employee.objects.all()
-  profileCount = 0
+  # userName = request.user.get_full_name()
+  profileCount = 0 
   deployedCount = 0
   progessCount = 0
   rejectCount = 0
@@ -79,13 +86,16 @@ class Interviewerc(object):
         def __init__(self, interviewer_id, name):
             self.interviewer_id = interviewer_id
             self.name = name
+
 #show employee 
+@login_required(login_url="auth/login/")
 def show_emp(request): 
   employees = Employee.objects.all()
   interviewers = serializers.serialize("json", Interviewer.objects.all())
   return render(request, "employee_register/showEmp.html",{'employees':employees,'interviewers':interviewers} )
 
 #edit employee
+@login_required(login_url="auth/login/")
 def edit_emp(request,emp_code): 
   interviewers = Interviewer.objects.all()
   if request.method == 'POST':
@@ -122,6 +132,7 @@ def edit_emp(request,emp_code):
     return render(request,'employee_register/showEmp.html' ,{'employees':employees,'interviewers':interviewers})
   
 #remove employee
+@login_required(login_url="auth/login/")
 def remove_emp(request,emp_code):
   employees = Employee.objects.get(emp_code=emp_code)
   employees.delete()
@@ -142,6 +153,7 @@ def remove_emp(request,emp_code):
 
 # insert employee from csv upload
 # one parameter named request
+@login_required(login_url="auth/login/")
 def profile_upload(request):
       template = "employee_register/profile_upload.html"
       data = Employee.objects.all()
@@ -181,6 +193,7 @@ def profile_upload(request):
       return render(request, template, context)
 
 # insert requirements
+@login_required(login_url="auth/login/")
 def insert_requirement(request):
   if request.method == "POST":  
       requestor= request.POST['requestor']       
@@ -197,6 +210,7 @@ def insert_requirement(request):
     return render(request, "employee_register/insertRequirement.html")
       
 # show requirements
+@login_required(login_url="auth/login/")
 def show_Req(request):
   requirements = Requirement.objects.all()
   return render(request, "employee_register/showReq.html", {'requirements':requirements})
@@ -212,8 +226,8 @@ def count_interview():
     interviewer.count=count
     interviewer.save()
 
-
 # Edit requirement
+@login_required(login_url="auth/login/")
 def edit_req(request,req_id): 
   if request.method == 'POST':
     requirement = Requirement.objects.get(id=req_id)
@@ -231,8 +245,75 @@ def edit_req(request,req_id):
     return render(request,'employee_register/showReq.html' ,{'requirements':requirements})
 
 # remove requirement
+@login_required(login_url="auth/login/")
 def remove_req(request,req_id):
   requirement = Requirement.objects.get(id=req_id)
   requirement.delete()
   messages.success(request, 'Requirement deleted sucessfully.')
   return redirect('/showReq')
+
+# register  
+@login_required(login_url="login/")
+def register(request):
+  if request.method == 'POST':
+    first_name = request.POST['first_name']
+    last_name = request.POST['last_name']
+    username = request.POST['username']
+    email = request.POST['email']
+    password1 = request.POST['password1']
+    password2 = request.POST['password2']
+    if password1 == password2:
+      if User.objects.filter(username=username).exists():
+        messages.warning(request, 'Username already taken.')
+        return redirect('../register/')
+      elif User.objects.filter(email=email).exists():
+        messages.warning(request, 'Email already exists.')
+        return redirect('../register/')
+      elif User.objects.filter(first_name=first_name, last_name=last_name).exists():
+        messages.warning(request, 'User with same name already exists')
+        return redirect('../register/')
+      else:
+        user = User.objects.create_user(username=username, password=password1, email=email, first_name=first_name, last_name=last_name)
+        user.save()
+        userType = request.POST['userType']
+        if userType == "interviewer":
+          name= first_name +' '+ last_name     
+          skill = request.POST['skill'] 
+          data = Interviewer(name=name,skill=skill)
+          data.save()
+        messages.success(request, 'User added successfully.')
+        return redirect('../register/')
+    else:
+      messages.warning(request, 'Password not matching...')
+      return redirect('../register/')
+  else:
+    return render(request, "employee_register/register.html")
+
+# password change
+@login_required(login_url="auth/login/")
+def pass_change(request):
+  if request.method == "POST":
+    username = request.user.get_username()
+    oldpass = request.POST['password1']
+    newpass1 = request.POST['password2']
+    newpass2 = request.POST['password3']
+    userAuth = authenticate(username=username, password=oldpass)
+    if userAuth is not None:
+      if newpass1 == newpass2:
+        if newpass1 == oldpass:
+          messages.warning(request,'Please do not use same password.')
+          return redirect('../passChange/')
+        else:
+          u = User.objects.get(username=username)
+          u.set_password(newpass1)
+          u.save()
+          messages.success(request, "Password changed successfully. Please login again.")
+          return redirect('../login/')
+      else:
+        messages.warning(request, 'Password not matching...')
+        return redirect('../passChange/')
+    else:
+      messages.error(request,"Old password is incorrect")
+      return redirect('../passChange/')
+  else:
+    return render(request, 'employee_register/passChange.html')

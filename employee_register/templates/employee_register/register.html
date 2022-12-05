@@ -1,0 +1,93 @@
+{% extends 'employee_register/base.html' %}
+{% load static %}
+{% block content %}
+  <style>
+  #addUserActive {
+    color: #49b5e7;
+  }
+  </style>
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+
+  <div class="content">
+    {% if messages %}
+      <div class="alert alert-success" role="alert" style="left:10px; width:fit-content">
+        {% for message in messages %}
+            {{message}}
+        {% endfor %}
+      </div>
+    {% endif %}
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-1 text-center">
+          </div>
+          <div class="col-md-5 contents">
+            <div class="form-block">
+            <div class="mb-4">
+                  <h3>Add <strong>User</strong></h3>
+                </div>
+                <form action="../register/" method="post">
+                  {% csrf_token %}
+                    <div class="form-group first" >
+                      <label for="first_name">First Name</label>
+                      <input type="text" class="form-control" id="first_name" name="first_name" required>
+                    </div>
+                    <div class="form-group first">
+                      <label for="last_name">Last Name</label>
+                      <input type="text" class="form-control" id="last_name" name="last_name">
+                    </div>
+                    <div class="form-group first">
+                      <label for="username">Username</label>
+                      <input type="text" class="form-control" id="username" name="username">
+                    </div>
+                    <div class="form-group first">
+                      <label for="email">Email</label>
+                      <input type="email" class="form-control" id="email" name="email">
+                    </div>
+                    <label for="userType" class="text-muted">User type</label>
+                    <select class="custom-select custom-select-sm" id="userType" name="userType" onchange="showSkill(this)">
+                        <option selected value="user">User</option>
+                        <option value="manager">Manager</option>
+                        <option value="interviewer">Interviewer</option>
+                    </select>
+                    <div class="form-group first" id='skill' style="display: none;">
+                      <label for="skill">Skill(technology) of Interviewer</label>
+                      <input type="text" class="form-control" id="skill" name="skill">
+                    </div>
+                    <div class="form-group first">
+                      <label for="password1">Password</label>
+                      <input type="password" class="form-control" id="password1" name="password1">
+                    </div>
+                    <div class="form-group first">
+                      <label for="password2">Please confirm Password</label>
+                      <input type="password" class="form-control" id="password2" name="password2">
+                    </div>
+                    <input type="submit" value="Submit" class="btn btn-pill text-white btn-block btn-primary">
+                </form>
+              </div>
+          </div>
+
+          <div class="col-md-5">
+            <span class="d-block text-center my-4 text-muted"></span>
+            <div class="social-login text-center">
+                  <img src="{% static 'insertAsset/img/hero-img.png' %}" alt="Image" class="img-fluid">
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script type="text/javascript">
+      function showSkill(select){
+        if(select.value=="interviewer"){
+         document.getElementById('skill').style.display = "block";
+        } else{
+          document.getElementById('skill').style.display = "none";
+        }
+      } 
+    </script>
+
+{% endblock content %}
+
+

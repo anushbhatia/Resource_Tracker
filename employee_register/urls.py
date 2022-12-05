@@ -2,6 +2,10 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
+   #link of login page
+   path('register/',views.register, name="register"),
+   path('passChange/',views.pass_change,name="pass_change"),
+  
    #link of home page
    path('', views.home, name='home'),
    #links of employee

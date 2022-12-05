@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'employee_register'
+    'employee_register',
+    'emp_login'
 ]
 
 MIDDLEWARE = [
@@ -75,21 +76,13 @@ WSGI_APPLICATION = 'resource_tracker.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-
     'default': {
-
         'ENGINE': 'django.db.backends.postgresql',
-
         'NAME': 'EmployeeDB',
-
         'USER': 'postgres',
-
         'PASSWORD': 'postgres',
-
         'HOST': 'localhost'
-
     }
-
 }
 
 # Password validation
@@ -134,5 +127,16 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'asset')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# SMTP Server (Email)
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
+
+
+# EMAIL_HOST = 'smtp.sendgrid.net'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'testsite_app'
+# EMAIL_HOST_PASSWORD = 'mys3cr3tp4ssw0rd'
+# EMAIL_USE_TLS = True
+# DEFAULT_FROM_EMAIL = 'TestSite Team <noreply@example.com>'
