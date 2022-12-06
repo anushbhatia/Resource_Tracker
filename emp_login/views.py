@@ -17,8 +17,10 @@ def login_user(request):
         login(request, user)
         return redirect("../../")
       else:
+        login(request, user)
+        logout(request)
         messages.warning(request,'As a new user please set a new password.')
-        return render(request, 'emp_login/passChange.html')
+        return render(request, 'emp_login/passChange.html', {'username':username})
     else:
       messages.error(request,"Invalid username or password.")
       return redirect('../login/')
@@ -38,6 +40,7 @@ def pass_change(request):
     oldpass = request.POST['password1']
     newpass1 = request.POST['password2']
     newpass2 = request.POST['password3']
+    username = request.POST['username']
     if newpass1 == newpass2:
         if newpass1 == oldpass:
           messages.warning(request,'Please do not use same password.')
