@@ -129,6 +129,7 @@ def edit_emp(request,emp_code):
   else:
     employees = Employee.objects.all()
     interviewers = Interviewer.objects.values('name')
+    count_interview()
     return render(request,'employee_register/showEmp.html' ,{'employees':employees,'interviewers':interviewers})
   
 #remove employee
@@ -221,7 +222,9 @@ def count_interview():
   for interviewer in interviewers:
     count=0
     for employee in employees:
-      if(interviewer.interviewer_id==employee.interviewer):
+      if(interviewer.interviewer_id==employee.interviewer_id and employee.empStatus=='L1 Assigned' and interviewer.interviewer_id!=0 ):
+        count=count+1
+      elif(interviewer.interviewer_id==employee.interviewer_id and employee.interviewer_id==0):
         count=count+1
     interviewer.count=count
     interviewer.save()
