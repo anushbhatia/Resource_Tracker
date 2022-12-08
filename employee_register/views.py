@@ -202,7 +202,7 @@ def profile_upload(request):
           countskip=countskip+1
 
       context = {}
-      a='Profiles from csv added sucessfully.Profiles Added:'+str(countadd) +" Profiles Skipped: " +str(countskip)
+      a='Profiles from csv added sucessfully.Profiles Added: '+str(countadd) +" Profiles Skipped: " +str(countskip)
       messages.success(request, a)
       return render(request, template, context)
 
