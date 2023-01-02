@@ -41,7 +41,7 @@ def insert_emp(request,template_name="employee_register/employee_list.html"):
       empBenchmng=request.POST['empBenchmng']  
       data = Employee(emp_code=emp_code, empFullname=empFullname, empEmail=empEmail, empPrimary=empPrimary, 
       empSecondary= empSecondary, empLocation=empLocation, empDesignation=empDesignation,
-      empBenchmng=empBenchmng)        
+      empBenchmng=empBenchmng,interviewer_id=1)        
       data.save()          
       messages.success(request, 'Profile added sucessfully.')
       return redirect('../upload-csv/')

@@ -20,7 +20,7 @@ class Employee(models.Model):
     empStatus=models.CharField(max_length=100,default='NA')
     empPanel=models.CharField(max_length=100,default='NA')
     empDate=models.DateField(default=date.today)
-    interviewer=models.ForeignKey(Interviewer,on_delete=models.PROTECT,default=0)
+    interviewer=models.ForeignKey(Interviewer,on_delete=models.PROTECT,default=1)
 class Meta:        
     db_table="Employee"
 
