@@ -135,6 +135,7 @@ def edit_emp(request,emp_code):
   else:
     employees = Employee.objects.all()
     interviewers = Interviewer.objects.values('name')
+    count_interview()
     return render(request,'employee_register/showEmp.html' ,{'employees':employees,'interviewers':interviewers})
   
   #edit employee by interviewer
@@ -196,6 +197,8 @@ def remove_emp(request,emp_code):
 @permission_required('employee_register.add_employee', raise_exception=True)
 def profile_upload(request):
       template = "employee_register/profile_upload.html"
+      countadd=0
+      countskip=0
       data = Employee.objects.all()
       # prompt is a context variable that can have different values depending on their context
       prompt = {
@@ -218,18 +221,29 @@ def profile_upload(request):
       io_string = io.StringIO(data_set)
       next(io_string)
       for column in csv.reader(io_string, delimiter=',', quotechar="|"):
-        _, created = Employee.objects.update_or_create(
-        emp_code= column[0],      
-        empFullname = column[1],      
-        empEmail = column[2],    
-        empPrimary = column[3],       
-        empSecondary= column[4],
-        empLocation= column[5],
-        empDesignation=column[6],
-        empBenchmng=column[7],
+        empId =None
+        try:
+          empId = Employee.objects.get(emp_code=column[0])
+        except:
+          pass
+        if(empId==None):
+          countadd=countadd+1
+          _, created = Employee.objects.update_or_create(
+          emp_code= column[0],      
+          empFullname = column[1],      
+          empEmail = column[2],    
+          empPrimary = column[3],       
+          empSecondary= column[4],
+          empLocation= column[5],
+          empDesignation=column[6],
+          empBenchmng=column[7],
         )
+        else:
+          countskip=countskip+1
+
       context = {}
-      messages.success(request, 'Profiles from csv added sucessfully. ')
+      a='Profiles from csv added sucessfully.Profiles Added: '+str(countadd) +" Profiles Skipped: " +str(countskip)
+      messages.success(request, a)
       return render(request, template, context)
 
 # insert requirements
@@ -263,7 +277,9 @@ def count_interview():
   for interviewer in interviewers:
     count=0
     for employee in employees:
-      if(interviewer.interviewer_id==employee.interviewer):
+      if(interviewer.interviewer_id==employee.interviewer_id and employee.empStatus=='L1 Assigned' and interviewer.interviewer_id!=0 ):
+        count=count+1
+      elif(interviewer.interviewer_id==employee.interviewer_id and employee.interviewer_id==0):
         count=count+1
     interviewer.count=count
     interviewer.save()
