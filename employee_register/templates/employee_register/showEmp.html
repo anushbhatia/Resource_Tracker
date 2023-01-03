@@ -6,6 +6,19 @@
     #showActive, #showEmpActive {
       color: #49b5e7;
     }
+    .formPopup{
+      display: none; 
+      position: fixed;
+      float: left; /* Stay in place */
+      z-index: 1; /* Sit on top */
+      left: 0;
+      top: 5;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: #474e5d79;
+      padding-top: 40px;
+    }
 </style>
 
 <script src="{% static 'showAsset/excel-bootstrap-table-filter-bundle.js' %}"></script>
@@ -13,40 +26,119 @@
 <link rel="stylesheet" href="{% static 'showAsset/excel-bootstrap-table-filter-style.css' %}" />
 <link rel="stylesheet" href="{% static 'showAsset/styleMain.css' %}" />  
 
-        <!--Table Start -->
+        
         <div class="content">
-            <div class="main-sparkline13-hd">
-                <h4>Profiles Data Table</h4>
-            </div>
-            <div class="table-filter">
-                {% if messages %}
-                    <div class="alert alert-success" role="alert" style="left:10px; width:fit-content">
-                        {% for message in messages %}
-                        {{message}}
-                        {% endfor %}
+            <!-- Edit form (for developer & manager)(popup) -->
+            <div class="contents formPopup" id="updateForm">
+                <div class="form-block col-md-4" style="margin: auto 1% 10% auto;">
+                <div class="mb-3">
+                    <h4>Update Details of<strong> Employee</strong><span onclick=closeForm() class="close" title="Close" style="color:red; text-align:end"><b>x</b></span></h4>
+                </div>
+                <form id="formUpdate" method="post">
+                    {% csrf_token %}
+                    
+                    <div class="form-group first " id="emp_codeDiv">
+                    <label for="emp_code">ID</label>
+                    <input type="text" class="form-control " id="emp_code" name="emp_code" disabled>
                     </div>
-                {% endif %}
-                <span class="counter pull-right"><input type="text" id="myInput" onkeyup="myFunction()" class="form-control" placeholder="What you looking for?"></span>
+                    <div class="form-group first" id="empFullnameDiv">
+                    <label for="empFullname">Name</label>
+                    <input type="text" class="form-control" id="empFullname" name="empFullname" > 
+                    </div>
+                    <div class="form-group first" id="empEmailDiv">
+                    <label for="empEmail">Email</label>
+                    <input type="email" class="form-control" id="empEmail" name="empEmail" > 
+                    </div>
+                    <div class="form-group first" id="empLocationDiv">
+                    <label for="empLocation">Location</label>
+                    <input type="text" class="form-control" id="empLocation" name="empLocation" >
+                    </div>
+                    <div class="form-group first" id="empDesignationDiv">
+                    <label for="empDesignation">Designation</label>
+                    <input type="text" class="form-control" id="empDesignation" name="empDesignation" >
+                    </div>
+                    <div class="form-group first" id="empBenchmngDiv">
+                    <label for="empBenchmng">Bench Manager</label>
+                    <input type="text" class="form-control" id="empBenchmng" name="empBenchmng" >
+                    </div>
+                    <div class="form-group first" id="empPrimaryDiv">
+                    <label for="empPrimary">Primary Skill</label>
+                    <input type="text" class="form-control" id="empPrimary" name="empPrimary" >
+                    </div>
+                    <div class="form-group first" id="empSecondaryDiv">
+                    <label for="empSecondary">Secondary Skill</label>
+                    <input type="text" class="form-control" id="empSecondary" name="empSecondary" >
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                          <label for="empStatus" class="col-form-label col-form-label-sm" >Status</label>
+                        </div>
+                        <div class="col-sm-10">
+                          <select class="custom-select custom-select" id="opt1" name="empStatus">
+                          </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                          <label for="empPanel" class="col-form-label col-form-label-sm" >Panel</label>
+                        </div>
+                        <div class="col-sm-10">
+                          <select class="custom-select custom-select" id="empPanel" name="empPanel">
+                          </select>
+                        </div>
+                    </div>
+                    <div class="form-group first" id="empRemarksDiv">
+                    <label for="empRemarks">Remarks</label>
+                    <input type="text" class="form-control" id="empRemarks" name="empRemarks" >
+                    </div>
+                    <div class="row" >
+                        <div class="col-sm-4"><button type="submit" class="btn text-white btn-block btn-primary " style="width: fit-content;">Update  </button>
+                        </div>
+                        <div class="col-sm-4"><button type="reset" class="btn text-white btn-block btn-primary" onclick="closeForm()" style="width: fit-content; background-color: rgba(255, 0, 0, 0.792);">Close  </button>
+                        </div>
+                    </div>
+                </form>
+                </div>
+            </div>
+
+
+            <table style="width: 100%;">
+                <tr >
+                    <td><h4 >Profiles Data Table</h4></td>
+                    <td align = "center">
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} " role="alert" style="left:10px; width:fit-content">
+                            <a class="close" data-dismiss="alert">×</a>
+                            {{message   }}
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                    </td>
+                    <td align = "right"><span class="counter"><input type="text" id="myInput" onkeyup="myFunction()" class="form-control" placeholder="What you looking for?" style="width:fit-content">
                         <script>
-                            $(document).ready(function () {
-                                $("#myInput").on("keyup", function () {
-                                    var value = $(this).val().toLowerCase();
-                                    $("#divTable tr").filter(function () {
-                                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                                $(document).ready(function () {
+                                    $("#myInput").on("keyup", function () {
+                                        var value = $(this).val().toLowerCase();
+                                        $("#divTable tr").filter(function () {
+                                            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                                        });
                                     });
                                 });
-                            });
-                            window.history.pushState({},"test",window.location.origin)
-                        </script> 
-            </div>
-            <table id="divTable" class="table table-striped table-hover" data-toggle="table" data-pagination="true" data-search="true" data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true"
+                            </script>
+                        </span>
+                    </td>
+                </tr>
+            </table>
+            <!--Table Start -->
+            <table id="divTable" class="table table-hover" data-toggle="table" data-pagination="true" data-search="true" data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true"
             data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
                 <thead>
                     <tr>
-                        <th data-field="state" data-checkbox="true" >#</th>
+                        <th data-field="state" data-checkbox="true" >Sr. No.</th>
                         <th data-field="empDate" data-editable="true">Date</th>
-                        <th data-field="emp_code">ID</th>
-                        <th data-field="empFullname" data-editable="true">Name</th>
+                        <th data-field="emp_code">ID &<br>Name</th>
+                        <th data-field="empFullname" data-editable="true" style="display: none;">Name</th>
                         <th data-field="empEmail" data-editable="true">Email</th>
                         <th data-field="empPrimary" data-editable="true">Primary Skill</th>
                         <th data-field="empSecondary" data-editable="true">Secondary Skill</th>
@@ -54,13 +146,21 @@
                         <th data-field="empDesignation" data-editable="true">Designation</th>
                         <th data-field="empBenchmng" data-editable="true">Bench Manager</th>
                         <th data-field="empStatus" data-editable="true">Status</th>
-                        <th data-field="empPanel" data-editable="true">Panel</th>
+                        <th data-field="empPanel1" data-editable="true" style="display:none;">Panel</th>
+                        <th data-field="empPanel2" data-editable="true">Panel</th>
                         <th data-field="empRemarks" data-editable="true">Remarks</th>
-                        <th data-field="action">Action</th>
+                        {% if perms.employee_register.change_employee or perms.employee_register.delete_employee %}
+                            <th data-field="action">Action</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 {% for employee in employees %}
-                    <tr>
+                    <tr
+                    {% if employee.empStatus == 'Client Select' %}
+                    style="background-color: rgba(196, 244, 196, 0.589);"
+                    {% elif employee.empStatus == 'Client Reject' or employee.empStatus == 'L1 Reject' %}
+                    style="background-color: #e5997833;"
+                    {% endif %} >
                         <td>
                             {{forloop.counter}}
                         </td>
@@ -68,9 +168,9 @@
                             {{employee.empDate}}
                         </td>
                         <td>
-                            {{employee.emp_code}}
+                            {{employee.emp_code}} <br> {{employee.empFullname}}
                         </td> 
-                        <td>
+                        <td style="display: none;">
                             {{employee.empFullname}}
                         </td>
                         <td>
@@ -95,16 +195,34 @@
                             {{employee.empStatus}}
                         </td>
                         <td>
-                            {{employee.empPanel}}
+                            <div>{{employee.interviewer}}</div>
+                            <span id="ts_{{forloop.counter}}" style="display:none;">{{employee.empTimeStamp}}</span>
+                            {% if employee.empStatus == 'L1 Assigned' %}
+                                <div style="color:rgb(169,169,169);" id="days_count_{{forloop.counter}}">
+                                </div>
+                                <script>
+                                    ts = document.getElementById("ts_{{forloop.counter}}").innerHTML;
+                                    date = ts.split(',')[0].split('.')[1].trim();
+                                    month = ts.split(',')[0].split('.')[0].trim();
+                                    year = ts.split(',')[1].trim();
+                                    ts_date = new Date(year+"-"+month+"-"+date);
+                                    currentDate = new Date();
+                                    diffTime = Math.abs(currentDate - ts_date);
+                                    diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); 
+                                    if(diffDays==0){document.getElementById("days_count_{{forloop.counter}}").innerHTML='Assigned today';}
+                                    else {document.getElementById("days_count_{{forloop.counter}}").innerHTML='Assigned '+diffDays+' days ago';}
+                                </script>
+                            {% endif %}
+                        </td>
+                        <td style="display:none;">
+                            {{employee.interviewer}}
                         </td>
                         <td>
-                            
                             {{employee.empRemarks}}
                         </td>
                         <td>
-                           
-                            <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{employee.emp_code}}','{{employee.empFullname}}','{{employee.empEmail}}','{{employee.empPrimary}}','{{employee.empSecondary}}','{{employee.empLocation}}','{{employee.empStatus}}','{{employee.empRemarks}}','{{employee.empDesignation}}','{{employee.empBenchmng}}','{{employee.empPanel}}','{{employee.interviewer_id}}','{{interviewers}}')"><i class="material-icons">&#xE254;</i></a>
-                            <a href="/removeEmp/{{employee.emp_code}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete {{employee.fullname}}?')"><i class="material-icons">&#xE872;</i></a>
+                            {% if perms.employee_register.change_employee %}
+                            {% for group in  user.groups.all %}{% if 'Interviewer' == group.name %}<a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openIntForm('{{employee.emp_code}}','{{employee.empFullname}}','{{employee.empEmail}}','{{employee.empStatus}}','{{employee.empRemarks}}','{{employee.empPanel}}','{{employee.interviewer_id}}','{{interviewers}}')"><i class="material-icons">&#xE254;</i></a>{% else %}<a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{employee.emp_code}}','{{employee.empFullname}}','{{employee.empEmail}}','{{employee.empPrimary}}','{{employee.empSecondary}}','{{employee.empLocation}}','{{employee.empStatus}}','{{employee.empRemarks}}','{{employee.empDesignation}}','{{employee.empBenchmng}}','{{employee.empPanel}}','{{employee.interviewer_id}}','{{interviewers}}')"><i class="material-icons">&#xE254;</i></a>{% endif %}{% endfor %}{% endif %}{% if perms.employee_register.delete_employee %}<a href="/removeEmp/{{employee.emp_code}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete this record?')"><i class="material-icons">&#xE872;</i></a>{% endif %}
                             <!-- <button onclick="document.getElementById('id01').style.display='block'">Open Modal</button> -->
                         </td>
                     </tr>
@@ -114,31 +232,19 @@
             </table>
         </div>
     </div>   
-    <!-- update form start -->
-    <div class="form-popup" id="updateForm" name="update_Form">
-        <form id="formUpdate" class="form-container" method="POST">
-            {% csrf_token %}
-          <h5>Update Details of Employee <span onclick=closeForm() class="close" title="Close Modal" style="color:red; text-align:end">×</span></h5>
 
-          <label for="emp_code"><b>ID</b></label>
-          <!--Disabled for input-->
-          <input type="text" value="emp_code" id="emp_code" name="emp_code" disabled>
+
+    <!-- update form (for Interviewer) start -->
+    <div class="form-popup" id="updateFormInt" name="update_Form_Int">
+        <form id="formUpdate_int" class="form-container" method="POST">
+            {% csrf_token %}
+          <h5>Update Details of Employee <span onclick=closeForm() class="close" title="Close" style="color:red; text-align:end">×</span></h5>
           <label for="empFullname"><b>Name</b></label>
-          <input type="text" value="empFullname" name="empFullname" id="empFullname">
+          <input type="text" name="empFullname" id="empFullname_int" disabled>
           <label for="empEmail"><b>Email</b></label>
-          <input type="text" value="empEmail" name="empEmail" id="empEmail">
-          <label for="empLocation"><b>Location</b></label>
-          <input type="text" value="empLocation" name="empLocation" id="empLocation" >
-          <label for="empDesignation"><b>Designation</b></label>
-          <input type="text" value="empDesignation" name="empDesignation" id="empDesignation">
-          <label for="empBenchmng"><b>Bench Manager</b></label>
-          <input type="text" value="empBenchmng" name="empBenchmng" id="empBenchmng">
-          <label for="empPrimary"><b>Primary Skill</b></label>
-          <input type="text" value="empPrimary" name="empPrimary" id="empPrimary">
-          <label for="empSecondary"><b>Secondary Skill</b></label>
-          <input type="text" value="empSecondary" name="empSecondary" id="empSecondary">
+          <input type="text" name="empEmail" id="empEmail_int" disabled> 
           <label for="empStatus"><b>Status</b></label>
-          <select id="opt1" class="form-select" name="empStatus" id="empStatus">
+          <select id="opt1_int" class="form-select" name="empStatus">
             <option value="L1 Assigned">L1 Assigned</option>
             <option value="L1 Select">L1 Select</option>
             <option value="L1 Reject">L1 Reject</option>
@@ -146,18 +252,17 @@
             <option value="Client Select">Client Select</option>
             <option value="Others">Others</option>
           </select>
-          <label for="empPanel"><b>Panel</b></label>
-          <select id="panel" class="form-select" name="empPanel" id="empPanel">
+          <label for="empPanel" style="display: none;"><b>Panel</b></label>
+          <select class="form-select" name="empPanel" id="empPanel_int" style="display: none;">
             </select>
           <label for="empRemarks"><b>Remarks</b></label>
-          <input class = "form-control text-wrap" col="2" rows = "3" type="text" value="empRemarks" name="empRemarks" id="empRemarks">
+          <input class = "form-control text-wrap" col="2" rows = "3" type="text" name="empRemarks" id="empRemarks_int">
 
           <button type="submit" class="btn">Update</button>
           <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
         </form>
       </div>
     <!-- Update form end -->
-
   <script>
         function openForm(id,name,mail,prim,sec,loc,sts,remk,desg,mang,panelName,empintid,interviewer) {
           var status=[
@@ -168,14 +273,26 @@
             'Client Reject',
             'Client Select',
             'Others'
-        ]
+            ]
           document.getElementById("updateForm").style.display = "block";
-          document.getElementById("emp_code").value=id;
-          document.getElementById("empFullname").value=name;
-          document.getElementById("empEmail").value=mail;
-          document.getElementById("empPrimary").value=prim;
-          document.getElementById("empSecondary").value=sec;
-          document.getElementById("empLocation").value=loc;
+          className = "emp_code";
+          addClass(id,className);
+          document.getElementById(className).value=id;
+          className = "empFullname";
+          addClass(name,className);
+          document.getElementById(className).value=name;
+          className = "empEmail";
+          addClass(mail,className);
+          document.getElementById(className).value=mail;
+          className = "empPrimary";
+          addClass(prim,className);
+          document.getElementById(className).value=prim;
+          className = "empSecondary";
+          addClass(sec,className);
+          document.getElementById(className).value=sec;
+          className = "empLocation";
+          addClass(loc,className);
+          document.getElementById(className).value=loc;
           var ddl = $("#opt1");
           ddl.empty();
           ddl.append($("<option selected></option>").val(sts).html(sts));
@@ -185,24 +302,104 @@
             if(sts!=status[s])
             ddl.append($("<option></option>").val(status[s]).html(status[s]));
          }
-          var dd2 = $("#panel");
+          var dd2 = $("#empPanel");
           dd2.empty();
-          dd2.append($("<option selected></option>").val(panelName).html(panelName));
           interviewer=eval(interviewer);
           for(var i=0;i<interviewer.length;i++)
           {
-            if(interviewer[i].pk!=empintid)
-            dd2.append($("<option></option>").val(interviewer[i].fields.name).html(interviewer[i].fields.name+' '+interviewer[i].fields.count));
+            if(interviewer[i].pk==empintid){
+                dd2.append($("<option selected></option>").val(interviewer[i].fields.name).html(interviewer[i].fields.name));
+            }
+            if(interviewer[i].pk!=empintid){
+                if (interviewer[i].fields.name ==  'NA')
+                    dd2.append($("<option></option>").val(interviewer[i].fields.name).html(interviewer[i].fields.name+', Assigned: '+interviewer[i].fields.count));
+                else 
+                    dd2.append($("<option></option>").val(interviewer[i].fields.name).html(interviewer[i].fields.name+', Assigned: '+interviewer[i].fields.count+', Skill: '+interviewer[i].fields.skill));
+            }
+            
           }
-          document.getElementById("empRemarks").value=remk;
-          document.getElementById("empDesignation").value=desg;
-          document.getElementById("empBenchmng").value=mang;
-          document.getElementById("formUpdate").action = "../editEmp/"+ id;
+          className = "empRemarks";
+          addClass(remk,className);
+          document.getElementById(className).value=remk;
+          className = "empDesignation";
+          addClass(desg,className);
+          document.getElementById(className).value=desg;
+          className = "empBenchmng";
+          addClass(mang,className);
+          document.getElementById(className).value=mang;
+          document.getElementById("formUpdate").action = "../editEmp/"+id;
         }
         
+        function openIntForm(id,name,mail,sts,remk,panelName,empintid,interviewer) {
+            var status=[
+              'NA',
+              'L1 Assigned',
+              'L1 Select',
+              'L1 Reject',
+              'Client Reject',
+              'Client Select',
+              'Others'
+              ]
+            document.getElementById("updateFormInt").style.display = "block";
+            document.getElementById("empFullname_int").value=name;
+            document.getElementById("empEmail_int").value=mail;
+            var ddl = $("#opt1_int");
+            ddl.empty();
+            ddl.append($("<option selected></option>").val(sts).html(sts));
+           for (var s=0;s<status.length;s++)
+           {
+             
+              if(sts!=status[s])
+              ddl.append($("<option></option>").val(status[s]).html(status[s]));
+           }
+            var dd2 = $("#empPanel_int");
+            dd2.empty();
+            dd2.append($("<option selected></option>").val(panelName).html(panelName));
+            interviewer=eval(interviewer);
+            for(var i=0;i<interviewer.length;i++)
+            {
+                if(interviewer[i].pk!=empintid){
+                    if (interviewer[i].fields.name ==  'NA')
+                        dd2.append($("<option></option>").val(interviewer[i].fields.name).html(interviewer[i].fields.name+', Assigned: '+interviewer[i].fields.count));
+                    else 
+                        dd2.append($("<option></option>").val(interviewer[i].fields.name).html(interviewer[i].fields.name+', Assigned: '+interviewer[i].fields.count+', Skill: '+interviewer[i].fields.skill));
+                }
+            }
+            document.getElementById("empRemarks_int").value=remk;
+            document.getElementById("formUpdate_int").action = "../editEmpInt/"+ id;
+        }
+          
         function closeForm() {
           document.getElementById("updateForm").style.display = "none";
+          removeEditClass1()
+          document.getElementById("updateFormInt").style.display = "none";
         }
+        var modal1 = document.getElementById('updateForm');
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal1 ) {
+            modal1.style.display = "none";
+            removeEditClass1()
+          }
+        }
+        function addClass(field,className){
+          if(field != ''){
+            var v = document.getElementById(className+"Div");
+            v.classList.add("field--not-empty");
+          }
+        }
+        //for interviewer edit popup
+        function removeEditClass1(){
+            var list1 = ['emp_code','empFullname','empEmail','empPrimary','empSecondary','empLocation','empRemarks','empDesignation','empBenchmng'];
+            for(var i=0;i<9;i++){
+                remClass(list1[i]);
+            }
+        }
+        function remClass(className){
+          var v = document.getElementById(className+"Div");
+          v.classList.remove('field--not-empty');
+        }
+
     // Use the plugin once the DOM has been loaded.
     $(function () {
       // Apply the plugin 

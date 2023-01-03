@@ -15,41 +15,49 @@
 
         <!--Table Start -->
         <div class="content">
-            <div class="main-sparkline13-hd">
-                <h4>Requirements Data Table</h4>
-            </div>
-            <div class="table-filter">
-                {% if messages %}
-                    <div class="alert alert-success" role="alert" style="left:10px; width:fit-content">
-                        {% for message in messages %}
-                        {{message}}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <span class="counter pull-right"><input type="text" id="myInput" onkeyup="myFunction()" class="form-control" placeholder="What you looking for?"></span>
+            <table style="width: 100%;">
+                <tr >
+                    <td><h4>Requirements Data Table</h4></td>
+                    <td align = "center">
+                        {% if messages %}
+                            {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} " role="alert" style="left:10px; width:fit-content">
+                                <a class="close" data-dismiss="alert">×</a>
+                                {{message   }}
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                    <td align = "right"><span class="counter"><input type="text" id="myInput" onkeyup="myFunction()" class="form-control" placeholder="What you looking for?" style="width:fit-content">
                         <script>
-                            $(document).ready(function () {
-                                $("#myInput").on("keyup", function () {
-                                    var value = $(this).val().toLowerCase();
-                                    $("#divTable tr").filter(function () {
-                                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                                $(document).ready(function () {
+                                    $("#myInput").on("keyup", function () {
+                                        var value = $(this).val().toLowerCase();
+                                        $("#divTable tr").filter(function () {
+                                            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                                        });
                                     });
                                 });
-                            });
-                        </script> 
-            </div>
-            <table id="divTable" class="table table-striped table-hover" data-toggle="table" data-pagination="true" data-search="true" data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true"
+                            </script>
+                        </span>
+                    </td>
+                </tr>
+            </table>
+
+            <table id="divTable" class="table table-hover" data-toggle="table" data-pagination="true" data-search="true" data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true"
             data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
                 <thead>
                     <tr>
-                        <th data-field="state" data-checkbox="true" >#</th>
+                        <th data-field="state" data-checkbox="true" >Sr. No.</th>
                         <th data-field="requestor" data-editable="true">Requestor</th>
                         <th data-field="reqPrimary" data-editable="true">Primary Skill</th>
                         <th data-field="reqSecondary" data-editable="true">Secondary Skill</th>
                         <th data-field="reqLocation" data-editable="true">Location</th>
                         <th data-field="reqGrade" data-editable="true">Grade</th>
                         <th data-field="reqCount" data-editable="true">Req Count</th>
-                        <th data-field="action">Action</th>
+                        {% if perms.employee_register.change_requirement or perms.employee_register.delete_requirement %}
+                            <th data-field="action">Action</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 {% for requirement in requirements %}
@@ -76,8 +84,8 @@
                             {{requirement.reqCount}}
                         </td>
                         <td>
-                            <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{requirement.id}}','{{requirement.requestor}}','{{requirement.reqPrimary}}','{{requirement.reqSecondary}}','{{requirement.reqLocation}}','{{requirement.reqGrade}}','{{requirement.reqCount}}')"><i class="material-icons">&#xE254;</i></a>
-                            <a href="/removeReq/{{requirement.id}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete {{employee.fullname}}?')"><i class="material-icons">&#xE872;</i></a>
+                            {% if perms.employee_register.change_requirement %}
+                            <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{requirement.id}}','{{requirement.requestor}}','{{requirement.reqPrimary}}','{{requirement.reqSecondary}}','{{requirement.reqLocation}}','{{requirement.reqGrade}}','{{requirement.reqCount}}')"><i class="material-icons">&#xE254;</i></a>{% endif %}{% if perms.employee_register.delete_requirement %}<a href="/removeReq/{{requirement.id}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete this requirement?')"><i class="material-icons">&#xE872;</i></a>{% endif %}
                             <!-- <button onclick="document.getElementById('id01').style.display='block'">Open Modal</button> -->
                         </td>
                     </tr>
@@ -90,7 +98,7 @@
     <div class="form-popup" id="updateForm" name="update_Form">
         <form id="formUpdate" class="form-container" method="POST">
             {% csrf_token %}
-          <h5>Update Details of Requirement <span onclick=closeForm() class="close" title="Close Modal" style="color:red; text-align:end">×</span></h5>
+          <h5>Update Details of Requirement <span onclick=closeForm() class="close" title="Close" style="color:red; text-align:end">×</span></h5>
 
           <!-- <label for="id" ><b>ID</b></label> -->
           <!--Disabled for input-->

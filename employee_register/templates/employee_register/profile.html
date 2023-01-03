@@ -1,0 +1,189 @@
+{% extends 'employee_register/base.html' %}
+
+{% load static %}
+{% block content %}
+<style>
+  #userActive, #showProfileActive {
+    color: #49b5e7;
+  }
+  a:hover{
+    color: white;
+  }
+  .formPopup{
+    display: none; 
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 15;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: #474e5d79;
+    padding-top: 50px;
+  }
+</style>
+<div class="content" style="padding-bottom: 0;">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} " role="alert" style="left:10px; width:fit-content">
+        <a class="close" data-dismiss="alert">×</a>
+        {{message   }}
+      </div>
+    {% endfor %}
+  {% endif %}
+  <div class="row gutters-sm">
+    <div class="col-md-1"></div>
+    <div class="col-md-4 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex flex-column align-items-center text-center">
+            <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150">
+            <div class="mt-3">
+              <h4>{{user.first_name}} {{user.last_name}}</h4>
+              <p class="text-secondary mb-1">{% for grp in user.groups.all %}{{grp}}{% endfor %}</p>
+              <!-- <p class="text-muted font-size-sm">Bay Area, San Francisco, CA</p> -->
+              <button class="btn btn-outline-primary " onclick="editForm()">Edit</button>
+              <button class="btn btn-outline-primary" onclick="passChangeForm()">Change Password</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Full Name</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+                {{user.first_name}} {{user.last_name}}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Username</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {{user.username}}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Email</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+                {{user.email}}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Date joined</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+                {{user.date_joined}}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">User Type</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {% for grp in user.groups.all %}
+              {{grp}} 
+              {% endfor %}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Permission</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {{perms.employee_register}}
+              
+            </div>
+          </div>
+          <hr>
+          
+        </div>
+      </div>
+</div>
+<!-- password change form (popup) -->
+<div class="contents formPopup" id="passChange">
+  <div class="form-block col-md-5" style="margin: auto auto auto auto;">
+    <div class="mb-3">
+      <h4>Change your <strong>Password</strong><span onclick=closeForm() class="close" title="Close" style="color:red; text-align:end"><b>x</b></span></h4>
+    </div>
+    <form action="../passChange/" method="post">
+      {% csrf_token %}
+      
+      <div class="form-group first">
+        <label for="password1">Enter old password</label>
+        <input type="password" class="form-control" id="password1" name="password1" required>
+      </div>
+      <div class="form-group first">
+        <label for="password2">Enter new password</label>
+        <input type="password" class="form-control" id="password2" name="password2" required> 
+      </div>
+      <div class="form-group first">
+        <label for="password3">Please confirm Password</label>
+        <input type="password" class="form-control" id="password3" name="password3" required>
+      </div>
+      <input type="submit" value="Submit" class="btn btn-pill text-white btn-block btn-primary">
+    </form>
+  </div>
+</div>
+<!-- Edit form (popup) -->
+<div class="contents formPopup" id="profileEdit">
+  <div class="form-block col-md-5" style="margin: auto auto auto auto;">
+    <div class="mb-3">
+      <h4>Edit <strong>Personal details</strong><span onclick=closeForm() class="close" title="Close" style="color:red; text-align:end"><b>x</b></span></h4>
+    </div>
+    <form action="../editProfile/" method="post">
+      {% csrf_token %}
+      
+      <div class="form-group first {% if user.first_name %}field--not-empty{% endif %}">
+        <label for="userFirstName">First Name</label>
+        <input type="text" class="form-control " id="userFirstName" name="userFirstName" value="{{user.first_name}}">
+      </div>
+      <div class="form-group first {% if user.last_name %}field--not-empty{% endif %}">
+        <label for="userLastName">Last Name</label>
+        <input type="text" class="form-control" id="userLastName" name="userLastName" value="{{user.last_name}}"> 
+      </div>
+      <div class="form-group first {% if user.email %}field--not-empty{% endif %}">
+        <label for="userEmail">Email</label>
+        <input type="email" class="form-control" id="userEmail" name="userEmail" value="{{user.email}}">
+      </div>
+      <input type="submit" value="Submit" class="btn btn-pill text-white btn-block btn-primary">
+    </form>
+  </div>
+</div>
+<script>
+  function passChangeForm(){
+    document.getElementById("passChange").style.display = "block";
+  }
+  function editForm(){
+    document.getElementById("profileEdit").style.display = "block";
+  }
+  var modal1 = document.getElementById('passChange');
+  var modal2 = document.getElementById('profileEdit');
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal1 ) {
+      modal1.style.display = "none";
+    }
+    if (event.target == modal2 ) {
+      modal2.style.display = "none";
+    }
+  }
+  function closeForm() {
+    document.getElementById("passChange").style.display = "none";
+    document.getElementById("profileEdit").style.display = "none";
+  }
+</script>
+{% endblock content %}

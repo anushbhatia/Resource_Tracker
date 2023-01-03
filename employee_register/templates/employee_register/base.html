@@ -44,30 +44,40 @@
 
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a class="nav-link scrollto" id="homeActive" href="../">Home</a></li>
-          <li class="dropdown"><a href="#" id="insertActive"><span>Insert</span> <i class="bi bi-chevron-down"></i></a>
+          <li><a class="nav-link scrollto" id="homeActive" href="{% url 'employee_register:home' %}">Home</a></li>
+          {% if perms.employee_register.add_employee or perms.employee_register.add_requirement %}
+            <li class="dropdown"><a href="#" id="insertActive"><span>Insert</span> <i class="bi bi-chevron-down"></i></a>
+              <ul>
+                {% if perms.employee_register.add_employee %}
+                  <li><a class="nav-link scrollto" id="insertEmpActive" href="../upload-csv/">Insert Employee</a></li>
+                {% endif %}
+                {% if perms.employee_register.add_requirement %}
+                  <li><a class="nav-link scrollto" id="insertReqActive" href="../insertRequirement/">Insert Requirement</a></li>
+                {% endif %}
+              </ul>
+            </li>
+          {% endif %}
+          {% if perms.employee_register.view_employee or perms.employee_register.view_requirement %}
+            <li class="dropdown"><a href="#" id="showActive"><span>Show</span> <i class="bi bi-chevron-down"></i></a>
+              <ul>
+                {% if perms.employee_register.view_employee %}
+                  <li><a class="nav-link scrollto " id="showEmpActive" href="../show/">Show Employees</a></li>
+                {% endif %}
+                {% if perms.employee_register.view_requirement %}
+                  <li><a class="nav-link scrollto " id="showReqActive" href="../showReq/">Show Requirements</a></li>
+                {% endif %}
+              </ul>
+            </li>
+          {% endif %}
+          {% if perms.auth.view_user and perms.auth.add_user %}
+            <li><a class="nav-link scrollto" id="addUserActive" href="../viewUser/">Add User</a></li>
+          {% elif perms.auth.view_user %}
+            <li><a class="nav-link scrollto" id="addUserActive" href="../viewUser/">Users</a></li>
+          {% endif %}
+          <li class="dropdown"><a href="#" id="userActive"></i><span>{% if user.first_name %}{{user.first_name}} {{user.last_name}}{% else %}{{user.username}}{% endif %}</span><i class="bi bi-chevron-down"></i></a>
             <ul>
-              <li><a class="nav-link scrollto" id="insertEmpActive" href="../upload-csv/">Insert Employee</a></li>
-              <li><a class="nav-link scrollto" id="insertReqActive" href="../insertRequirement/">Insert Requirement</a></li>
-            </ul>
-          </li>
-          <li class="dropdown"><a href="#" id="showActive"><span>Show</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <li><a class="nav-link scrollto " id="showEmpActive" href="../show/">Show Employees</a></li>
-              <li><a class="nav-link scrollto " id="showReqActive" href="../showReq/">Show Requirements</a></li>
-            </ul>
-          </li>
-          <li><a class="nav-link scrollto" id="addUserActive" href="../register/">Add User</a></li>
-          <li class="dropdown"><a href="#" id="userActive"><span>{{user.first_name}} {{user.last_name}}</span><i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <li class="dropdown"><a href="#" id="profileActive"><span>My Profile</span> <i class="bi bi-chevron-right"></i></a>
-                <ul>
-                  <li><a href="#">Show Profile</a></li>
-                  <li><a href="../passChange/" id="passChangeActive">Change Password</a></li>
-                  <li><a href="#">Preferance</a></li>
-                </ul>
-              </li>
-              <li><a href="../about/" id="aboutActive">About</a></li>
+              <li ><a href="../profile/" id="profileActive"><span>Show Profile</span></i></a></li>
+              <!-- <li><a href="../about/" id="aboutActive">About</a></li> -->
               <li><a href="../../auth/logout">Logout</a></li>
             </ul>
           </li>
@@ -83,7 +93,7 @@
   {% endblock content %} 
 
    <!-- ======= Footer ======= -->
-  <footer id="footer">
+  <footer id="footer" style="bottom:0;">
 
     <div class="container py-4">
       <div class="copyright">

@@ -13,9 +13,11 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 d-flex flex-column justify-content-center">
-          <h1>Websites that Help you track resources</h1>
-          <h2>You can easily add and track resource profiles. </h2>
-          <div><a href="../show/" class="btn-get-started scrollto">Track</a></div>
+          <h1>Website that Help you track Employee </h1>
+          <h2>You can easily add and track Employee profiles. </h2>
+          {% if perms.employee_register.view_employee %}
+            <div><a href="../show/" class="btn-get-started scrollto">Track</a></div>
+          {% endif %}
         </div>
         <div class="col-lg-6 order-1 order-lg-2 hero-img">
           <img src="{% static 'baseAsset/img/hero-img.png' %}" class="img-fluid" alt="">

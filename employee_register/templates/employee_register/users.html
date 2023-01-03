@@ -1,0 +1,233 @@
+{% extends 'employee_register/base.html' %}
+{% load static %}
+{% block content %}
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+  <style>
+    #addUserActive {
+      color: #49b5e7;
+    }
+    .formPopup{
+      display: none; 
+      position: fixed;
+      float: left; /* Stay in place */
+      z-index: 1; /* Sit on top */
+      left: 0;
+      top: 15;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: #474e5d79;
+      padding-top: 50px;
+    }
+  </style>
+
+
+  <div class="content">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} " role="alert" style="left:10px; width:fit-content">
+          <a class="close" data-dismiss="alert">×</a>
+          {{message   }}
+        </div>
+      {% endfor %}
+    {% endif %}
+    <!-- Edit form (popup) -->
+    <div class="contents formPopup" id="editUser">
+      <div class="form-block col-md-4" style="margin: auto auto auto 2%;">
+        <div class="mb-3">
+          <h4>Edit <strong>user details</strong><span onclick=closeForm() class="close" title="Close" style="color:red; text-align:end"><b>x</b></span></h4>
+        </div>
+        <form action="../editProfile/" method="post">
+          {% csrf_token %}
+          
+          <div class="form-group first " id="userFirstNameDiv">
+            <label for="userFirstName">First Name</label>
+            <input type="text" class="form-control " id="userFirstName" name="userFirstName" >
+          </div>
+          <div class="form-group first" id="userLastNameDiv">
+            <label for="userLastName">Last Name</label>
+            <input type="text" class="form-control" id="userLastName" name="userLastName" > 
+          </div>
+          <div class="form-group first" id="userUsernameDiv">
+            <label for="userUsername">Username</label>
+            <input type="text" class="form-control" id="userUsername" name="userUsername" > 
+          </div>
+          <div class="form-group first" id="userEmailDiv">
+            <label for="userEmail">Email</label>
+            <input type="email" class="form-control" id="userEmail" name="userEmail" >
+          </div>
+          <input type="submit" value="Submit" class="btn btn-pill text-white btn-block btn-primary">
+        </form>
+      </div>
+    </div>
+
+    
+    <!----modal starts here--->
+    <div class="container">
+      <div class="row align-items-top">
+        <div class="col-md-4 contents" >
+          {% if perms.auth.add_user %}
+            <div class="form-block">
+              <div class="mb-2">
+                  <h3>Add <strong>User</strong></h3>
+                </div>
+                <form action="../register/" method="post">
+                  {% csrf_token %}
+                    <div class="form-group first" >
+                      <label for="first_name">First Name</label>
+                      <input type="text" class="form-control" id="first_name" name="first_name" required>
+                    </div>
+                    <div class="form-group first">
+                      <label for="last_name">Last Name</label>
+                      <input type="text" class="form-control" id="last_name" name="last_name">
+                    </div>
+                    <div class="form-group first">
+                      <label for="username">Username</label>
+                      <input type="text" class="form-control" id="username" name="username">
+                    </div>
+                    <div class="form-group first">
+                      <label for="email">Email</label>
+                      <input type="email" class="form-control" id="email" name="email">
+                    </div>
+                    <div class="form-group row">
+                      <div class="col-sm-3">
+                        <label for="userType" class="col-form-label col-form-label-sm">User type</label>
+                      </div>
+                      <div class="col-sm-8">
+                        <select class="custom-select custom-select-sm" id="userType" name="userType" onchange="showSkill(this)" required>
+                          <option value="" disabled selected>Select User Type</option>
+                          <!-- <option value="Developer" style="text-align:center;">Developer</option>
+                          <option value="Manager" style="text-align:center;">Manager</option>
+                          <option value="Interviewer" style="text-align:center;">Interviewer</option>
+                          <option value="Viewer" style="text-align:center;">Viewer</option> -->
+                          {% for group in grouplist %}
+                            <option value="{{ group.name }}" style="text-align:center;">{{ group.name }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group first" id='skill' style="display: none;">
+                      <label for="skill">Skill(technology) of Interviewer</label>
+                      <input type="text" class="form-control" id="skill" name="skill">
+                    </div>
+                    <div class="form-group first">
+                      <label for="password1">Password</label>
+                      <input type="password" class="form-control" id="password1" name="password1">
+                    </div>
+                    <div class="form-group first">
+                      <label for="password2">Please confirm Password</label>
+                      <input type="password" class="form-control" id="password2" name="password2">
+                    </div>
+                    <input type="submit" value="Submit" class="btn btn-pill text-white btn-block btn-primary">
+                </form>
+              </div>
+            {% else %}
+              <div class="social-login text-center" >
+                <img src="{% static 'insertAsset/img/about.png' %}" alt="Image" class="img-fluid">
+              </div>
+            {% endif %}
+        </div>
+        
+        <div class="col-md-8 contents align-items-top" >
+          <div class="mb-2">
+            <h3>List of <strong>Users</strong></h3>
+          </div>
+          <table class="table table-hover"  data-toggle="table" data-pagination="true" data-search="true" data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true"
+          data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
+              <thead>
+                  <tr>
+                      <th data-field="state" data-checkbox="true" >Sr. No.</th>
+                      <th data-field="user_name" data-editable="true">Name</th>
+                      <th data-field="user_userName" data-editable="true">UserName</th>
+                      <th data-field="user_email" data-editable="true">Email</th>
+                      <th data-field="user_userType" data-editable="true">User Type</th>
+                      <th data-field="action">Action</th>
+                  </tr>
+              </thead>
+              {% for user in userList %}
+                  <tr>
+                      <td>
+                          {{forloop.counter}}
+                      </td>
+                      <td>
+                          {{user.first_name}} {{user.last_name}}
+                      </td>
+                      <td>
+                          {{user.username}}
+                      </td> 
+                      <td>
+                          {{user.email}}
+                      </td>
+                      <td>
+                        {% for grp in user.groups.all %}
+                        {{grp}} 
+                        {% endfor %}
+                      </td>
+                      <td>
+                        <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="userEdit('{{user.id}}','{{user.first_name}}','{{user.last_name}}','{{user.username}}','{{user.email}}','{% for grp in user.groups.all %}{{grp}}{% endfor %}')"><i class="material-icons">&#xE254;</i></a><a href="/removeUser/{{user.id}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete this user?')"><i class="material-icons">&#xE872;</i></a>
+                      </td>
+                  </tr>
+              {% endfor %}
+              <tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+</div>  
+    
+  <script type="text/javascript">
+    function showSkill(select){
+      if(select.value=="Interviewer"){
+       document.getElementById('skill').style.display = "block";
+      } else{
+        document.getElementById('skill').style.display = "none";
+      }
+    } 
+    function userEdit(id,fName,lName,userId,email,grp){
+      document.getElementById('editUser').style.display='block';
+      className = "userFirstName";
+      addClass(fName,className);
+      document.getElementById(className).value=fName;
+      className = "userLastName";
+      addClass(lName,className);
+      document.getElementById(className).value=lName;
+      className = "userUsername";
+      addClass(userId,className);
+      document.getElementById(className).value=userId;
+      className = "userEmail";
+      addClass(email,className);
+      document.getElementById(className).value=email;
+    }
+    function closeForm() {
+      document.getElementById("editUser").style.display = "none";
+      removeClass();
+    }
+    var modal = document.getElementById('editUser');
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal ) {
+        modal.style.display = "none";
+        removeClass();
+      }
+    }
+    function addClass(field,className){
+      if(field != ''){
+        var v = document.getElementById(className+"Div");
+        v.classList.add("field--not-empty");
+      }
+    }
+    function removeClass(){
+      remClass('userFirstName');
+      remClass('userLastName');
+      remClass('userUsername');
+      remClass('userEmail');
+    }
+    function remClass(className){
+      var v = document.getElementById(className+"Div");
+      v.classList.remove('field--not-empty');
+    }
+  </script>
+
+{% endblock content %}
+
+
