@@ -6,6 +6,19 @@
     #showActive, #showReqActive {
       color: #49b5e7;
     }
+    .formPopup{
+        display: none; 
+        position: fixed;
+        float: left; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 5;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: #474e5d79;
+        padding-top: 40px;
+    }
 </style>
 
 <script src="{% static 'showAsset/excel-bootstrap-table-filter-bundle.js' %}"></script>
@@ -15,6 +28,49 @@
 
         <!--Table Start -->
         <div class="content">
+            <div class="contents formPopup" id="updateForm">
+                <div class="form-block col-md-4" style="margin: auto 1% 10% auto;">
+                <div class="mb-3">
+                    <h4>Update Details of <strong>Requirement</strong><span onclick=closeForm() class="close" title="Close" style="color:red; text-align:end"><b>x</b></span></h4>
+                </div>
+                <form id="formUpdate" method="post">
+                    {% csrf_token %}
+                    
+                    <div class="form-group first " id="requestorDiv">
+                    <label for="requestor">Requestor name</label>
+                    <input type="text" class="form-control " id="requestor" name="requestor" disabled style="font-size: medium;">
+                    </div>
+                    <div class="form-group first" id="reqPrimaryDiv">
+                    <label for="reqPrimary">Primary Skill</label>
+                    <input type="text" class="form-control" id="reqPrimary" name="reqPrimary" style="font-size: medium;"> 
+                    </div>
+                    <div class="form-group first" id="reqSecondaryDiv">
+                    <label for="reqSecondary">Secondary Skill</label>
+                    <input type="text" class="form-control" id="reqSecondary" name="reqSecondary" style="font-size: medium;">
+                    </div>
+                    <div class="form-group first" id="reqLocationDiv">
+                    <label for="reqLocation">Location</label>
+                    <input type="text" class="form-control" id="reqLocation" name="reqLocation" style="font-size: medium;">
+                    </div>
+                    <div class="form-group first" id="reqGradeDiv">
+                    <label for="reqGrade">Grade</label>
+                    <input type="text" class="form-control" id="reqGrade" name="reqGrade" style="font-size: medium;">
+                    </div>
+                    <div class="form-group first" id="reqCountDiv">
+                    <label for="reqCount">Requirement Count</label>
+                    <input type="text" class="form-control" id="reqCount" name="reqCount" style="font-size: medium;">
+                    </div>
+                    <div class="row" >
+                        <div class="col-sm-4"><button type="submit" class="btn text-white btn-block btn-primary " style="width: fit-content;">Update  </button>
+                        </div>
+                        <div class="col-sm-4"><button type="reset" class="btn text-white btn-block btn-primary" onclick="closeForm()" style="width: fit-content; background-color: rgba(255, 0, 0, 0.792);">Close  </button>
+                        </div>
+                    </div>
+                </form>
+                </div>
+            </div>
+
+
             <table style="width: 100%;">
                 <tr >
                     <td><h4>Requirements Data Table</h4></td>
@@ -94,49 +150,58 @@
             </table>
         </div>
     </div>   
-    <!-- Update form start -->
-    <div class="form-popup" id="updateForm" name="update_Form">
-        <form id="formUpdate" class="form-container" method="POST">
-            {% csrf_token %}
-          <h5>Update Details of Requirement <span onclick=closeForm() class="close" title="Close" style="color:red; text-align:end">×</span></h5>
 
-          <!-- <label for="id" ><b>ID</b></label> -->
-          <!--Disabled for input-->
-          <!-- <input type="text" value="id" id="id" name="id" disabled > -->
-          
-          <label for="requestor"><b>Requestor name</b></label>
-          <input type="text" value="requestor" name="requestor" id="requestor">
-          <label for="reqPrimary"><b>Primary Skill</b></label>
-          <input type="text" value="reqPrimary" name="reqPrimary" id="reqPrimary">
-          <label for="reqSecondary"><b>Secondary Skill</b></label>
-          <input type="text" value="reqSecondary" name="reqSecondary" id="reqSecondary">
-          <label for="reqLocation"><b>Location</b></label>
-          <input type="text" value="reqLocation" name="reqLocation" id="reqLocation" >
-          <label for="reqGrade"><b>Grade</b></label>
-          <input type="text" value="reqGrade" name="reqGrade" id="reqGrade" >
-          <label for="reqCount"><b>Grade</b></label>
-          <input type="text" value="reqCount" name="reqCount" id="reqCount" >
-
-          <button type="submit" class="btn">Update</button>
-          <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
-        </form>
-      </div>
-      <!-- Update form end -->
   <script>
     function openForm(id,reqr,prim,sec,loc,grade,count) {
         document.getElementById("updateForm").style.display = "block";
-        
-        document.getElementById("requestor").value=reqr;
-        document.getElementById("reqPrimary").value=prim;
-        document.getElementById("reqSecondary").value=sec;
-        document.getElementById("reqLocation").value=loc;
-        document.getElementById("reqGrade").value=grade;
-        document.getElementById("reqCount").value=count;
+        className = "requestor";
+        addClass(reqr,className);
+        document.getElementById(className).value=reqr;
+        className = "reqPrimary";
+        addClass(prim,className);
+        document.getElementById(className).value=prim;
+        className = "reqSecondary";
+        addClass(sec,className);
+        document.getElementById(className).value=sec;
+        className = "reqLocation";
+        addClass(loc,className);
+        document.getElementById(className).value=loc;
+        className = "reqGrade";
+        addClass(grade,className);
+        document.getElementById(className).value=grade;
+        className = "reqCount";
+        addClass(count,className);
+        document.getElementById(className).value=count;
         document.getElementById("formUpdate").action = "../editReq/"+ id;
       }
       
       function closeForm() {
         document.getElementById("updateForm").style.display = "none";
+        removeEditClass1()
+      }
+      var modal1 = document.getElementById('updateForm');
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function(event) {
+        if (event.target == modal1 ) {
+          modal1.style.display = "none";
+          removeEditClass1()
+        }
+      }
+      function addClass(field,className){
+        if(field != ''){
+          var v = document.getElementById(className+"Div");
+          v.classList.add("field--not-empty");
+        }
+      }
+      function removeEditClass1(){
+          var list1 = ['requestor','reqPrimary','reqSecondary','reqLocation','reqGrade','reqCount'];
+          for(var i=0;i<9;i++){
+              remClass(list1[i]);
+          }
+      }
+      function remClass(className){
+        var v = document.getElementById(className+"Div");
+        v.classList.remove('field--not-empty');
       }
     // Use the plugin once the DOM has been loaded.
     $(function () {

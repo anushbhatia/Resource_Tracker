@@ -18,7 +18,7 @@ def login_user(request):
         return redirect("../../")
       else:
         login(request, user)
-        messages.warning(request,'As a new user please set a new password.')
+        messages.success(request,'As a new user please set a new password.')
         return render(request, 'emp_login/passChange.html', {'username':username})
     else:
       messages.warning(request,"Invalid username or password. ")

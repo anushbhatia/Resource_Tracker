@@ -39,35 +39,35 @@
                     
                     <div class="form-group first " id="emp_codeDiv">
                     <label for="emp_code">ID</label>
-                    <input type="text" class="form-control " id="emp_code" name="emp_code" disabled>
+                    <input type="text" class="form-control " id="emp_code" name="emp_code" disabled style="font-size: medium;">
                     </div>
                     <div class="form-group first" id="empFullnameDiv">
                     <label for="empFullname">Name</label>
-                    <input type="text" class="form-control" id="empFullname" name="empFullname" > 
+                    <input type="text" class="form-control" id="empFullname" name="empFullname" style="font-size: medium;"> 
                     </div>
                     <div class="form-group first" id="empEmailDiv">
                     <label for="empEmail">Email</label>
-                    <input type="email" class="form-control" id="empEmail" name="empEmail" > 
+                    <input type="email" class="form-control" id="empEmail" name="empEmail" style="font-size: medium;"> 
                     </div>
                     <div class="form-group first" id="empLocationDiv">
                     <label for="empLocation">Location</label>
-                    <input type="text" class="form-control" id="empLocation" name="empLocation" >
+                    <input type="text" class="form-control" id="empLocation" name="empLocation" style="font-size: medium;">
                     </div>
                     <div class="form-group first" id="empDesignationDiv">
                     <label for="empDesignation">Designation</label>
-                    <input type="text" class="form-control" id="empDesignation" name="empDesignation" >
+                    <input type="text" class="form-control" id="empDesignation" name="empDesignation" style="font-size: medium;">
                     </div>
                     <div class="form-group first" id="empBenchmngDiv">
                     <label for="empBenchmng">Bench Manager</label>
-                    <input type="text" class="form-control" id="empBenchmng" name="empBenchmng" >
+                    <input type="text" class="form-control" id="empBenchmng" name="empBenchmng" style="font-size: medium;">
                     </div>
                     <div class="form-group first" id="empPrimaryDiv">
                     <label for="empPrimary">Primary Skill</label>
-                    <input type="text" class="form-control" id="empPrimary" name="empPrimary" >
+                    <input type="text" class="form-control" id="empPrimary" name="empPrimary" style="font-size: medium;">
                     </div>
                     <div class="form-group first" id="empSecondaryDiv">
                     <label for="empSecondary">Secondary Skill</label>
-                    <input type="text" class="form-control" id="empSecondary" name="empSecondary" >
+                    <input type="text" class="form-control" id="empSecondary" name="empSecondary" style="font-size: medium;">
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-2">
@@ -89,7 +89,7 @@
                     </div>
                     <div class="form-group first" id="empRemarksDiv">
                     <label for="empRemarks">Remarks</label>
-                    <input type="text" class="form-control" id="empRemarks" name="empRemarks" >
+                    <input type="text" class="form-control" id="empRemarks" name="empRemarks" style="font-size: medium;">
                     </div>
                     <div class="row" >
                         <div class="col-sm-4"><button type="submit" class="btn text-white btn-block btn-primary " style="width: fit-content;">Update  </button>
@@ -100,7 +100,57 @@
                 </form>
                 </div>
             </div>
-
+            <!-- Edit form (for Interviwer)(popup) -->
+            <div class="contents formPopup" id="updateFormInt">
+                <div class="form-block col-md-4" style="margin: auto 1% 10% auto;">
+                <div class="mb-3">
+                    <h4>Update Details of<strong> Employee</strong><span onclick=closeForm() class="close" title="Close" style="color:red; text-align:end"><b>x</b></span></h4>
+                </div>
+                <form id="formUpdate_int" method="post">
+                    {% csrf_token %}
+                    
+                    <div class="form-group first" id="empFullname_intDiv">
+                    <label for="empFullname">Name</label>
+                    <input type="text" class="form-control" id="empFullname_int" name="empFullname" style="font-size: medium;"> 
+                    </div>
+                    <div class="form-group first" id="empEmail_intDiv">
+                    <label for="empEmail">Email</label>
+                    <input type="email" class="form-control" id="empEmail_int" name="empEmail" style="font-size: medium;"> 
+                    </div>
+                    <div class="form-group row">  </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                          <label for="empStatus" class="col-form-label col-form-label-sm" >Status</label>
+                        </div>
+                        <div class="col-sm-10">
+                          <select class="custom-select custom-select" id="opt1_int" name="empStatus">
+                          </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                          <label for="empPanel" class="col-form-label col-form-label-sm" >Panel</label>
+                        </div>
+                        <div class="col-sm-10">
+                          <select class="custom-select custom-select" id="empPanel_int" name="empPanel">
+                          </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">  </div>
+                    <div class="form-group first" id="empRemarks_intDiv">
+                    <label for="empRemarks">Remarks</label>
+                    <input type="text" class="form-control" id="empRemarks_int" name="empRemarks" style="font-size: medium;">
+                    </div>
+                    <div class="row" >
+                        <div class="col-sm-4"><button type="submit" class="btn text-white btn-block btn-primary " style="width: fit-content;">Update  </button>
+                        </div>
+                        <div class="col-sm-4"><button type="reset" class="btn text-white btn-block btn-primary" onclick="closeForm()" style="width: fit-content; background-color: rgba(255, 0, 0, 0.792);">Close  </button>
+                        </div>
+                    </div>
+                </form>
+                </div>
+            </div>
+            <!-- Update form end -->
 
             <table style="width: 100%;">
                 <tr >
@@ -234,35 +284,6 @@
     </div>   
 
 
-    <!-- update form (for Interviewer) start -->
-    <div class="form-popup" id="updateFormInt" name="update_Form_Int">
-        <form id="formUpdate_int" class="form-container" method="POST">
-            {% csrf_token %}
-          <h5>Update Details of Employee <span onclick=closeForm() class="close" title="Close" style="color:red; text-align:end">×</span></h5>
-          <label for="empFullname"><b>Name</b></label>
-          <input type="text" name="empFullname" id="empFullname_int" disabled>
-          <label for="empEmail"><b>Email</b></label>
-          <input type="text" name="empEmail" id="empEmail_int" disabled> 
-          <label for="empStatus"><b>Status</b></label>
-          <select id="opt1_int" class="form-select" name="empStatus">
-            <option value="L1 Assigned">L1 Assigned</option>
-            <option value="L1 Select">L1 Select</option>
-            <option value="L1 Reject">L1 Reject</option>
-            <option value="Client Reject">Client Reject</option>
-            <option value="Client Select">Client Select</option>
-            <option value="Others">Others</option>
-          </select>
-          <label for="empPanel" style="display: none;"><b>Panel</b></label>
-          <select class="form-select" name="empPanel" id="empPanel_int" style="display: none;">
-            </select>
-          <label for="empRemarks"><b>Remarks</b></label>
-          <input class = "form-control text-wrap" col="2" rows = "3" type="text" name="empRemarks" id="empRemarks_int">
-
-          <button type="submit" class="btn">Update</button>
-          <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
-        </form>
-      </div>
-    <!-- Update form end -->
   <script>
         function openForm(id,name,mail,prim,sec,loc,sts,remk,desg,mang,panelName,empintid,interviewer) {
           var status=[
@@ -341,17 +362,20 @@
               'Others'
               ]
             document.getElementById("updateFormInt").style.display = "block";
-            document.getElementById("empFullname_int").value=name;
-            document.getElementById("empEmail_int").value=mail;
+            className = "empFullname_int";
+            addClass(name,className);
+            document.getElementById(className).value=name;
+            className = "empEmail_int";
+            addClass(mail,className);
+            document.getElementById(className).value=mail;
             var ddl = $("#opt1_int");
             ddl.empty();
             ddl.append($("<option selected></option>").val(sts).html(sts));
-           for (var s=0;s<status.length;s++)
-           {
-             
+            for (var s=0;s<status.length;s++)
+            {
               if(sts!=status[s])
               ddl.append($("<option></option>").val(status[s]).html(status[s]));
-           }
+            }
             var dd2 = $("#empPanel_int");
             dd2.empty();
             dd2.append($("<option selected></option>").val(panelName).html(panelName));
@@ -365,7 +389,9 @@
                         dd2.append($("<option></option>").val(interviewer[i].fields.name).html(interviewer[i].fields.name+', Assigned: '+interviewer[i].fields.count+', Skill: '+interviewer[i].fields.skill));
                 }
             }
-            document.getElementById("empRemarks_int").value=remk;
+            className = "empRemarks_int";
+            addClass(remk,className);
+            document.getElementById(className).value=remk;
             document.getElementById("formUpdate_int").action = "../editEmpInt/"+ id;
         }
           
@@ -373,13 +399,19 @@
           document.getElementById("updateForm").style.display = "none";
           removeEditClass1()
           document.getElementById("updateFormInt").style.display = "none";
+          removeEditClass2()
         }
         var modal1 = document.getElementById('updateForm');
+        var modal2 = document.getElementById('updateFormInt');
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function(event) {
           if (event.target == modal1 ) {
             modal1.style.display = "none";
             removeEditClass1()
+          }
+          if (event.target == modal2 ) {
+            modal2.style.display = "none";
+            removeEditClass2()
           }
         }
         function addClass(field,className){
@@ -388,9 +420,16 @@
             v.classList.add("field--not-empty");
           }
         }
-        //for interviewer edit popup
+        //for developer/manager edit popup
         function removeEditClass1(){
             var list1 = ['emp_code','empFullname','empEmail','empPrimary','empSecondary','empLocation','empRemarks','empDesignation','empBenchmng'];
+            for(var i=0;i<9;i++){
+                remClass(list1[i]);
+            }
+        }
+        //for interviewer edit popup
+        function removeEditClass2(){
+            var list1 = ['empFullname_int','empEmail_int','empRemarks_int'];
             for(var i=0;i<9;i++){
                 remClass(list1[i]);
             }
