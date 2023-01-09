@@ -353,14 +353,15 @@ def register_user(request):
       return redirect('../viewUser/')
   else:
     users = User.objects.all()
-    return render(request, "employee_register/users.html", {'userList':users})
+    groups = Group.objects.all()
+    return render(request, "employee_register/users.html", {'userList':users,'grouplist':groups})
 
-# view
+# view Users
 @login_required(login_url="auth/login/")
 @permission_required('auth.view_user', raise_exception=True)
 def view_user(request):
   users = User.objects.all()
-  groups = Group.objects.all()
+  groups = list(Group.objects.all())
   return render(request, "employee_register/users.html", {'userList':users,'grouplist':groups})
 
 # Edit user  

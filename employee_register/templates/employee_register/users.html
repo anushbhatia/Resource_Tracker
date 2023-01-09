@@ -56,6 +56,19 @@
             <label for="userEmail">Email</label>
             <input type="email" class="form-control" id="userEmail" name="userEmail" >
           </div>
+          <div class="form-group row">
+            <div class="col-sm-3">
+              <label for="userType" class="col-form-label col-form-label-sm">User type</label>
+            </div>
+            <div class="col-sm-8">
+              <select class="custom-select custom-select-sm" id="userTypeEdit" name="userType" onchange="showSkillEdit(this)" required>
+              </select>
+            </div>
+          </div>
+          <div class="form-group first" id='skillEdit' style="display: none;">
+            <label for="skill">Skill(technology) of Interviewer</label>
+            <input type="text" class="form-control"  name="skill">
+          </div>
           <input type="submit" value="Submit" class="btn btn-pill text-white btn-block btn-primary">
         </form>
       </div>
@@ -96,19 +109,15 @@
                       <div class="col-sm-8">
                         <select class="custom-select custom-select-sm" id="userType" name="userType" onchange="showSkill(this)" required>
                           <option value="" disabled selected>Select User Type</option>
-                          <!-- <option value="Developer" style="text-align:center;">Developer</option>
-                          <option value="Manager" style="text-align:center;">Manager</option>
-                          <option value="Interviewer" style="text-align:center;">Interviewer</option>
-                          <option value="Viewer" style="text-align:center;">Viewer</option> -->
                           {% for group in grouplist %}
                             <option value="{{ group.name }}" style="text-align:center;">{{ group.name }}</option>
                           {% endfor %}
                         </select>
                       </div>
                     </div>
-                    <div class="form-group first" id='skill' style="display: none;">
+                    <div class="form-group first" id='skill2' style="display: none;">
                       <label for="skill">Skill(technology) of Interviewer</label>
-                      <input type="text" class="form-control" id="skill" name="skill">
+                      <input type="text" class="form-control" name="skill">
                     </div>
                     <div class="form-group first">
                       <label for="password1">Password</label>
@@ -164,7 +173,7 @@
                         {% endfor %}
                       </td>
                       <td>
-                        <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="userEdit('{{user.id}}','{{user.first_name}}','{{user.last_name}}','{{user.username}}','{{user.email}}','{% for grp in user.groups.all %}{{grp}}{% endfor %}')"><i class="material-icons">&#xE254;</i></a><a href="/removeUser/{{user.id}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete this user?')"><i class="material-icons">&#xE872;</i></a>
+                        <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="userEdit('{{user.id}}','{{user.first_name}}','{{user.last_name}}','{{user.username}}','{{user.email}}','{{grouplist}}','{% for grp in user.groups.all %}{{grp}}{% endfor %}')"><i class="material-icons">&#xE254;</i></a><a href="/removeUser/{{user.id}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete this user?')"><i class="material-icons">&#xE872;</i></a>
                       </td>
                   </tr>
               {% endfor %}
@@ -178,12 +187,19 @@
   <script type="text/javascript">
     function showSkill(select){
       if(select.value=="Interviewer"){
-       document.getElementById('skill').style.display = "block";
+       document.getElementById('skill2').style.display = "block";
       } else{
-        document.getElementById('skill').style.display = "none";
+        document.getElementById('skill2').style.display = "none";
       }
     } 
-    function userEdit(id,fName,lName,userId,email,grp){
+    function showSkillEdit(select){
+      if(select.value=="Interviewer"){
+       document.getElementById('skillEdit').style.display = "block";
+      } else{
+        document.getElementById('skillEdit').style.display = "none";
+      }
+    }
+    function userEdit(id,fName,lName,userId,email,group,usergrp){
       document.getElementById('editUser').style.display='block';
       className = "userFirstName";
       addClass(fName,className);
@@ -197,6 +213,25 @@
       className = "userEmail";
       addClass(email,className);
       document.getElementById(className).value=email;
+      
+      alert(group)
+      var dd3 = $("#userTypeEdit");
+      dd3.empty();
+      //group=eval(group);
+      alert(Object.keys(group).length)
+      for(var i=1;i<=4;i++)
+      {
+        alert(i)
+        alert(group[i])
+        if(group[i].name==usergrp){
+            dd3.append($("<option selected></option>").val(group[i].fields.name).html(group[i].fields.name));
+            alert('True')
+        }
+        if(group[i].name!=usergrp){
+            dd3.append($("<option></option>").val(group[i].fields.name).html(group[i].fields.name));
+            alert('False')
+        }        
+      }
     }
     function closeForm() {
       document.getElementById("editUser").style.display = "none";

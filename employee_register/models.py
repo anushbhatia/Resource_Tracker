@@ -10,9 +10,16 @@ class Interviewer(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,default=None,null=True)
     def __str__(self):
         return self.name
+    @classmethod
+    def get_default_pk(cls):
+        interviewer, created = cls.objects.get_or_create(
+            name='NA', 
+            skill='NA',
+            count=0,
+        )
+        return interviewer.pk
 class Meta:        
     db_table="Interviewer"
-# Employee Model
 class Employee(models.Model):
     emp_code=models.CharField(max_length=100)
     empFullname=models.CharField(max_length=100)
@@ -26,7 +33,7 @@ class Employee(models.Model):
     empStatus=models.CharField(max_length=100,default='NA')
     empPanel=models.CharField(max_length=100,default='NA') # need to remove
     empDate=models.DateField(default=date.today)  # date on which record added
-    interviewer=models.ForeignKey(Interviewer,on_delete=models.SET_DEFAULT,default=1)
+    interviewer=models.ForeignKey(Interviewer,on_delete=models.SET_DEFAULT,default=Interviewer.get_default_pk)
     empTimeStamp = models.DateTimeField(default=None,null=True)  #date on which L1 assigned 
 class Meta:        
     db_table="Employee"
@@ -41,3 +48,7 @@ class Requirement(models.Model):
     reqCount=models.SmallIntegerField()
 class Meta:        
     db_table="Requirement"
+
+
+
+
