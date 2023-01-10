@@ -22,7 +22,7 @@ def profile_percentange():
         percent=50
   return percent
 
-# insert employee from form
+# Insert employee from form
 @login_required(login_url="auth/login/")
 @permission_required('employee_register.add_employee', raise_exception=True)
 def insert_emp(request,template_name="employee_register/employee_list.html"):  
@@ -64,11 +64,10 @@ def insert_emp(request,template_name="employee_register/employee_list.html"):
   else:   
     return render(request, 'employee_register/profile_upload.html')
 
-#Home page 
+# Home page 
 @login_required(login_url="auth/login/")
 def home(request): 
   employees = Employee.objects.all()
-  # userName = request.user.get_full_name()
   profileCount = 0 
   deployedCount = 0
   progessCount = 0
@@ -81,7 +80,6 @@ def home(request):
       progessCount=progessCount+1
     elif(employee.empStatus=='L1 Reject' or employee.empStatus=='Client Reject' or employee.empStatus=='Others'):
       rejectCount=rejectCount+1
-
   return render(request, "employee_register/home.html",{'profileCount':profileCount,'deployedCount':deployedCount,'progessCount':progessCount,'rejectCount':rejectCount})
 
 class Interviewerc(object):
@@ -89,7 +87,7 @@ class Interviewerc(object):
             self.interviewer_id = interviewer_id
             self.name = name
 
-#show employee 
+# Show employee 
 @login_required(login_url="auth/login/")
 @permission_required('employee_register.view_employee', raise_exception=True)
 def show_emp(request): 
@@ -97,7 +95,7 @@ def show_emp(request):
   interviewers = serializers.serialize("json", Interviewer.objects.all())
   return render(request, "employee_register/showEmp.html",{'employees':employees,'interviewers':interviewers} )
 
-#edit employee
+# Edit employee
 @login_required(login_url="auth/login/")
 @permission_required('employee_register.change_employee', raise_exception=True)
 def edit_emp(request,emp_code): 
@@ -122,7 +120,6 @@ def edit_emp(request,emp_code):
       if(temppanel!=employee.empPanel and i.name==employee.empPanel and employee.empStatus=='NA' and i.name!='NA'):
         employee.interviewer=i
         employee.empStatus='L1 Assigned'
-        employee.empTimeStamp=datetime.now()
       elif(temppanel!=employee.empPanel and i.name==employee.empPanel and employee.empStatus!='NA' and i.name=='NA'):
         employee.interviewer=i
         employee.empStatus='NA' 
@@ -131,14 +128,12 @@ def edit_emp(request,emp_code):
     employee.save() 
     messages.success(request, 'Profile updated sucessfully. ')
     count_interview()
+    employee.empTimeStamp=datetime.now()
     return redirect('../show')
   else:
-    employees = Employee.objects.all()
-    interviewers = Interviewer.objects.values('name')
-    count_interview()
-    return render(request,'employee_register/showEmp.html' ,{'employees':employees,'interviewers':interviewers})
+    return redirect('../show')
   
-  #edit employee by interviewer
+# Edit employee by interviewer
 @login_required(login_url="auth/login/")
 @permission_required('employee_register.change_employee', raise_exception=True)
 def edit_emp_int(request,emp_code): 
@@ -155,7 +150,6 @@ def edit_emp_int(request,emp_code):
       if(temppanel!=employee.empPanel and i.name==employee.empPanel and employee.empStatus=='NA' and i.name!='NA'):
         employee.interviewer=i
         employee.empStatus='L1 Assigned'
-        employee.empTimeStamp=datetime.now()
       elif(temppanel!=employee.empPanel and i.name==employee.empPanel and employee.empStatus!='NA' and i.name=='NA'):
         employee.interviewer=i
         employee.empStatus='NA' 
@@ -164,13 +158,12 @@ def edit_emp_int(request,emp_code):
     employee.save() 
     messages.success(request, 'Profile updated sucessfully. ')
     count_interview()
+    employee.empTimeStamp=datetime.now()
     return redirect('../show')
   else:
-    employees = Employee.objects.all()
-    interviewers = Interviewer.objects.values('name')
-    return render(request,'employee_register/showEmp.html' ,{'employees':employees,'interviewers':interviewers})
+    return redirect('../show')
  
-#remove employee
+# Remove employee
 @login_required(login_url="auth/login/")
 @permission_required('employee_register.delete_employee', raise_exception=True)
 def remove_emp(request,emp_code):
@@ -178,21 +171,8 @@ def remove_emp(request,emp_code):
   employees.delete()
   messages.success(request, 'Profile deleted sucessfully. ')
   return redirect('../show')
-  '''#if we use post contidition using form popup
-  if request.method == 'POST':
-      employees.delete()
-      return redirect('/show')
 
-  context = {
-        'employees': employees,
-        'interviewers':interviewers
-  }
-  
-  return render(request, 'employee_register/delete.html', context)
-  '''
-
-# insert employee from csv upload
-# one parameter named request
+# Insert employee from csv upload
 @login_required(login_url="auth/login/")
 @permission_required('employee_register.add_employee', raise_exception=True)
 def profile_upload(request):
@@ -246,7 +226,7 @@ def profile_upload(request):
       messages.success(request, a)
       return render(request, template, context)
 
-# insert requirements
+# Insert requirements
 @login_required(login_url="auth/login/")
 @permission_required('employee_register.add_requirement', raise_exception=True)
 def insert_requirement(request):
@@ -264,7 +244,7 @@ def insert_requirement(request):
   else:   
     return render(request, "employee_register/insertRequirement.html")
       
-# show requirements
+# Show requirements
 @login_required(login_url="auth/login/")
 @permission_required('employee_register.view_requirement', raise_exception=True)
 def show_Req(request):
@@ -300,10 +280,9 @@ def edit_req(request,req_id):
     messages.success(request, 'Requirement updated sucessfully. ')
     return redirect('/showReq')
   else:
-    requirements = Requirement.objects.all()
-    return render(request,'employee_register/showReq.html' ,{'requirements':requirements})
+    return redirect('/showReq')
 
-# remove requirement
+# Remove requirement
 @login_required(login_url="auth/login/")
 @permission_required('employee_register.delete_requirement', raise_exception=True)
 def remove_req(request,req_id):
@@ -312,7 +291,7 @@ def remove_req(request,req_id):
   messages.success(request, 'Requirement deleted sucessfully. ')
   return redirect('/showReq')
 
-# register user  
+# Add new(register) user  
 @login_required(login_url="auth/login/")
 @permission_required('auth.add_user', raise_exception=True)
 def register_user(request):
@@ -352,46 +331,87 @@ def register_user(request):
       messages.warning(request, 'Password not matching... ')
       return redirect('../viewUser/')
   else:
-    users = User.objects.all()
-    groups = Group.objects.all()
-    return render(request, "employee_register/users.html", {'userList':users,'grouplist':groups})
+    return redirect('../viewUser/')
 
-# view Users
+# View Users
 @login_required(login_url="auth/login/")
 @permission_required('auth.view_user', raise_exception=True)
 def view_user(request):
   users = User.objects.all()
-  groups = list(Group.objects.all())
-  return render(request, "employee_register/users.html", {'userList':users,'grouplist':groups})
+  groups = Group.objects.all()
+  editGroup = serializers.serialize("json", Group.objects.all())
+  interviwer = serializers.serialize("json", Interviewer.objects.all())
+  return render(request, "employee_register/users.html", {'userList':users,'grouplist':groups,'editGroupList':editGroup,'interviwer':interviwer})
 
 # Edit user  
 @login_required(login_url="auth/login/")
 @permission_required('auth.change_user', raise_exception=True)
 def edit_user(request,user_id):
-  user = User.objects.get(id=user_id)
   if request.method == 'POST':
-    user.first_name = request.POST['first_name']
-    user.last_name = request.POST['last_name']
-    user.username = request.POST['username']
-    user.email = request.POST['email']
-    oldUserType = request.POST['userType']
-    newUserType = request.POST['userType']
+    user = User.objects.get(id=user_id)
+    oldFirstName = user.first_name
+    oldLastName = user.last_name
+    oldUsername = user.username
+    oldEmail = user.email
+    oldUserType = user.groups.all()[0].name
+    newFirstName = request.POST['userFirstName']
+    newLastName = request.POST['userLastName']
+    newUsername = request.POST['userUsername']
+    newEmail = request.POST['userEmail']
+    newUserType = request.POST['userUserType']
+    if(oldFirstName!=newFirstName or oldLastName!=newLastName):
+      if User.objects.filter(first_name=newFirstName, last_name=newLastName).exists():
+        messages.warning(request, 'User with same name already exists. ')
+        return redirect('../register')
+      else:
+        user.first_name = newFirstName
+        user.last_name = newLastName
+    if(oldUsername!=newUsername):
+      if User.objects.filter(username=newUsername).exists():
+        messages.warning(request, 'Username already taken. ')
+        return redirect('../register')
+      else:
+        user.username = newUsername
+    if(oldEmail!=newEmail):
+      if User.objects.filter(email=newEmail).exists():
+        messages.warning(request, 'Email already exists. ')
+        return redirect('../register')
+      else:
+        user.email = newEmail
+    if(oldUserType!=newUserType):
+      group1 = Group.objects.get(name=oldUserType)
+      user.groups.remove(group1)
+      group2 = Group.objects.get(name=newUserType)
+      user.groups.add(group2)
+      if oldUserType == "Interviewer":
+        data = Interviewer.objects.get(user_id=user_id)
+        data.delete()
+      if newUserType == "Interviewer":
+        name= user.first_name +' '+ user.last_name    
+        skill = request.POST['userSkill'] 
+        data = Interviewer(name=name,skill=skill,user_id=user_id)
+        data.save()
+    user.save()
+    messages.success(request, 'User updated successfully. ')
+    return redirect('../viewUser')
+  else:
+    return redirect('../viewUser')
 
-# remove user
+# Remove user
 @login_required(login_url="auth/login/")
 @permission_required('auth.delete_user', raise_exception=True)
 def remove_user(request,user_id):
   user = User.objects.get(id=user_id)
   user.delete()
   messages.success(request, 'User deleted sucessfully. ')
-  return redirect('../register')
+  return redirect('../viewUser')
 
-# show profile
+# Show my profile
 @login_required(login_url="auth/login/")
 def show_profile(request):
   return render(request,'employee_register/profile.html')
 
-# password change
+# My password change
 @login_required(login_url="auth/login/")
 def pass_change(request):
   if request.method == "POST":
@@ -418,7 +438,7 @@ def pass_change(request):
       messages.warning(request,"Old password is incorrect. ")
       return redirect('../profile/')
   else:
-    return render(request, 'employee_register/passChange.html')
+    return redirect('../profile/')
 
 # Edit my profile
 @login_required(login_url="auth/login/")
@@ -449,7 +469,7 @@ def edit_profile(request):
     messages.success(request, 'Profile updated sucessfully. ')
     return redirect('../profile/')
   else:
-    return render(request,'employee_register/profile.html')
+    return redirect('../profile/')
 
 
 

@@ -14,10 +14,10 @@
       left: 0;
       top: 15;
       width: 100%; /* Full width */
-      height: 100%; /* Full height */
-      overflow: auto; /* Enable scroll if needed */
+      height: 80%; /* Full height */
+      overflow: scroll; /* Enable scroll if needed */
       background-color: #474e5d79;
-      padding-top: 50px;
+      padding-top: 30px;
     }
   </style>
 
@@ -37,7 +37,7 @@
         <div class="mb-3">
           <h4>Edit <strong>user details</strong><span onclick=closeForm() class="close" title="Close" style="color:red; text-align:end"><b>x</b></span></h4>
         </div>
-        <form action="../editProfile/" method="post">
+        <form id='editUserLink' method="post">
           {% csrf_token %}
           
           <div class="form-group first " id="userFirstNameDiv">
@@ -61,13 +61,13 @@
               <label for="userType" class="col-form-label col-form-label-sm">User type</label>
             </div>
             <div class="col-sm-8">
-              <select class="custom-select custom-select-sm" id="userTypeEdit" name="userType" onchange="showSkillEdit(this)" required>
+              <select class="custom-select custom-select-sm" id="userTypeEdit" name="userUserType" onchange="showSkillEdit(this)" >
               </select>
             </div>
           </div>
-          <div class="form-group first" id='skillEdit' style="display: none;">
+          <div class="form-group first" id='skillEditDiv' style="display: none;">
             <label for="skill">Skill(technology) of Interviewer</label>
-            <input type="text" class="form-control"  name="skill">
+            <input type="text" class="form-control" id="skillEditValue" name="userSkill">
           </div>
           <input type="submit" value="Submit" class="btn btn-pill text-white btn-block btn-primary">
         </form>
@@ -154,6 +154,7 @@
                   </tr>
               </thead>
               {% for user in userList %}
+                {% if not user.is_staff %}
                   <tr>
                       <td>
                           {{forloop.counter}}
@@ -173,9 +174,10 @@
                         {% endfor %}
                       </td>
                       <td>
-                        <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="userEdit('{{user.id}}','{{user.first_name}}','{{user.last_name}}','{{user.username}}','{{user.email}}','{{grouplist}}','{% for grp in user.groups.all %}{{grp}}{% endfor %}')"><i class="material-icons">&#xE254;</i></a><a href="/removeUser/{{user.id}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete this user?')"><i class="material-icons">&#xE872;</i></a>
+                        <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="userEdit('{{user.id}}','{{user.first_name}}','{{user.last_name}}','{{user.username}}','{{user.email}}','{{editGroupList}}','{% for grp in user.groups.all %}{{grp}}{% endfor %}','{{interviwer}}')"><i class="material-icons">&#xE254;</i></a><a href="/removeUser/{{user.id}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete this user?')"><i class="material-icons">&#xE872;</i></a>
                       </td>
                   </tr>
+                {% endif %}
               {% endfor %}
               <tbody>
           </table>
@@ -194,12 +196,14 @@
     } 
     function showSkillEdit(select){
       if(select.value=="Interviewer"){
-       document.getElementById('skillEdit').style.display = "block";
+       document.getElementById('skillEditDiv').style.display = "block";
+       var v = document.getElementById('skillEditDiv');
+       v.classList.remove('field--not-empty');
       } else{
-        document.getElementById('skillEdit').style.display = "none";
+        document.getElementById('skillEditDiv').style.display = "none";
       }
     }
-    function userEdit(id,fName,lName,userId,email,group,usergrp){
+    function userEdit(id,fName,lName,userId,email,group,usergrp,interviewer){
       document.getElementById('editUser').style.display='block';
       className = "userFirstName";
       addClass(fName,className);
@@ -213,28 +217,36 @@
       className = "userEmail";
       addClass(email,className);
       document.getElementById(className).value=email;
+      document.getElementById("editUserLink").action = "../editUser/"+ id;
       
-      alert(group)
       var dd3 = $("#userTypeEdit");
       dd3.empty();
-      //group=eval(group);
-      alert(Object.keys(group).length)
-      for(var i=1;i<=4;i++)
+      group=eval(group);
+      for(var i=0;i<group.length;i++)
       {
-        alert(i)
-        alert(group[i])
-        if(group[i].name==usergrp){
-            dd3.append($("<option selected></option>").val(group[i].fields.name).html(group[i].fields.name));
-            alert('True')
+        if(group[i].fields.name==usergrp){
+          dd3.append($("<option selected></option>").val(group[i].fields.name).html(group[i].fields.name));
+          if(usergrp=='Interviewer'){
+            document.getElementById('skillEditDiv').style.display = "block";
+            interviewer=eval(interviewer)
+            for(var j=0;j<interviewer.length;j++){
+              if(interviewer[j].fields.user==id){
+                document.getElementById('skillEditValue').value=interviewer[j].fields.skill;
+                var v = document.getElementById('skillEditDiv');
+                v.classList.add("field--not-empty");
+              }
+            }
+          }
+          else{document.getElementById('skillEditDiv').style.display = "none";}
         }
-        if(group[i].name!=usergrp){
-            dd3.append($("<option></option>").val(group[i].fields.name).html(group[i].fields.name));
-            alert('False')
+        if(group[i].fields.name!=usergrp){
+          dd3.append($("<option></option>").val(group[i].fields.name).html(group[i].fields.name));
         }        
       }
     }
     function closeForm() {
       document.getElementById("editUser").style.display = "none";
+      document.getElementById('skillEditValue').value='';
       removeClass();
     }
     var modal = document.getElementById('editUser');
@@ -242,6 +254,7 @@
     window.onclick = function(event) {
       if (event.target == modal ) {
         modal.style.display = "none";
+        document.getElementById('skillEditValue').value='';
         removeClass();
       }
     }
