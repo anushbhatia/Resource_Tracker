@@ -272,12 +272,13 @@
                         </td>
                         <td>
                             {% if perms.employee_register.change_employee %}
+                            <!-- this is only for super user -->
+                            {% if user.is_staff %}<a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{employee.emp_code}}','{{employee.empFullname}}','{{employee.empEmail}}','{{employee.empPrimary}}','{{employee.empSecondary}}','{{employee.empLocation}}','{{employee.empStatus}}','{{employee.empRemarks}}','{{employee.empDesignation}}','{{employee.empBenchmng}}','{{employee.empPanel}}','{{employee.interviewer_id}}','{{interviewers}}')"><i class="material-icons">&#xE254;</i></a>{% endif %}
                             {% for group in  user.groups.all %}{% if 'Interviewer' == group.name %}<a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openIntForm('{{employee.emp_code}}','{{employee.empFullname}}','{{employee.empEmail}}','{{employee.empStatus}}','{{employee.empRemarks}}','{{employee.empPanel}}','{{employee.interviewer_id}}','{{interviewers}}')"><i class="material-icons">&#xE254;</i></a>{% else %}<a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{employee.emp_code}}','{{employee.empFullname}}','{{employee.empEmail}}','{{employee.empPrimary}}','{{employee.empSecondary}}','{{employee.empLocation}}','{{employee.empStatus}}','{{employee.empRemarks}}','{{employee.empDesignation}}','{{employee.empBenchmng}}','{{employee.empPanel}}','{{employee.interviewer_id}}','{{interviewers}}')"><i class="material-icons">&#xE254;</i></a>{% endif %}{% endfor %}{% endif %}{% if perms.employee_register.delete_employee %}<a href="/removeEmp/{{employee.emp_code}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete this record?')"><i class="material-icons">&#xE872;</i></a>{% endif %}
-                            <!-- <button onclick="document.getElementById('id01').style.display='block'">Open Modal</button> -->
                         </td>
                     </tr>
                 {% endfor %}
-               
+                
                 <tbody>
             </table>
         </div>
