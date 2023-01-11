@@ -4,6 +4,7 @@ import datetime
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
+import employee_register.models
 
 
 class Migration(migrations.Migration):

@@ -149,7 +149,7 @@
       
       <div class="form-group first {% if user.first_name %}field--not-empty{% endif %}">
         <label for="userFirstName">First Name</label>
-        <input type="text" class="form-control " id="userFirstName" name="userFirstName" value="{{user.first_name}}">
+        <input type="text" class="form-control " id="userFirstName" name="userFirstName" value="{{user.first_name}}" required>
       </div>
       <div class="form-group first {% if user.last_name %}field--not-empty{% endif %}">
         <label for="userLastName">Last Name</label>
@@ -157,7 +157,7 @@
       </div>
       <div class="form-group first {% if user.email %}field--not-empty{% endif %}">
         <label for="userEmail">Email</label>
-        <input type="email" class="form-control" id="userEmail" name="userEmail" value="{{user.email}}">
+        <input type="email" class="form-control" id="userEmail" name="userEmail" value="{{user.email}}" required>
       </div>
       <input type="submit" value="Submit" class="btn btn-pill text-white btn-block btn-primary">
     </form>
