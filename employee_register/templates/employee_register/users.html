@@ -42,7 +42,7 @@
           
           <div class="form-group first " id="userFirstNameDiv">
             <label for="userFirstName">First Name</label>
-            <input type="text" class="form-control " id="userFirstName" name="userFirstName" >
+            <input type="text" class="form-control " id="userFirstName" name="userFirstName" required>
           </div>
           <div class="form-group first" id="userLastNameDiv">
             <label for="userLastName">Last Name</label>
@@ -50,18 +50,18 @@
           </div>
           <div class="form-group first" id="userUsernameDiv">
             <label for="userUsername">Username</label>
-            <input type="text" class="form-control" id="userUsername" name="userUsername" > 
+            <input type="text" class="form-control" id="userUsername" name="userUsername" required> 
           </div>
           <div class="form-group first" id="userEmailDiv">
             <label for="userEmail">Email</label>
-            <input type="email" class="form-control" id="userEmail" name="userEmail" >
+            <input type="email" class="form-control" id="userEmail" name="userEmail" required>
           </div>
           <div class="form-group row">
             <div class="col-sm-3">
               <label for="userType" class="col-form-label col-form-label-sm">User type</label>
             </div>
             <div class="col-sm-8">
-              <select class="custom-select custom-select-sm" id="userTypeEdit" name="userUserType" onchange="showSkillEdit(this)" >
+              <select class="custom-select custom-select-sm" id="userTypeEdit" name="userUserType" onchange="showSkillEdit(this)" required>
               </select>
             </div>
           </div>
@@ -96,11 +96,11 @@
                     </div>
                     <div class="form-group first">
                       <label for="username">Username</label>
-                      <input type="text" class="form-control" id="username" name="username">
+                      <input type="text" class="form-control" id="username" name="username" required>
                     </div>
                     <div class="form-group first">
                       <label for="email">Email</label>
-                      <input type="email" class="form-control" id="email" name="email">
+                      <input type="email" class="form-control" id="email" name="email" required>
                     </div>
                     <div class="form-group row">
                       <div class="col-sm-3">

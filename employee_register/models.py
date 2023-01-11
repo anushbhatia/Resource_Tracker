@@ -20,6 +20,7 @@ class Interviewer(models.Model):
         return interviewer.pk
 class Meta:        
     db_table="Interviewer"
+# Employee Model
 class Employee(models.Model):
     emp_code=models.CharField(max_length=100)
     empFullname=models.CharField(max_length=100)
