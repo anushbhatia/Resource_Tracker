@@ -47,7 +47,7 @@
                     </div>
                     <div class="form-group first" id="empEmailDiv">
                     <label for="empEmail">Email</label>
-                    <input type="email" class="form-control" id="empEmail" name="empEmail" style="font-size: medium;"> 
+                    <input type="email" class="form-control" id="empEmail" name="empEmail" style="font-size: medium;" required> 
                     </div>
                     <div class="form-group first" id="empLocationDiv">
                     <label for="empLocation">Location</label>
@@ -115,7 +115,7 @@
                     </div>
                     <div class="form-group first" id="empEmail_intDiv">
                     <label for="empEmail">Email</label>
-                    <input type="email" class="form-control" id="empEmail_int" name="empEmail" style="font-size: medium;"> 
+                    <input type="email" class="form-control" id="empEmail_int" name="empEmail" style="font-size: medium;" required> 
                     </div>
                     <div class="form-group row">  </div>
                     <div class="form-group row">
@@ -271,12 +271,13 @@
                             {{employee.empRemarks}}
                         </td>
                         <td>
-                            <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openIntForm('{{employee.emp_code}}','{{employee.empFullname}}','{{employee.empEmail}}','{{employee.empStatus}}','{{employee.empRemarks}}','{{employee.empPanel}}','{{employee.interviewer_id}}','{{interviewers}}')"><i class="material-icons">&#xE254;</i></a><a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{employee.emp_code}}','{{employee.empFullname}}','{{employee.empEmail}}','{{employee.empPrimary}}','{{employee.empSecondary}}','{{employee.empLocation}}','{{employee.empStatus}}','{{employee.empRemarks}}','{{employee.empDesignation}}','{{employee.empBenchmng}}','{{employee.empPanel}}','{{employee.interviewer_id}}','{{interviewers}}')"><i class="material-icons">&#xE254;</i></a>{% if perms.employee_register.delete_employee %}<a href="/removeEmp/{{employee.emp_code}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete this record?')"><i class="material-icons">&#xE872;</i></a>{% endif %}
-                            
+                            {% if perms.employee_register.change_employee %}
+                            {% for group in  user.groups.all %}{% if 'Interviewer' == group.name %}<a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openIntForm('{{employee.emp_code}}','{{employee.empFullname}}','{{employee.empEmail}}','{{employee.empStatus}}','{{employee.empRemarks}}','{{employee.empPanel}}','{{employee.interviewer_id}}','{{interviewers}}')"><i class="material-icons">&#xE254;</i></a>{% else %}<a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{employee.emp_code}}','{{employee.empFullname}}','{{employee.empEmail}}','{{employee.empPrimary}}','{{employee.empSecondary}}','{{employee.empLocation}}','{{employee.empStatus}}','{{employee.empRemarks}}','{{employee.empDesignation}}','{{employee.empBenchmng}}','{{employee.empPanel}}','{{employee.interviewer_id}}','{{interviewers}}')"><i class="material-icons">&#xE254;</i></a>{% endif %}{% endfor %}{% endif %}{% if perms.employee_register.delete_employee %}<a href="/removeEmp/{{employee.emp_code}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete this record?')"><i class="material-icons">&#xE872;</i></a>{% endif %}
+                            <!-- <button onclick="document.getElementById('id01').style.display='block'">Open Modal</button> -->
                         </td>
                     </tr>
                 {% endfor %}
-               
+                
                 <tbody>
             </table>
         </div>
@@ -332,7 +333,7 @@
             }
             if(interviewer[i].pk!=empintid){
                 if (interviewer[i].fields.name ==  'NA')
-                    dd2.append($("<option></option>").val(interviewer[i].fields.name).html(interviewer[i].fields.name+', Assigned: '+interviewer[i].fields.count));
+                    dd2.append($("<option></option>").val(interviewer[i].fields.name).html(interviewer[i].fields.name));
                 else 
                     dd2.append($("<option></option>").val(interviewer[i].fields.name).html(interviewer[i].fields.name+', Assigned: '+interviewer[i].fields.count+', Skill: '+interviewer[i].fields.skill));
             }

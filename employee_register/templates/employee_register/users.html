@@ -14,10 +14,10 @@
       left: 0;
       top: 15;
       width: 100%; /* Full width */
-      height: 100%; /* Full height */
-      overflow: auto; /* Enable scroll if needed */
+      height: 80%; /* Full height */
+      overflow: scroll; /* Enable scroll if needed */
       background-color: #474e5d79;
-      padding-top: 50px;
+      padding-top: 30px;
     }
   </style>
 
@@ -37,12 +37,12 @@
         <div class="mb-3">
           <h4>Edit <strong>user details</strong><span onclick=closeForm() class="close" title="Close" style="color:red; text-align:end"><b>x</b></span></h4>
         </div>
-        <form action="../editProfile/" method="post">
+        <form id='editUserLink' method="post">
           {% csrf_token %}
           
           <div class="form-group first " id="userFirstNameDiv">
             <label for="userFirstName">First Name</label>
-            <input type="text" class="form-control " id="userFirstName" name="userFirstName" >
+            <input type="text" class="form-control " id="userFirstName" name="userFirstName" required>
           </div>
           <div class="form-group first" id="userLastNameDiv">
             <label for="userLastName">Last Name</label>
@@ -50,11 +50,24 @@
           </div>
           <div class="form-group first" id="userUsernameDiv">
             <label for="userUsername">Username</label>
-            <input type="text" class="form-control" id="userUsername" name="userUsername" > 
+            <input type="text" class="form-control" id="userUsername" name="userUsername" required> 
           </div>
           <div class="form-group first" id="userEmailDiv">
             <label for="userEmail">Email</label>
-            <input type="email" class="form-control" id="userEmail" name="userEmail" >
+            <input type="email" class="form-control" id="userEmail" name="userEmail" required>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-3">
+              <label for="userType" class="col-form-label col-form-label-sm">User type</label>
+            </div>
+            <div class="col-sm-8">
+              <select class="custom-select custom-select-sm" id="userTypeEdit" name="userUserType" onchange="showSkillEdit(this)" required>
+              </select>
+            </div>
+          </div>
+          <div class="form-group first" id='skillEditDiv' style="display: none;">
+            <label for="skill">Skill(technology) of Interviewer</label>
+            <input type="text" class="form-control" id="skillEditValue" name="userSkill">
           </div>
           <input type="submit" value="Submit" class="btn btn-pill text-white btn-block btn-primary">
         </form>
@@ -83,11 +96,11 @@
                     </div>
                     <div class="form-group first">
                       <label for="username">Username</label>
-                      <input type="text" class="form-control" id="username" name="username">
+                      <input type="text" class="form-control" id="username" name="username" required>
                     </div>
                     <div class="form-group first">
                       <label for="email">Email</label>
-                      <input type="email" class="form-control" id="email" name="email">
+                      <input type="email" class="form-control" id="email" name="email" required>
                     </div>
                     <div class="form-group row">
                       <div class="col-sm-3">
@@ -96,19 +109,15 @@
                       <div class="col-sm-8">
                         <select class="custom-select custom-select-sm" id="userType" name="userType" onchange="showSkill(this)" required>
                           <option value="" disabled selected>Select User Type</option>
-                          <!-- <option value="Developer" style="text-align:center;">Developer</option>
-                          <option value="Manager" style="text-align:center;">Manager</option>
-                          <option value="Interviewer" style="text-align:center;">Interviewer</option>
-                          <option value="Viewer" style="text-align:center;">Viewer</option> -->
                           {% for group in grouplist %}
                             <option value="{{ group.name }}" style="text-align:center;">{{ group.name }}</option>
                           {% endfor %}
                         </select>
                       </div>
                     </div>
-                    <div class="form-group first" id='skill' style="display: none;">
+                    <div class="form-group first" id='skill2' style="display: none;">
                       <label for="skill">Skill(technology) of Interviewer</label>
-                      <input type="text" class="form-control" id="skill" name="skill">
+                      <input type="text" class="form-control" name="skill">
                     </div>
                     <div class="form-group first">
                       <label for="password1">Password</label>
@@ -145,6 +154,7 @@
                   </tr>
               </thead>
               {% for user in userList %}
+                {% if not user.is_staff %}
                   <tr>
                       <td>
                           {{forloop.counter}}
@@ -164,9 +174,10 @@
                         {% endfor %}
                       </td>
                       <td>
-                        <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="userEdit('{{user.id}}','{{user.first_name}}','{{user.last_name}}','{{user.username}}','{{user.email}}','{% for grp in user.groups.all %}{{grp}}{% endfor %}')"><i class="material-icons">&#xE254;</i></a><a href="/removeUser/{{user.id}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete this user?')"><i class="material-icons">&#xE872;</i></a>
+                        <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="userEdit('{{user.id}}','{{user.first_name}}','{{user.last_name}}','{{user.username}}','{{user.email}}','{{editGroupList}}','{% for grp in user.groups.all %}{{grp}}{% endfor %}','{{interviwer}}')"><i class="material-icons">&#xE254;</i></a><a href="/removeUser/{{user.id}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete this user?')"><i class="material-icons">&#xE872;</i></a>
                       </td>
                   </tr>
+                {% endif %}
               {% endfor %}
               <tbody>
           </table>
@@ -178,12 +189,21 @@
   <script type="text/javascript">
     function showSkill(select){
       if(select.value=="Interviewer"){
-       document.getElementById('skill').style.display = "block";
+       document.getElementById('skill2').style.display = "block";
       } else{
-        document.getElementById('skill').style.display = "none";
+        document.getElementById('skill2').style.display = "none";
       }
     } 
-    function userEdit(id,fName,lName,userId,email,grp){
+    function showSkillEdit(select){
+      if(select.value=="Interviewer"){
+       document.getElementById('skillEditDiv').style.display = "block";
+       var v = document.getElementById('skillEditDiv');
+       v.classList.remove('field--not-empty');
+      } else{
+        document.getElementById('skillEditDiv').style.display = "none";
+      }
+    }
+    function userEdit(id,fName,lName,userId,email,group,usergrp,interviewer){
       document.getElementById('editUser').style.display='block';
       className = "userFirstName";
       addClass(fName,className);
@@ -197,9 +217,36 @@
       className = "userEmail";
       addClass(email,className);
       document.getElementById(className).value=email;
+      document.getElementById("editUserLink").action = "../editUser/"+ id;
+      
+      var dd3 = $("#userTypeEdit");
+      dd3.empty();
+      group=eval(group);
+      for(var i=0;i<group.length;i++)
+      {
+        if(group[i].fields.name==usergrp){
+          dd3.append($("<option selected></option>").val(group[i].fields.name).html(group[i].fields.name));
+          if(usergrp=='Interviewer'){
+            document.getElementById('skillEditDiv').style.display = "block";
+            interviewer=eval(interviewer)
+            for(var j=0;j<interviewer.length;j++){
+              if(interviewer[j].fields.user==id){
+                document.getElementById('skillEditValue').value=interviewer[j].fields.skill;
+                var v = document.getElementById('skillEditDiv');
+                v.classList.add("field--not-empty");
+              }
+            }
+          }
+          else{document.getElementById('skillEditDiv').style.display = "none";}
+        }
+        if(group[i].fields.name!=usergrp){
+          dd3.append($("<option></option>").val(group[i].fields.name).html(group[i].fields.name));
+        }        
+      }
     }
     function closeForm() {
       document.getElementById("editUser").style.display = "none";
+      document.getElementById('skillEditValue').value='';
       removeClass();
     }
     var modal = document.getElementById('editUser');
@@ -207,6 +254,7 @@
     window.onclick = function(event) {
       if (event.target == modal ) {
         modal.style.display = "none";
+        document.getElementById('skillEditValue').value='';
         removeClass();
       }
     }
