@@ -65,6 +65,557 @@
       </div>
     </section><!-- End Counts Section -->
 
+    <!-- DASHBOARD section -->
+
+    <section id="dashboard" class="dashboards">
+      <div class="text-center title">
+        <h4><b>User Friendly Insights</b></h4>
+      </div>
+      <div id = "id2">
+      <div><!-- overall insight --> 
+        <h5><u>Overall Profile Distribution</u></h5>
+        <canvas id="myChart" width="280" height="280"></canvas>
+        <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ["Profile Received","Profile Deployed","Profiles in Progess","Profile Rejected"],
+                datasets: [{
+                    label: 'Number of profiles',
+                    data: ["{{profileCount}}","{{deployedCount}}","{{progessCount}}","{{rejectCount}}"],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(153, 102, 255, 0.5)',
+                        'rgba(255, 159, 64, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                plugins:{
+                  legend:{
+                    position:'top',
+                    align:'start'
+                  }
+
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+        </script>
+      </div> 
+      </div>
+
+      <br>
+      <br>
+
+      <!--       -------------------------------------------------------             -->
+      <div class ="center">
+      <select id = "status_select" >
+      <option value = "hide">
+      --PROFILE STATUS--none/hide
+      </option>
+      
+      <option value = "progress"> IN PROGRESS </option>
+      <option value = "selected"> SELECTED/DEPLOYED </option>
+      <option value = "rejected"> REJECTED </option>
+      
+      </select>
+      </div>
+      <br>
+      <br>
+
+      <div id = "id1">
+      <div id = "ID1">
+        <h5 id = "selectedheading" class = "class1 head"><u>Selected Profile's Technology Distribution</u></h5>
+        <canvas id="selected" class = "class1" width="100%" height="30%"></canvas>
+        
+        <script>
+        var ctx = document.getElementById('selected').getContext('2d');
+        var myChart1 = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [{% for key, value in selected_primary_tech_dict.items %} '{{ key }}', {% endfor %}],
+                datasets: [{
+                    label: "",
+                    data: [{% for key, value in selected_primary_tech_dict.items %} '{{ value }}', {% endfor %}],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(153, 102, 255, 0.5)',
+                        'rgba(255, 159, 64, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                
+                plugins:{
+                  legend:{
+                    position:'top',
+                    align:'start'
+                  }
+
+                },
+                scales: {
+
+                    
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                    
+                }
+            }
+        });
+        </script>
+
+
+
+
+      </div>
+
+      <div id = "ID2" >
+        <h5 id = "progressheading" class = "class1 head"><u>In Progress Profile's Technology Distribution</u></h5>
+        <canvas id="progress" class = "class1" width="100%" height="30%"></canvas>
+        <script>
+        var ctx = document.getElementById('progress').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [{% for key, value in in_progress_primary_tech_dict.items %} '{{ key }}', {% endfor %}],
+                datasets: [{
+                    label: "",
+                    data: [{% for key, value in in_progress_primary_tech_dict.items %} '{{ value }}', {% endfor %}],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(153, 102, 255, 0.5)',
+                        'rgba(255, 159, 64, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                plugins:{
+                  legend:{
+                    position:'top',
+                    align:'start'
+                  }
+
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+        </script>
+
+
+
+
+      </div>
+
+      <div  id = "ID3">
+        <h5 id = "rejectedheading" class = "class1 head"><u>Rejected Profile's Technology Distribution</u></h5>
+        <canvas id="rejected" class = "class1" width="100%" height="30%"></canvas>
+        <script>
+        var ctx = document.getElementById('rejected').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [{% for key, value in rejected_primary_tech_dict.items %} '{{ key }}', {% endfor %}],
+                datasets: [{
+                    label: "",
+                    data: [{% for key, value in rejected_primary_tech_dict.items %} '{{ value }}', {% endfor %}],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(153, 102, 255, 0.5)',
+                        'rgba(255, 159, 64, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                plugins:{
+                  legend:{
+                    position:'top',
+                    align:'start'
+                  }
+
+                },
+                scales: {
+                    
+                    y: {
+                      beginAtZero:true
+                      
+                    }
+                }
+            }
+        });
+        </script>
+
+
+
+
+      </div>
+    </div>
+
+    
+
+
+    
+
+    <script>
+    $(document).ready(function(){
+
+      $('#ID1').css("display","none")
+      $('#ID2').css("display","none")
+      $('#ID3').css("display","none")
+
+    //$('.class1').hide();
+    //$('#')
+    
+    $('#status_select').change(function(){
+      // Get the value of the selected option
+      var selectedChart = $(this).val();
+      // Hide all chart canvas elements
+      //$('.class1').hide();
+      // Show the selected chart
+      if (selectedChart === "progress")
+      {
+
+        $('#ID1').css("display","none")
+        $('#ID3').css("display","none")
+        $('#ID2').css({"display":"block","width":"100%"})
+      }
+      else if (selectedChart === "selected")
+      {
+
+        $('#ID2').css("display","none")
+        $('#ID3').css("display","none")
+        $('#ID1').css({"display":"block","width":"100%"})
+      }
+
+      else if (selectedChart === "rejected")
+      {
+
+        $('#ID1').css("display","none")
+        $('#ID2').css("display","none")
+        $('#ID3').css({"display":"block","width":"100%"})
+      }
+      else
+      {
+        $('#ID1').css("display","none")
+        $('#ID2').css("display","none")
+        $('#ID3').css("display","none")
+      }
+
+      //$('#ID1').html('');
+      //$('#' + selectedChart + 'heading').show()
+  });
+});
+    </script>
+    
+
+
+    <div id = "form2" class = "center">
+
+    <select id = "tech">
+    <option>
+    --SELECT TECH--
+    </option>
+    {% for i in all_tech %}
+    <option value="{{i}}"> {{i}} </option>
+    {% endfor %}
+    </select>
+
+    <script>
+    $(document).ready(function(){
+      var ctx11;
+      var chart11;
+
+      
+
+      $('#tech').change(function(){
+        var selected_option = $(this).val();
+        var progress_dict_json = JSON.parse('{{in_progress_tech_dict_json|safe}}');
+        var selected_dict_json = JSON.parse('{{selected_tech_dict_json|safe}}');
+        var rejected_dict_json = JSON.parse('{{rejected_tech_dict_json|safe}}');
+        if (selected_option in progress_dict_json ){
+          val1 = 0
+          val2 = 0
+          if  (selected_option in selected_dict_json){
+            val1 = selected_dict_json[selected_option]
+          }
+          if  (selected_option in rejected_dict_json){
+            val2 = rejected_dict_json[selected_option]
+          }
+
+          //$('#values').text(progress_dict_json[selected_option]);
+          var html = '<div class="random_class">' +'<p> in progress: ' + progress_dict_json[selected_option] + '</p>' + '<br>' +'<p> selected: ' + val1 + '</p>' + '<br>' + '<p> rejected: ' + val2 + '</p>';
+          $('#values').html(html);
+          if(chart11){
+                chart11.destroy();
+            }
+          ctx11 = document.getElementById('this_chart').getContext('2d');
+          chart11 = new Chart(ctx11,{
+            type:'doughnut',
+            data:{
+              labels:['In Progress','Selected','Rejected'],
+              datasets:[{
+                label:'',
+                data: [progress_dict_json[selected_option],val1,val2],
+                backgroundColor: ['rgba(50, 99, 132, 0.2)',
+                                  'rgba(99, 99, 500, 0.2)',
+                                  'rgba(255, 99, 132, 0.2)',
+                                  ]
+              }]
+            },
+            options: {
+              
+              
+            }
+          });
+
+          
+
+          
+
+
+        }
+        else{
+          display_val = 0
+          
+          val1 = 0
+          val2 = 0
+          if  (selected_option in selected_dict_json){
+            val1 = selected_dict_json[selected_option]
+          }
+          if  (selected_option in rejected_dict_json){
+            val2 = rejected_dict_json[selected_option]
+          }
+
+          var html = '<div class="random_class">' +'<p class="in-progress"> in progress: ' + display_val + '</p>' + '<br>' +'<p class = "selected"> selected: ' + val1 + '</p>' + '<br>' + '<p class="rejected"> rejected: ' + val2 + '</p>';
+
+          //$('#values').text(progress_dict_json[selected_option]);
+          $('#values').html(html);
+          if(chart11){
+              chart11.destroy();
+          }
+          ctx11 = document.getElementById('this_chart').getContext('2d');
+          chart11 = new Chart(ctx11,{
+            type:'doughnut',
+            data:{
+              labels:['In Progress','Selected','Rejected'],
+              datasets:[{
+                label:'',
+                data: [0,val1,val2],
+                backgroundColor: ['rgba(50, 99, 132, 0.2)',
+                                  'rgba(99, 99, 500, 0.2)',
+                                  'rgba(255, 99, 132, 0.2)',
+                                  ]
+              }]
+            },
+            options: {
+              
+              
+            }
+          });
+
+          
+
+        }
+        /*if (!(selected_option in progress_dict_json)){
+          $('#values').text('no one in this tech yet!');
+        }
+        
+        if (selected_option in selected_dict_json ){
+          $('#values').text(selected_dict_json[selected_option]);
+        }
+        if (!(selected_option in selected_dict_json)){
+          $('#values').text('no one selected in this tech yet!');
+        }
+        if (selected_option in rejected_dict_json ){
+          $('#values').text(rejected_dict_json[selected_option]);
+        }
+        if (!(selected_option in rejected_dict_json)){
+          $('#values').text('no one in this tech yet!');
+        }*/
+      });
+    });
+
+
+
+    </script>
+
+    <div style="position: relative;">
+    <canvas id="this_chart" width="300" height="300"></canvas>
+    <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">
+        <canvas id="this_chart"></canvas>
+    </div>
+</div>
+            <div id = "values">
+            
+
+
+            
+            </div>
+
+
+
+    </div>
+
+
+    <div>
+
+      <div id = "id22">
+      <div><!-- overall monthly insight --> 
+        <h5><u>Overall Monthly Insight</u></h5>
+        <canvas id="myChart22" width="100%" height="30"></canvas>
+        <script>
+        var ctx22 = document.getElementById('myChart22').getContext('2d');
+        var myChart22 = new Chart(ctx22, {
+            type: 'bar',
+            data: {
+                labels: ['Jan','Feb','Mar','Apr','May','June','Aug','Sep','Oct','Nov','Dec'],
+                datasets: [{
+                    label: 'In Progress',
+                    data: [{% for key, value in monthly_in_progress_dict.items %} {{ value }}, {% endfor %}],
+                    backgroundColor: [
+                        'rgba(255, 255, 0, 0.2)'
+                    ],
+                    borderColor: [
+                        
+                    ],
+                    borderWidth: 0
+                },
+                {
+                    
+                    label: 'Selected',
+                    data: [{% for key, value in monthly_selected_dict.items %} {{ value }}, {% endfor %}],
+                    backgroundColor: [
+                        'rgba(0, 255, 0, 0.2)'
+                    ],
+                    
+                    borderColor: [
+                        
+                    ],
+                    borderWidth: 0
+                },
+                {
+                    label: 'Rejected',
+                    data: [{% for key, value in monthly_rejected_dict.items %} {{ value }}, {% endfor %}],
+                    backgroundColor: [
+                         'rgba(255, 0, 0, 0.2)'
+                    ],
+                    
+                    borderColor: [
+                       
+                    ],
+                    borderWidth: 0
+                }
+                
+                
+                ]
+            },
+            options: {
+                plugins:{
+                  legend:{
+                    position:'top',
+                    align:'start'
+                  }
+
+                },
+                scales: {
+
+                    y:{
+                      beginAtZero : true
+                    },
+                    x:{
+                      stacked:false
+                     
+                    }
+                }
+                 
+            }
+        });
+        </script>
+      </div> 
+      </div>
+    
+    
+    </div>
+
+
+
+
+
+
+
+    </section>
+
+
+
+    
+
+
+
   </main>
   <!-- End #main -->
 {% endblock content %}

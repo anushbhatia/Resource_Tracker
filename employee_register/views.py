@@ -6,7 +6,9 @@ from django.contrib.auth.models import User,Group
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required,permission_required
 from django.core import serializers
+import json
 from datetime import datetime
+
 '''
 LOCATION: 30
 GRADE:30
@@ -62,15 +64,92 @@ def home(request):
   deployedCount = 0
   progessCount = 0
   rejectCount = 0
+
+  selected_primary_tech_dict =    {}
+  in_progress_primary_tech_dict = {}
+  rejected_primary_tech_dict =    {}
+  monthly_selected_dict = {'Jan':0,'Feb':0,'Mar':0,'Apr':0,'May':0,'June':0,'Jul':0,'Aug':0,'Sep':0,'Oct':0,'Nov':0,'Dec':0}
+  monthly_in_progress_dict = {'Jan':0,'Feb':0,'Mar':0,'Apr':0,'May':0,'June':0,'Jul':0,'Aug':0,'Sep':0,'Oct':0,'Nov':0,'Dec':0}
+  monthly_rejected_dict = {'Jan':0,'Feb':0,'Mar':0,'Apr':0,'May':0,'June':0,'Jul':0,'Aug':0,'Sep':0,'Oct':0,'Nov':0,'Dec':0}
+  months = ['Jan','Feb','Mar','Apr','May','June','Aug','Sep','Oct','Nov','Dec']
+
+  all_tech = []
+
+
   for employee in employees:
     profileCount = profileCount+1
     if(employee.empStatus=='Client Select'):
       deployedCount=deployedCount+1
+      if (employee.empTimeStamp is not None):
+        month = employee.empTimeStamp.month
+        month = months[month-1]
+        monthly_selected_dict[month] = monthly_selected_dict[month] + 1
+      else:
+        pass
+        
+      
     elif(employee.empStatus=='NA' or employee.empStatus=='L1 Assigned' or employee.empStatus=='L1 Select'):
       progessCount=progessCount+1
+      if (employee.empTimeStamp is not None):
+        month = employee.empTimeStamp.month
+        month = months[month-1]
+        monthly_in_progress_dict[month] = monthly_in_progress_dict[month]+1
+      else:
+        month = employee.empDate.month
+        month = months[month-1]
+        monthly_in_progress_dict[month] = monthly_in_progress_dict[month]+1
+
     elif(employee.empStatus=='L1 Reject' or employee.empStatus=='Client Reject' or employee.empStatus=='Others'):
       rejectCount=rejectCount+1
-  return render(request, "employee_register/home.html",{'profileCount':profileCount,'deployedCount':deployedCount,'progessCount':progessCount,'rejectCount':rejectCount})
+      if (employee.empTimeStamp is not None):
+        month = employee.empTimeStamp.month
+        month = months[month-1]
+        monthly_rejected_dict[month] = monthly_rejected_dict[month] + 1
+      else:
+        pass
+    
+    if(employee.empPrimary in in_progress_primary_tech_dict.keys() and (employee.empStatus=='NA' or employee.empStatus=='L1 Assigned' or employee.empStatus=='L1 Select')):
+      in_progress_primary_tech_dict[employee.empPrimary] = in_progress_primary_tech_dict[employee.empPrimary] + 1
+    elif(employee.empPrimary not in in_progress_primary_tech_dict.keys() and (employee.empStatus=='NA' or employee.empStatus=='L1 Assigned' or employee.empStatus=='L1 Select')):
+      in_progress_primary_tech_dict[employee.empPrimary] = 1
+
+
+    if(employee.empPrimary in selected_primary_tech_dict.keys() and employee.empStatus=='Client Select'):
+      selected_primary_tech_dict[employee.empPrimary] = selected_primary_tech_dict[employee.empPrimary] + 1
+    elif(employee.empPrimary not in selected_primary_tech_dict.keys() and employee.empStatus=='Client Select'):
+      selected_primary_tech_dict[employee.empPrimary] = 1
+
+
+    if(employee.empPrimary in rejected_primary_tech_dict.keys() and (employee.empStatus=='L1 Reject' or employee.empStatus=='Client Reject' or employee.empStatus=='Others')):
+      rejected_primary_tech_dict[employee.empPrimary] = rejected_primary_tech_dict[employee.empPrimary] + 1
+    elif(employee.empPrimary not in rejected_primary_tech_dict.keys() and (employee.empStatus=='L1 Reject' or employee.empStatus=='Client Reject' or employee.empStatus=='Others')):
+      rejected_primary_tech_dict[employee.empPrimary] = 1
+
+  for keys in in_progress_primary_tech_dict.keys():
+    all_tech.append(keys)
+  
+  for keys in selected_primary_tech_dict.keys():
+    all_tech.append(keys)
+    
+  for keys in rejected_primary_tech_dict.keys():
+    all_tech.append(keys)
+  
+  
+  all_tech = set(all_tech)
+  all_tech = sorted(all_tech)
+
+  selected_tech_dict_json = json.dumps(selected_primary_tech_dict)
+  in_progress_tech_dict_json = json.dumps(in_progress_primary_tech_dict)
+  rejected_tech_dict_json = json.dumps(rejected_primary_tech_dict)
+
+
+  
+
+
+
+
+
+  return render(request, "employee_register/home.html",{'profileCount':profileCount,'deployedCount':deployedCount,'progessCount':progessCount,'rejectCount':rejectCount,'selected_primary_tech_dict':selected_primary_tech_dict,'in_progress_primary_tech_dict':in_progress_primary_tech_dict,'rejected_primary_tech_dict':rejected_primary_tech_dict,'all_tech':all_tech,'selected_tech_dict_json':selected_tech_dict_json,'in_progress_tech_dict_json':in_progress_tech_dict_json,'rejected_tech_dict_json':rejected_tech_dict_json,'monthly_in_progress_dict':monthly_in_progress_dict,'monthly_rejected_dict':monthly_rejected_dict,'monthly_selected_dict':monthly_selected_dict})
 
 class Interviewerc(object):
         def __init__(self, interviewer_id, name):
@@ -111,6 +190,7 @@ def edit_emp(request,emp_code):
       if(temppanel!=employee.empPanel and i.name==employee.empPanel and employee.empStatus=='NA' and i.name!='NA'):
         employee.interviewer=i
         employee.empStatus='L1 Assigned'
+        
       elif(temppanel!=employee.empPanel and i.name==employee.empPanel and employee.empStatus!='NA' and i.name=='NA'):
         employee.interviewer=i
         employee.empStatus='NA' 
@@ -141,6 +221,7 @@ def edit_emp_int(request,emp_code):
       if(temppanel!=employee.empPanel and i.name==employee.empPanel and employee.empStatus=='NA' and i.name!='NA'):
         employee.interviewer=i
         employee.empStatus='L1 Assigned'
+        
       elif(temppanel!=employee.empPanel and i.name==employee.empPanel and employee.empStatus!='NA' and i.name=='NA'):
         employee.interviewer=i
         employee.empStatus='NA' 
@@ -163,8 +244,21 @@ def remove_emp(request,emp_code):
   employees.delete()
   messages.success(request, 'Profile deleted sucessfully. ')
   return redirect('../show')
+  '''#if we use post contidition using form popup
+  if request.method == 'POST':
+      employees.delete()
+      return redirect('/show')
 
-# Insert employee from csv upload
+  context = {
+        'employees': employees,
+        'interviewers':interviewers
+  }
+  
+  return render(request, 'employee_register/delete.html', context)
+  '''
+
+# insert employee from csv upload
+# one parameter named request
 @login_required(login_url="auth/login/")
 @permission_required('employee_register.add_employee', raise_exception=True)
 def profile_upload(request):
