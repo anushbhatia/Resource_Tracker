@@ -26,7 +26,7 @@
                     
                     <div class="alert alert-warning" role="alert" width:fit-content"> 
                       {{warningMsg}}
-                      Order of the CSV should be:- <b>Id, Name, Email, Primary skill, Secondary skill, Location, Designation, Bench manager</b>
+                      Order of the CSV should be:- <b>Id, Name, Email, Primary skill, Secondary skill, Location, Designation, Bench manager, Path(Link) of Resume</b>
                     </div>
                     
                     <form action="../upload-csv/" method="POST" enctype="multipart/form-data">
@@ -53,7 +53,7 @@
             <div class="col-md-5 contents">
               <div class="form-block">
               <div class="mb-4">
-                    <h3>Add details of <strong>Resource</strong></h3>
+                    <h3>Add details of <strong>Employee</strong></h3>
                   </div>
                   <form action="../insert/" method="post">
                     {% csrf_token %}
@@ -88,6 +88,10 @@
                       <div class="form-group last mb-4">
                         <label for="empBenchmng">Bench Manager</label>
                         <input type="text" class="form-control" id="empBenchmng" name="empBenchmng">
+                      </div>
+                      <div class="form-group last mb-4">
+                        <label for="empCVPath">Path(Link) of Resume</label>
+                        <input type="text" class="form-control" id="empCVPath" name="empCVPath">
                       </div>
                       <input type="submit" value="Submit" class="btn btn-pill text-white btn-block btn-primary">
                   </form>

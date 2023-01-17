@@ -41,26 +41,16 @@ def insert_emp(request,template_name="employee_register/employee_list.html"):
       empLocation= request.POST['empLocation']
       empDesignation=request.POST['empDesignation']
       empBenchmng=request.POST['empBenchmng']  
+      empCVPath=request.POST['empCVPath']
       data = Employee(emp_code=emp_code, empFullname=empFullname, empEmail=empEmail, empPrimary=empPrimary, 
       empSecondary= empSecondary, empLocation=empLocation, empDesignation=empDesignation,
-      empBenchmng=empBenchmng)        
+      empBenchmng=empBenchmng,CVPath=empCVPath)        
       data.save()          
       messages.success(request, 'Profile added sucessfully. ')
       return redirect('../upload-csv/')
     else:
-      empId= request.POST['emp_code']
-      employee = Employee.objects.get(emp_code=empId)
-
-      employee.empFullname = request.POST['empFullname']       
-      employee.empEmail = request.POST['empEmail']       
-      employee.empPrimary = request.POST['empPrimary']       
-      employee.empSecondary= request.POST['empSecondary'] 
-      employee.empLocation= request.POST['empLocation']
-      employee.empDesignation=request.POST['empDesignation']
-      employee.empBenchmng=request.POST['empBenchmng']
-      employee.save() 
-      messages.success(request, 'Profile updated sucessfully. ')
-      return render(request, 'employee_register/profile_upload.html')
+      messages.warning(request, 'Employee with same Id already exist. ')
+      return redirect('../upload-csv/')
   else:   
     return render(request, 'employee_register/profile_upload.html')
 
@@ -112,6 +102,7 @@ def edit_emp(request,emp_code):
     employee.empStatus=request.POST['empStatus']
     temppanel=employee.empPanel
     employee.empPanel=request.POST['empPanel']
+    employee.CVPath=request.POST['empCVPath']
     print(employee.empPanel)
     employee.empDesignation=request.POST['empDesignation']
     employee.empBenchmng=request.POST['empBenchmng']
@@ -125,10 +116,10 @@ def edit_emp(request,emp_code):
         employee.empStatus='NA' 
       elif(temppanel!=employee.empPanel and i.name==employee.empPanel):
         employee.interviewer=i
+    employee.empTimeStamp=datetime.now()
     employee.save() 
     messages.success(request, 'Profile updated sucessfully. ')
     count_interview()
-    employee.empTimeStamp=datetime.now()
     return redirect('../show')
   else:
     return redirect('../show')
@@ -155,10 +146,11 @@ def edit_emp_int(request,emp_code):
         employee.empStatus='NA' 
       elif(temppanel!=employee.empPanel and i.name==employee.empPanel):
         employee.interviewer=i
+    employee.empTimeStamp=datetime.now()
     employee.save() 
     messages.success(request, 'Profile updated sucessfully. ')
     count_interview()
-    employee.empTimeStamp=datetime.now()
+    
     return redirect('../show')
   else:
     return redirect('../show')
@@ -217,6 +209,7 @@ def profile_upload(request):
           empLocation= column[5],
           empDesignation=column[6],
           empBenchmng=column[7],
+          empCVPath=column[8],
         )
         else:
           countskip=countskip+1

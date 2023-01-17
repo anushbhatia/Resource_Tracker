@@ -38,36 +38,36 @@
                     {% csrf_token %}
                     
                     <div class="form-group first " id="emp_codeDiv">
-                    <label for="emp_code">ID</label>
-                    <input type="text" class="form-control " id="emp_code" name="emp_code" disabled style="font-size: medium;">
+                        <label for="emp_code">ID</label>
+                        <input type="text" class="form-control " id="emp_code" name="emp_code" disabled style="font-size: medium;">
                     </div>
                     <div class="form-group first" id="empFullnameDiv">
-                    <label for="empFullname">Name</label>
-                    <input type="text" class="form-control" id="empFullname" name="empFullname" style="font-size: medium;"> 
+                        <label for="empFullname">Name</label>
+                        <input type="text" class="form-control" id="empFullname" name="empFullname" style="font-size: medium;"> 
                     </div>
                     <div class="form-group first" id="empEmailDiv">
-                    <label for="empEmail">Email</label>
-                    <input type="email" class="form-control" id="empEmail" name="empEmail" style="font-size: medium;" required> 
+                        <label for="empEmail">Email</label>
+                        <input type="email" class="form-control" id="empEmail" name="empEmail" style="font-size: medium;" required> 
                     </div>
                     <div class="form-group first" id="empLocationDiv">
-                    <label for="empLocation">Location</label>
-                    <input type="text" class="form-control" id="empLocation" name="empLocation" style="font-size: medium;">
+                        <label for="empLocation">Location</label>
+                        <input type="text" class="form-control" id="empLocation" name="empLocation" style="font-size: medium;">
                     </div>
                     <div class="form-group first" id="empDesignationDiv">
-                    <label for="empDesignation">Designation</label>
-                    <input type="text" class="form-control" id="empDesignation" name="empDesignation" style="font-size: medium;">
+                        <label for="empDesignation">Designation</label>
+                        <input type="text" class="form-control" id="empDesignation" name="empDesignation" style="font-size: medium;">
                     </div>
                     <div class="form-group first" id="empBenchmngDiv">
-                    <label for="empBenchmng">Bench Manager</label>
-                    <input type="text" class="form-control" id="empBenchmng" name="empBenchmng" style="font-size: medium;">
+                        <label for="empBenchmng">Bench Manager</label>
+                        <input type="text" class="form-control" id="empBenchmng" name="empBenchmng" style="font-size: medium;">
                     </div>
                     <div class="form-group first" id="empPrimaryDiv">
-                    <label for="empPrimary">Primary Skill</label>
-                    <input type="text" class="form-control" id="empPrimary" name="empPrimary" style="font-size: medium;">
+                        <label for="empPrimary">Primary Skill</label>
+                        <input type="text" class="form-control" id="empPrimary" name="empPrimary" style="font-size: medium;">
                     </div>
                     <div class="form-group first" id="empSecondaryDiv">
-                    <label for="empSecondary">Secondary Skill</label>
-                    <input type="text" class="form-control" id="empSecondary" name="empSecondary" style="font-size: medium;">
+                        <label for="empSecondary">Secondary Skill</label>
+                        <input type="text" class="form-control" id="empSecondary" name="empSecondary" style="font-size: medium;">
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-2">
@@ -87,9 +87,13 @@
                           </select>
                         </div>
                     </div>
+                    <div class="form-group first" id="empCVPathDiv">
+                        <label for="empCVPath">Path(Link) of Resume</label>
+                        <input type="text" class="form-control" id="empCVPath" name="empCVPath" style="font-size: medium;">
+                    </div>
                     <div class="form-group first" id="empRemarksDiv">
-                    <label for="empRemarks">Remarks</label>
-                    <input type="text" class="form-control" id="empRemarks" name="empRemarks" style="font-size: medium;">
+                        <label for="empRemarks">Remarks</label>
+                        <input type="text" class="form-control" id="empRemarks" name="empRemarks" style="font-size: medium;">
                     </div>
                     <div class="row" >
                         <div class="col-sm-4"><button type="submit" class="btn text-white btn-block btn-primary " style="width: fit-content;">Update  </button>
@@ -110,12 +114,12 @@
                     {% csrf_token %}
                     
                     <div class="form-group first" id="empFullname_intDiv">
-                    <label for="empFullname">Name</label>
-                    <input type="text" class="form-control" id="empFullname_int" name="empFullname" style="font-size: medium;"> 
+                        <label for="empFullname">Name</label>
+                        <input type="text" class="form-control" id="empFullname_int" name="empFullname" style="font-size: medium;"> 
                     </div>
                     <div class="form-group first" id="empEmail_intDiv">
-                    <label for="empEmail">Email</label>
-                    <input type="email" class="form-control" id="empEmail_int" name="empEmail" style="font-size: medium;" required> 
+                        <label for="empEmail">Email</label>
+                        <input type="email" class="form-control" id="empEmail_int" name="empEmail" style="font-size: medium;" required> 
                     </div>
                     <div class="form-group row">  </div>
                     <div class="form-group row">
@@ -138,8 +142,8 @@
                     </div>
                     <div class="form-group row">  </div>
                     <div class="form-group first" id="empRemarks_intDiv">
-                    <label for="empRemarks">Remarks</label>
-                    <input type="text" class="form-control" id="empRemarks_int" name="empRemarks" style="font-size: medium;">
+                        <label for="empRemarks">Remarks</label>
+                        <input type="text" class="form-control" id="empRemarks_int" name="empRemarks" style="font-size: medium;">
                     </div>
                     <div class="row" >
                         <div class="col-sm-4"><button type="submit" class="btn text-white btn-block btn-primary " style="width: fit-content;">Update  </button>
@@ -199,9 +203,7 @@
                         <th data-field="empPanel1" data-editable="true" style="display:none;">Panel</th>
                         <th data-field="empPanel2" data-editable="true">Panel</th>
                         <th data-field="empRemarks" data-editable="true">Remarks</th>
-                        {% if perms.employee_register.change_employee or perms.employee_register.delete_employee %}
-                            <th data-field="action">Action</th>
-                        {% endif %}
+                        <th data-field="action">Action</th>
                     </tr>
                 </thead>
                 {% for employee in employees %}
@@ -270,11 +272,22 @@
                         <td>
                             {{employee.empRemarks}}
                         </td>
-                        <td>
+                        <td style="display: flex; ">
+                            {% if employee.CVPath %}
+                                <a href="https://{{employee.CVPath}}" target="_blank" class="edit" title="View resume" data-toggle="tooltip" ><i class="material-icons">&#xe873;</i></a>
+                            {% endif %}
                             {% if perms.employee_register.change_employee %}
-                            <!-- this is only for super user -->
-                            {% if user.is_staff %}<a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{employee.emp_code}}','{{employee.empFullname}}','{{employee.empEmail}}','{{employee.empPrimary}}','{{employee.empSecondary}}','{{employee.empLocation}}','{{employee.empStatus}}','{{employee.empRemarks}}','{{employee.empDesignation}}','{{employee.empBenchmng}}','{{employee.empPanel}}','{{employee.interviewer_id}}','{{interviewers}}')"><i class="material-icons">&#xE254;</i></a>{% endif %}
-                            {% for group in  user.groups.all %}{% if 'Interviewer' == group.name %}<a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openIntForm('{{employee.emp_code}}','{{employee.empFullname}}','{{employee.empEmail}}','{{employee.empStatus}}','{{employee.empRemarks}}','{{employee.empPanel}}','{{employee.interviewer_id}}','{{interviewers}}')"><i class="material-icons">&#xE254;</i></a>{% else %}<a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{employee.emp_code}}','{{employee.empFullname}}','{{employee.empEmail}}','{{employee.empPrimary}}','{{employee.empSecondary}}','{{employee.empLocation}}','{{employee.empStatus}}','{{employee.empRemarks}}','{{employee.empDesignation}}','{{employee.empBenchmng}}','{{employee.empPanel}}','{{employee.interviewer_id}}','{{interviewers}}')"><i class="material-icons">&#xE254;</i></a>{% endif %}{% endfor %}{% endif %}{% if perms.employee_register.delete_employee %}<a href="/removeEmp/{{employee.emp_code}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete this record?')"><i class="material-icons">&#xE872;</i></a>{% endif %}
+                                <!-- this is only for super user -->
+                                {% if user.is_staff %}<a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{employee.emp_code}}','{{employee.empFullname}}','{{employee.empEmail}}','{{employee.empPrimary}}','{{employee.empSecondary}}','{{employee.empLocation}}','{{employee.empStatus}}','{{employee.empRemarks}}','{{employee.empDesignation}}','{{employee.empBenchmng}}','{{employee.empPanel}}','{{employee.interviewer_id}}','{{interviewers}}')"><i class="material-icons">&#xE254;</i></a>
+                                {% endif %}
+                                {% for group in  user.groups.all %}
+                                    {% if 'Interviewer' == group.name %}<a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openIntForm('{{employee.emp_code}}','{{employee.empFullname}}','{{employee.empEmail}}','{{employee.empStatus}}','{{employee.empRemarks}}','{{employee.empPanel}}','{{employee.interviewer_id}}','{{interviewers}}')"><i class="material-icons">&#xE254;</i></a>
+                                    {% else %}<a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="openForm('{{employee.emp_code}}','{{employee.empFullname}}','{{employee.empEmail}}','{{employee.empPrimary}}','{{employee.empSecondary}}','{{employee.empLocation}}','{{employee.empStatus}}','{{employee.empRemarks}}','{{employee.empDesignation}}','{{employee.empBenchmng}}','{{employee.empPanel}}','{{employee.interviewer_id}}','{{interviewers}}','{{employee.CVPath}}')"><i class="material-icons">&#xE254;</i></a>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            {% if perms.employee_register.delete_employee %}<a href="/removeEmp/{{employee.emp_code}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete this record?')"><i class="material-icons">&#xE872;</i></a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
@@ -286,7 +299,7 @@
 
 
   <script>
-        function openForm(id,name,mail,prim,sec,loc,sts,remk,desg,mang,panelName,empintid,interviewer) {
+        function openForm(id,name,mail,prim,sec,loc,sts,remk,desg,mang,panelName,empintid,interviewer,CVPath) {
           var status=[
             'NA',
             'L1 Assigned',
@@ -349,6 +362,9 @@
           className = "empBenchmng";
           addClass(mang,className);
           document.getElementById(className).value=mang;
+          className = "empCVPath";
+          addClass(CVPath,className);
+          document.getElementById(className).value=CVPath;
           document.getElementById("formUpdate").action = "../editEmp/"+id;
         }
         
@@ -423,8 +439,8 @@
         }
         //for developer/manager edit popup
         function removeEditClass1(){
-            var list1 = ['emp_code','empFullname','empEmail','empPrimary','empSecondary','empLocation','empRemarks','empDesignation','empBenchmng'];
-            for(var i=0;i<9;i++){
+            var list1 = ['emp_code','empFullname','empEmail','empPrimary','empSecondary','empLocation','empRemarks','empDesignation','empBenchmng','empCVPath'];
+            for(var i=0;i<10;i++){
                 remClass(list1[i]);
             }
         }

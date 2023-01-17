@@ -36,6 +36,7 @@ class Employee(models.Model):
     empDate=models.DateField(default=date.today)  # date on which record added
     interviewer=models.ForeignKey(Interviewer,on_delete=models.SET_DEFAULT,default=Interviewer.get_default_pk)
     empTimeStamp = models.DateTimeField(default=None,null=True)  #date on which L1 assigned 
+    CVPath = models.CharField(max_length=200)
 class Meta:        
     db_table="Employee"
 # Requirement Model
