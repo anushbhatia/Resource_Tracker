@@ -6,7 +6,46 @@
   #homeActive {
     color: #49b5e7;
   }
+  #id1{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #id2{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .head{
+    text-align: center;
+  }
+  .center{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #this_chart {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+   
+  }
+  /*#ID1{
+    position: none;
+  } 
+  #ID2{
+    position: none;
+  }
+  #ID3{
+    position: none;
+  } */
   </style>
+  <!--  Chart JS CDN ====================================-->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.1.2/dist/chart.umd.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
   <!-- ======= Hero Section ======= -->
   <section id="hero" class="d-flex align-items-center">
 
@@ -69,7 +108,7 @@
 
     <section id="dashboard" class="dashboards">
       <div class="text-center title">
-        <h4><b>User Friendly Insights</b></h4>
+        <h4><b>Insights</b></h4>
       </div>
       <div id = "id2">
       <div><!-- overall insight --> 
@@ -432,12 +471,6 @@
               
             }
           });
-
-          
-
-          
-
-
         }
         else{
           display_val = 0
@@ -499,9 +532,6 @@
         }*/
       });
     });
-
-
-
     </script>
 
     <div style="position: relative;">
@@ -511,19 +541,9 @@
     </div>
 </div>
             <div id = "values">
-            
-
-
-            
             </div>
-
-
-
     </div>
-
-
     <div>
-
       <div id = "id22">
       <div><!-- overall monthly insight --> 
         <h5><u>Overall Monthly Insight</u></h5>

@@ -17,7 +17,6 @@ def login_user(request):
         login(request, user)
         return redirect("../../")
       else:
-        login(request, user)
         messages.success(request,'As a new user please set a new password.')
         return render(request, 'emp_login/passChange.html', {'username':username})
     else:
@@ -33,28 +32,32 @@ def logout_user(request):
   return redirect('../login/')
 
 # password change for new user
-@login_required(login_url="auth/login/")
 def pass_change(request):
   if request.method == "POST":
-    username = request.user.get_username()
     oldpass = request.POST['password1']
     newpass1 = request.POST['password2']
     newpass2 = request.POST['password3']
-    # username = request.POST['username']
-    if newpass1 == newpass2:
+    username = request.POST['username']
+    user = authenticate(username=username, password=oldpass)
+    if user is not None:
+      if newpass1 == newpass2:
         if newpass1 == oldpass:
           messages.warning(request,'Please do not use same password.')
-          return redirect('../passChange/')
+          return redirect('../login/')
         else:
+          login(request, user)
           u = User.objects.get(username=username)
           u.set_password(newpass1)
           u.save()
           logout(request)
           messages.success(request, "Password changed successfully. Please login again.")
           return redirect('../login/')
-    else:
+      else:
         messages.warning(request, 'Password not matching...')
-        return redirect('../passChange/')
+        return redirect('../login/')
+    else:
+      messages.warning(request,"Old password incorrect. Please try again.")
+      return redirect('../login/')
   else:
     return render(request, 'emp_login/passChange.html')
 

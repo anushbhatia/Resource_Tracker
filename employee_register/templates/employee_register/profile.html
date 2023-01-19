@@ -104,8 +104,9 @@
               <h6 class="mb-0">Permission</h6>
             </div>
             <div class="col-sm-9 text-secondary">
-              {{perms.employee_register}}
-              
+              {% for perm in permList%}
+                {{perm}}<br>
+              {% endfor %}
             </div>
           </div>
           <hr>

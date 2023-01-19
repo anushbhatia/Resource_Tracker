@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Employee, Interviewer, Requirement
 import csv, io
 from django.contrib import messages
-from django.contrib.auth.models import User,Group 
+from django.contrib.auth.models import User,Group
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required,permission_required
 from django.core import serializers
@@ -141,13 +141,6 @@ def home(request):
   selected_tech_dict_json = json.dumps(selected_primary_tech_dict)
   in_progress_tech_dict_json = json.dumps(in_progress_primary_tech_dict)
   rejected_tech_dict_json = json.dumps(rejected_primary_tech_dict)
-
-
-  
-
-
-
-
 
   return render(request, "employee_register/home.html",{'profileCount':profileCount,'deployedCount':deployedCount,'progessCount':progessCount,'rejectCount':rejectCount,'selected_primary_tech_dict':selected_primary_tech_dict,'in_progress_primary_tech_dict':in_progress_primary_tech_dict,'rejected_primary_tech_dict':rejected_primary_tech_dict,'all_tech':all_tech,'selected_tech_dict_json':selected_tech_dict_json,'in_progress_tech_dict_json':in_progress_tech_dict_json,'rejected_tech_dict_json':rejected_tech_dict_json,'monthly_in_progress_dict':monthly_in_progress_dict,'monthly_rejected_dict':monthly_rejected_dict,'monthly_selected_dict':monthly_selected_dict})
 
@@ -496,7 +489,13 @@ def remove_user(request,user_id):
 # Show my profile
 @login_required(login_url="auth/login/")
 def show_profile(request):
-  return render(request,'employee_register/profile.html')
+  permissionList=[]
+  grpName=request.user.groups.all()[0]
+  allPerm = grpName.permissions.all()
+  for perm in allPerm:
+    p=str(perm).split('|')
+    permissionList.append(p[2])
+  return render(request,'employee_register/profile.html',{'permList':permissionList})
 
 # My password change
 @login_required(login_url="auth/login/")
