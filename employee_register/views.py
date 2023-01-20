@@ -374,6 +374,7 @@ def remove_req(request,req_id):
 # Add new(register) user  
 @login_required(login_url="auth/login/")
 @permission_required('auth.add_user', raise_exception=True)
+@permission_required('employee_register.add_interviewer', raise_exception=True)
 def register_user(request):
   if request.method == 'POST':
     first_name = request.POST['first_name']
@@ -416,6 +417,7 @@ def register_user(request):
 # View Users
 @login_required(login_url="auth/login/")
 @permission_required('auth.view_user', raise_exception=True)
+@permission_required('employee_register.view_interviewer', raise_exception=True)
 def view_user(request):
   users = User.objects.all()
   groups = Group.objects.all()
@@ -426,6 +428,7 @@ def view_user(request):
 # Edit user  
 @login_required(login_url="auth/login/")
 @permission_required('auth.change_user', raise_exception=True)
+@permission_required('employee_register.change_interviewer', raise_exception=True)
 def edit_user(request,user_id):
   if request.method == 'POST':
     user = User.objects.get(id=user_id)
@@ -480,6 +483,7 @@ def edit_user(request,user_id):
 # Remove user
 @login_required(login_url="auth/login/")
 @permission_required('auth.delete_user', raise_exception=True)
+@permission_required('employee_register.delete_interviewer', raise_exception=True)
 def remove_user(request,user_id):
   user = User.objects.get(id=user_id)
   user.delete()

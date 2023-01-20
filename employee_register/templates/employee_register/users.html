@@ -150,7 +150,9 @@
                       <th data-field="user_userName" data-editable="true">UserName</th>
                       <th data-field="user_email" data-editable="true">Email</th>
                       <th data-field="user_userType" data-editable="true">User Type</th>
-                      <th data-field="action">Action</th>
+                      {% if perms.auth.change_user or perms.auth.delete_user %}
+                        <th data-field="action">Action</th>
+                      {% endif %}
                   </tr>
               </thead>
               {% for user in userList %}
@@ -174,7 +176,12 @@
                         {% endfor %}
                       </td>
                       <td>
-                        <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="userEdit('{{user.id}}','{{user.first_name}}','{{user.last_name}}','{{user.username}}','{{user.email}}','{{editGroupList}}','{% for grp in user.groups.all %}{{grp}}{% endfor %}','{{interviwer}}')"><i class="material-icons">&#xE254;</i></a><a href="/removeUser/{{user.id}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete this user?')"><i class="material-icons">&#xE872;</i></a>
+                        {% if perms.auth.change_user %}
+                          <a href="#" class="edit" title="Edit" data-toggle="tooltip" onclick="userEdit('{{user.id}}','{{user.first_name}}','{{user.last_name}}','{{user.username}}','{{user.email}}','{{editGroupList}}','{% for grp in user.groups.all %}{{grp}}{% endfor %}','{{interviwer}}')"><i class="material-icons">&#xE254;</i></a>
+                        {% endif %}
+                        {% if perms.auth.delete_user %}
+                          <a href="/removeUser/{{user.id}}" class="delete" title="Delete" data-toggle="tooltip" onclick="return confirm('Are you sure to delete this user?')"><i class="material-icons">&#xE872;</i></a>
+                        {% endif %}
                       </td>
                   </tr>
                 {% endif %}

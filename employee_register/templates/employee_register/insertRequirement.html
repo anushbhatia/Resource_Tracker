@@ -30,11 +30,11 @@
                   <form action="../insertRequirement/" method="post">
                     {% csrf_token %}
                       <div class="form-group first" >
-                        <label for="requestor">Requestor name</label>
+                        <label for="requestor">Requestor name*</label>
                         <input type="text" class="form-control" id="requestor" name="requestor" required>
                       </div>
                       <div class="form-group first">
-                        <label for="reqPrimary">Primary Skill</label>
+                        <label for="reqPrimary">Primary Skill*</label>
                         <input type="text" class="form-control" id="reqPrimary" name="reqPrimary" required>
                       </div>
                       <div class="form-group first">
@@ -50,7 +50,7 @@
                         <input type="text" class="form-control" id="reqGrade" name="reqGrade">
                       </div>
                       <div class="form-group first">
-                        <label for="reqCount">Requirement Count</label>
+                        <label for="reqCount">Requirement Count*</label>
                         <input type="text" class="form-control" id="reqCount" name="reqCount" required>
                       </div>
                       <input type="submit" value="Submit" class="btn btn-pill text-white btn-block btn-primary">
