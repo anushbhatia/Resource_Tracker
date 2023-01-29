@@ -1,7 +1,6 @@
 import time
 from django.shortcuts import render, redirect
 from datetime import datetime as dtime
-from .email import mailing_engine
 from .models import Employee, Interviewer, Requirement
 import csv, io
 from django.contrib import messages
