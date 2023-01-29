@@ -71,6 +71,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'resource_tracker.wsgi.application'
+#iodn hfae syxu xmic
 
 
 # Database
@@ -104,6 +105,7 @@ DATABASES = {
         'PORT':'3306',
     }
 }
+
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -142,6 +144,15 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'asset')
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'anushbhatia1234@gmail.com'
+EMAIL_HOST_PASSWORD = 'iodn hfae syxu xmic'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
 
 
 
