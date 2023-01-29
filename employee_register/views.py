@@ -11,7 +11,7 @@ from django.core import serializers
 from django.core.mail import send_mail
 import json
 from datetime import datetime
-from ..resource_tracker.settings import EMAIL_HOST_USER
+
 '''
 LOCATION: 30
 GRADE:30
@@ -583,42 +583,42 @@ def edit_profile(request):
     return redirect('../profile/')
  
 # send_mail(subject = 'Test Mail',message = 'Kindly Ignore',from_email = 'anushbhatia1234@gmail.com',recipient_list = ['anushbhatia1234@gmail.com'],fail_silently = False);
-while True:
-    now = dtime.now()
-  # If the time now is 15:15 run the rest.
-    if now.hour == 10 and now.minute == 30:
-        interviewers = Interviewer.objects.all()
-        users=User.objects.all()
-        for interviewer in interviewers:
-          for user in users:
-            if user.id==interviewer.user_id:
-                print(user.email)
-                htmlmessage=f'''Hi {user.first_name} 👋, <br>
-                <p>You have been assigned {interviewer.count} profiles for the review.Please Evaluate the profiles as earliest as possible.<br>
-                <a href="http://abhatia1.pythonanywhere.com/" target="_blank">View Profiles</a></button><br></p>
-                Thanks and Regards,<br>
-                Profile Team 🤖'''
-                send_mail(subject = 'New Profiles For Review',
-                message='You have been assigned profiles for the review.',
-                html_message= htmlmessage
-                ,from_email = EMAIL_HOST_USER,recipient_list = [user.email],fail_silently = False)
-                time.sleep(3600)
-    if now.hour == 17 and now.minute == 00:
-        interviewers = Interviewer.objects.all()
-        users=User.objects.all()
-        for interviewer in interviewers:
-          for user in users:
-            if user.id==interviewer.user_id:
-                print(user.email)
-                htmlmessage=f'''Hi {user.first_name} 👋, <br>
-                <p>You have been assigned {interviewer.count} profiles for the review.Please Evaluate the profiles as earliest as possible.<br>
-                <a href="http://abhatia1.pythonanywhere.com/" target="_blank">View Profiles</a></button><br></p>
-                Thanks and Regards,<br>
-                Profile Team 🤖'''
-                send_mail(subject = 'New Profiles For Review',
-                message='You have been assigned profiles for the review.',
-                html_message= htmlmessage
-                ,from_email = EMAIL_HOST_USER,recipient_list = [user.email],fail_silently = False)
-                time.sleep(3600)
+# while True:
+#     now = dtime.now()
+#   # If the time now is 15:15 run the rest.
+#     if now.hour == 10 and now.minute == 30:
+#         interviewers = Interviewer.objects.all()
+#         users=User.objects.all()
+#         for interviewer in interviewers:
+#           for user in users:
+#             if user.id==interviewer.user_id:
+#                 print(user.email)
+#                 htmlmessage=f'''Hi {user.first_name} 👋, <br>
+#                 <p>You have been assigned {interviewer.count} profiles for the review.Please Evaluate the profiles as earliest as possible.<br>
+#                 <a href="http://abhatia1.pythonanywhere.com/" target="_blank">View Profiles</a></button><br></p>
+#                 Thanks and Regards,<br>
+#                 Profile Team 🤖'''
+#                 send_mail(subject = 'New Profiles For Review',
+#                 message='You have been assigned profiles for the review.',
+#                 html_message= htmlmessage
+#                 ,from_email = 'anushbhatia1234@gmail.com',recipient_list = [user.email],fail_silently = False)
+#                 time.sleep(3600)
+#     if now.hour == 17 and now.minute == 00:
+#         interviewers = Interviewer.objects.all()
+#         users=User.objects.all()
+#         for interviewer in interviewers:
+#           for user in users:
+#             if user.id==interviewer.user_id:
+#                 print(user.email)
+#                 htmlmessage=f'''Hi {user.first_name} 👋, <br>
+#                 <p>You have been assigned {interviewer.count} profiles for the review.Please Evaluate the profiles as earliest as possible.<br>
+#                 <a href="http://abhatia1.pythonanywhere.com/" target="_blank">View Profiles</a></button><br></p>
+#                 Thanks and Regards,<br>
+#                 Profile Team 🤖'''
+#                 send_mail(subject = 'New Profiles For Review',
+#                 message='You have been assigned profiles for the review.',
+#                 html_message= htmlmessage
+#                 ,from_email = 'anushbhatia1234@gmail.com',recipient_list = [user.email],fail_silently = False)
+#                 time.sleep(3600)
 
         
