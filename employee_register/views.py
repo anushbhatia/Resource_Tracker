@@ -1,4 +1,6 @@
+import time
 from django.shortcuts import render, redirect
+from datetime import datetime as dtime
 from .models import Employee, Interviewer, Requirement
 import csv, io
 from django.contrib import messages
@@ -6,6 +8,7 @@ from django.contrib.auth.models import User,Group
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required,permission_required
 from django.core import serializers
+from django.core.mail import send_mail
 import json
 from datetime import datetime
 
@@ -172,29 +175,43 @@ def edit_emp(request,emp_code):
     employee.empLocation= request.POST['empLocation']
     employee.empRemarks=request.POST['empRemarks']
     employee.empStatus=request.POST['empStatus']
-    temppanel=employee.empPanel
-    employee.empPanel=request.POST['empPanel']
+    #temppanel=employee.empPanel
+    #employee.empPanel=request.POST['empPanel']
     employee.CVPath=request.POST['empCVPath']
-    print(employee.empPanel)
+    #print(employee.empPanel)
     employee.empDesignation=request.POST['empDesignation']
     employee.empBenchmng=request.POST['empBenchmng']
-    for i in interviewers:
-      print(temppanel,employee.empPanel,i.name,employee.empPanel,employee.empStatus)
-      if(temppanel!=employee.empPanel and i.name==employee.empPanel and employee.empStatus=='NA' and i.name!='NA'):
-        employee.interviewer=i
-        employee.empStatus='L1 Assigned'
+    temppanel=employee.interviewer
+    newpanel=request.POST['empPanel']
+    if(temppanel!=newpanel):
+      for i in interviewers:
+        if(i.name==newpanel and employee.empStatus=='NA' and i.name!='NA'):
+          employee.interviewer=i
+          employee.empStatus='L1 Assigned'
+          
+        elif(i.name==newpanel and employee.empStatus!='NA' and i.name=='NA'):
+          employee.interviewer=i
+          employee.empStatus='NA' 
+        elif(i.name==newpanel):
+          employee.interviewer=i
+    # for i in interviewers:
+    #   print(temppanel,employee.empPanel,i.name,employee.empPanel,employee.empStatus)
+    #   if(temppanel!=employee.empPanel and i.name==employee.empPanel and employee.empStatus=='NA' and i.name!='NA'):
+    #     employee.interviewer=i
+    #     employee.empStatus='L1 Assigned'
         
-      elif(temppanel!=employee.empPanel and i.name==employee.empPanel and employee.empStatus!='NA' and i.name=='NA'):
-        employee.interviewer=i
-        employee.empStatus='NA' 
-      elif(temppanel!=employee.empPanel and i.name==employee.empPanel):
-        employee.interviewer=i
+    #   elif(temppanel!=employee.empPanel and i.name==employee.empPanel and employee.empStatus!='NA' and i.name=='NA'):
+    #     employee.interviewer=i
+    #     employee.empStatus='NA' 
+    #   elif(temppanel!=employee.empPanel and i.name==employee.empPanel):
+    #     employee.interviewer=i
     employee.empTimeStamp=datetime.now()
     employee.save() 
     messages.success(request, 'Profile updated sucessfully. ')
     count_interview()
     return redirect('../show')
   else:
+    
     return redirect('../show')
   
 # Edit employee by interviewer
@@ -207,19 +224,19 @@ def edit_emp_int(request,emp_code):
     #employee.emp_code= request.POST['emp_code'] 
     employee.empRemarks=request.POST['empRemarks']
     employee.empStatus=request.POST['empStatus']
-    temppanel=employee.empPanel
-    employee.empPanel=request.POST['empPanel']
-    for i in interviewers:
-      print(temppanel,employee.empPanel,i.name,employee.empPanel,employee.empStatus)
-      if(temppanel!=employee.empPanel and i.name==employee.empPanel and employee.empStatus=='NA' and i.name!='NA'):
-        employee.interviewer=i
-        employee.empStatus='L1 Assigned'
-        
-      elif(temppanel!=employee.empPanel and i.name==employee.empPanel and employee.empStatus!='NA' and i.name=='NA'):
-        employee.interviewer=i
-        employee.empStatus='NA' 
-      elif(temppanel!=employee.empPanel and i.name==employee.empPanel):
-        employee.interviewer=i
+    temppanel=employee.interviewer
+    newpanel=request.POST['empPanel']
+    if(temppanel!=newpanel):
+      for i in interviewers:
+        if(i.name==newpanel and employee.empStatus=='NA' and i.name!='NA'):
+          employee.interviewer=i
+          employee.empStatus='L1 Assigned'
+          
+        elif(i.name==newpanel and employee.empStatus!='NA' and i.name=='NA'):
+          employee.interviewer=i
+          employee.empStatus='NA' 
+        elif(i.name==newpanel):
+          employee.interviewer=i
     employee.empTimeStamp=datetime.now()
     employee.save() 
     messages.success(request, 'Profile updated sucessfully. ')
@@ -296,7 +313,7 @@ def profile_upload(request):
           empLocation= column[5],
           empDesignation=column[6],
           empBenchmng=column[7],
-          empCVPath=column[8],
+          CVPath=column[8]
         )
         else:
           countskip=countskip+1
@@ -494,7 +511,10 @@ def remove_user(request,user_id):
 @login_required(login_url="auth/login/")
 def show_profile(request):
   permissionList=[]
-  grpName=request.user.groups.all()[0]
+  try: #Added for the superuser
+    grpName=request.user.groups.all()[0]
+  except:
+    grpName=Group.objects.all()[2]
   allPerm = grpName.permissions.all()
   for perm in allPerm:
     p=str(perm).split('|')
@@ -559,8 +579,46 @@ def edit_profile(request):
     messages.success(request, 'Profile updated sucessfully. ')
     return redirect('../profile/')
   else:
+   
     return redirect('../profile/')
+ 
+# send_mail(subject = 'Test Mail',message = 'Kindly Ignore',from_email = 'anushbhatia1234@gmail.com',recipient_list = ['anushbhatia1234@gmail.com'],fail_silently = False);
+# while True:
+#     now = dtime.now()
+#   # If the time now is 15:15 run the rest.
+#     if now.hour == 10 and now.minute == 30:
+#         interviewers = Interviewer.objects.all()
+#         users=User.objects.all()
+#         for interviewer in interviewers:
+#           for user in users:
+#             if user.id==interviewer.user_id:
+#                 print(user.email)
+#                 htmlmessage=f'''Hi {user.first_name} 👋, <br>
+#                 <p>You have been assigned {interviewer.count} profiles for the review.Please Evaluate the profiles as earliest as possible.<br>
+#                 <a href="http://abhatia1.pythonanywhere.com/" target="_blank">View Profiles</a></button><br></p>
+#                 Thanks and Regards,<br>
+#                 Profile Team 🤖'''
+#                 send_mail(subject = 'New Profiles For Review',
+#                 message='You have been assigned profiles for the review.',
+#                 html_message= htmlmessage
+#                 ,from_email = 'anushbhatia1234@gmail.com',recipient_list = [user.email],fail_silently = False)
+#                 time.sleep(3600)
+#     if now.hour == 17 and now.minute == 00:
+#         interviewers = Interviewer.objects.all()
+#         users=User.objects.all()
+#         for interviewer in interviewers:
+#           for user in users:
+#             if user.id==interviewer.user_id:
+#                 print(user.email)
+#                 htmlmessage=f'''Hi {user.first_name} 👋, <br>
+#                 <p>You have been assigned {interviewer.count} profiles for the review.Please Evaluate the profiles as earliest as possible.<br>
+#                 <a href="http://abhatia1.pythonanywhere.com/" target="_blank">View Profiles</a></button><br></p>
+#                 Thanks and Regards,<br>
+#                 Profile Team 🤖'''
+#                 send_mail(subject = 'New Profiles For Review',
+#                 message='You have been assigned profiles for the review.',
+#                 html_message= htmlmessage
+#                 ,from_email = 'anushbhatia1234@gmail.com',recipient_list = [user.email],fail_silently = False)
+#                 time.sleep(3600)
 
-
-
-  
+        

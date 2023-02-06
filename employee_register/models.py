@@ -32,7 +32,7 @@ class Employee(models.Model):
     empBenchmng=models.CharField(max_length=100)
     empRemarks=models.CharField(max_length=200)
     empStatus=models.CharField(max_length=100,default='NA')
-    empPanel=models.CharField(max_length=100,default='NA') # need to remove
+    #empPanel=models.CharField(max_length=100,default='NA') # need to remove
     empDate=models.DateField(default=date.today)  # date on which record added
     interviewer=models.ForeignKey(Interviewer,on_delete=models.SET_DEFAULT,default=Interviewer.get_default_pk)
     empTimeStamp = models.DateTimeField(default=None,null=True)  #date on which L1 assigned 
